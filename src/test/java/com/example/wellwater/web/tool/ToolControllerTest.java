@@ -56,13 +56,14 @@ class ToolControllerTest {
         );
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.resultFirst("nitrate", "nitrate", model);
+        String viewName = controller.resultFirst("nitrate", "PA", "nitrate", model);
 
         assertEquals("pages/intake/result-first", viewName);
         assertNotNull(model.getAttribute("request"));
         assertNotNull(model.getAttribute("analytes"));
         assertNotNull(model.getAttribute("states"));
         assertTrue(((java.util.List<?>) model.getAttribute("analytes")).contains("radon"));
+        assertEquals("PA", ((ToolRequest) model.getAttribute("request")).getState());
     }
 
     @Test

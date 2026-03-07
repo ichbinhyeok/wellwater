@@ -15,9 +15,9 @@
     description = "Start from event trigger and route to safe next actions.",
     activeEntryMode = request.getEntryMode(),
     leftPanel = @`
-        <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">사건 이력 입력</h2>
-        <p class="text-zinc-500 text-sm mb-8 leading-relaxed">홍수, 수리, 산불 등 지하수 오염을 유발할 수 있는 특이사항을 선택해주세요. 엔진이 위험도를 분석합니다.</p>
-        
+        <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">Start with a recent trigger</h2>
+        <p class="text-zinc-500 text-sm mb-8 leading-relaxed">Select the recent event that changed your water behavior. The engine will prioritize practical risk checks.</p>
+
         <form method="post" action="/tool/result" class="space-y-5">
             <input type="hidden" name="entryMode" value="trigger-first">
             <input type="hidden" name="slugHint" value="${request.getSlugHint()}">
@@ -25,7 +25,7 @@
             <!-- Primary Trigger -->
             <div class="group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
                 <div class="flex justify-between items-center mb-1">
-                    <label class="text-sm font-semibold text-zinc-900">Primary Trigger (사건/트리거)</label>
+                    <label class="text-sm font-semibold text-zinc-900">Primary Trigger</label>
                 </div>
                 <select name="triggerFlag" class="w-full mt-2 text-base outline-none bg-transparent text-zinc-900 cursor-pointer">
                     <option value="">Select trigger</option>
@@ -154,21 +154,21 @@
                 <div class="space-y-3">
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="infantPresent" value="true" checked="${request.isInfantPresent()}" class="w-4 h-4 rounded text-zinc-900 focus:ring-zinc-900 border-zinc-300 cursor-pointer">
-                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Infant present (영유아 거주)</span>
+                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Infant present in household</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="pregnancyPresent" value="true" checked="${request.isPregnancyPresent()}" class="w-4 h-4 rounded text-zinc-900 focus:ring-zinc-900 border-zinc-300 cursor-pointer">
-                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Pregnancy present (임산부 거주)</span>
+                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Pregnancy in household</span>
                     </label>
                     <label class="flex items-center gap-3 cursor-pointer group">
                         <input type="checkbox" name="immunocompromisedPresent" value="true" checked="${request.isImmunocompromisedPresent()}" class="w-4 h-4 rounded text-zinc-900 focus:ring-zinc-900 border-zinc-300 cursor-pointer">
-                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Immunocompromised present (면역 저하자)</span>
+                        <span class="text-sm font-medium text-zinc-600 group-hover:text-zinc-900 transition-colors">Immunocompromised person in household</span>
                     </label>
                 </div>
             </div>
 
             <button type="submit" class="mt-8 flex items-center justify-center w-full py-4 rounded-xl text-base font-semibold text-white bg-zinc-900 hover:bg-zinc-800 transition-colors shadow-sm">
-                Run Decision Engine ➔
+                Run Decision Engine
             </button>
         </form>
     `,
@@ -177,9 +177,9 @@
             <div class="w-20 h-20 bg-zinc-100 rounded-full flex items-center justify-center mb-6 shadow-subtle ring-1 ring-zinc-200">
                 <svg class="w-8 h-8 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
             </div>
-            <h3 class="text-2xl font-bold text-zinc-900 mb-2">대기 중 (Awaiting Input)</h3>
+            <h3 class="text-2xl font-bold text-zinc-900 mb-2">Awaiting input</h3>
             <p class="text-zinc-500 text-sm max-w-[280px] leading-relaxed">
-                좌측 패널에 발생한 사건/이력을 선택하시면, 엔진이 관련된 오염 가능성을 분석하여 행동 지침을 이 영역에 표시합니다.
+                Select the trigger and add context to receive a practical risk triage and clear next steps.
             </p>
         </div>
     `

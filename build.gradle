@@ -29,3 +29,12 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+tasks.named('processResources') {
+	from('data/pseo') {
+		into 'seed-data/pseo'
+	}
+	from('data/registry') {
+		into 'seed-data/registry'
+	}
+}

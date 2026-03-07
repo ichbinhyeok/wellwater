@@ -57,12 +57,14 @@ public class ToolController {
     @GetMapping("/tool/result-first")
     public String resultFirst(
             @RequestParam(required = false) String analyte,
+            @RequestParam(required = false) String state,
             @RequestParam(required = false) String slug,
             Model model
     ) {
         ToolRequest request = new ToolRequest();
         request.setEntryMode("result-first");
         request.setAnalyteName(analyte);
+        request.setState(state);
         request.setSlugHint(slug);
         addSharedOptions(model);
         model.addAttribute("request", request);
@@ -71,10 +73,16 @@ public class ToolController {
     }
 
     @GetMapping("/tool/symptom-first")
-    public String symptomFirst(@RequestParam(required = false) String symptom, @RequestParam(required = false) String slug, Model model) {
+    public String symptomFirst(
+            @RequestParam(required = false) String symptom,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String slug,
+            Model model
+    ) {
         ToolRequest request = new ToolRequest();
         request.setEntryMode("symptom-first");
         request.setSymptomFlag(symptom);
+        request.setState(state);
         request.setSlugHint(slug);
         addSharedOptions(model);
         model.addAttribute("request", request);
@@ -83,10 +91,16 @@ public class ToolController {
     }
 
     @GetMapping("/tool/trigger-first")
-    public String triggerFirst(@RequestParam(required = false) String trigger, @RequestParam(required = false) String slug, Model model) {
+    public String triggerFirst(
+            @RequestParam(required = false) String trigger,
+            @RequestParam(required = false) String state,
+            @RequestParam(required = false) String slug,
+            Model model
+    ) {
         ToolRequest request = new ToolRequest();
         request.setEntryMode("trigger-first");
         request.setTriggerFlag(trigger);
+        request.setState(state);
         request.setSlugHint(slug);
         addSharedOptions(model);
         model.addAttribute("request", request);

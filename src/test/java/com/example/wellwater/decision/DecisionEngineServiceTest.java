@@ -276,4 +276,124 @@ class DecisionEngineServiceTest {
         assertTrue(result.keyReasons().stream().anyMatch(reason -> reason.contains("Registry threshold check")));
         assertTrue(result.dataQualityNotes().stream().anyMatch(note -> note.contains("Decision rules version")));
     }
+
+    @Test
+    void phHighRangeRoutesToAmberCorrosionFlow() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "ph",
+                "9.0",
+                "su",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "whole-house",
+                "",
+                List.of(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertEquals(ProblemType.CORROSION, result.problemType());
+        assertEquals(Branch.AMBER, result.branch());
+        assertEquals(ActionMode.INSPECT_SOURCE, result.actionMode());
+        assertTrue(result.thresholdSummary().contains("EPA SMCL"));
+        assertTrue(result.scenarios().stream().anyMatch(s -> s.scenarioId().equals("verify-first")));
+    }
+
+    @Test
+    void leadAboveThresholdRoutesToAmberVerifyFirstFlow() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "lead",
+                "20",
+                "ppb",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "drinking-only",
+                "",
+                List.of(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertEquals(ProblemType.CHEMICAL_HEALTH, result.problemType());
+        assertEquals(Branch.AMBER, result.branch());
+        assertEquals(ActionMode.RETEST, result.actionMode());
+        assertTrue(result.thresholdSummary().contains("EPA action level"));
+        assertTrue(result.scenarios().stream().anyMatch(s -> s.scenarioId().equals("verify-first")));
+    }
+
+    @Test
+    void radiumAboveThresholdRoutesToAmberVerifyFirstFlow() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "radium",
+                "6",
+                "pCi/L",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "drinking-only",
+                "",
+                List.of(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertEquals(ProblemType.CHEMICAL_HEALTH, result.problemType());
+        assertEquals(Branch.AMBER, result.branch());
+        assertEquals(ActionMode.RETEST, result.actionMode());
+        assertTrue(result.thresholdSummary().contains("EPA MCL"));
+        assertTrue(result.scenarios().stream().anyMatch(s -> s.scenarioId().equals("verify-first")));
+    }
 }

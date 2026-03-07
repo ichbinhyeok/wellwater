@@ -1,7 +1,10 @@
 @param java.util.Map<String, Long> familyCounts
+@param Integer totalPageCount
 @param java.util.List<com.example.wellwater.pseo.PseoPage> featuredPages
+@param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
+@param com.example.wellwater.web.page.SeoMetadata seo
 
-@template.layout.main(title = "Private Well Water Guide | Results, Symptoms, and Next Steps", robots = "index,follow", description = "Use test results, water symptoms, or recent changes to decide what to verify next for a private well.", content = @`
+@template.layout.main(title = "Private Well Water Guide | Results, Symptoms, and Next Steps", robots = "index,follow", description = "Use test results, water symptoms, or recent changes to decide what to verify next for a private well.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
@@ -23,7 +26,7 @@
                             <span>entry modes</span>
                         </div>
                         <div class="metric">
-                            <strong>${familyCounts.get("contaminants") + familyCounts.get("symptoms") + familyCounts.get("compares") + familyCounts.get("triggers")}</strong>
+                            <strong>${totalPageCount}</strong>
                             <span>public guide pages</span>
                         </div>
                         <div class="metric">
@@ -95,6 +98,16 @@
                     <h3>Recent Triggers</h3>
                     <p class="card-meta">${familyCounts.get("triggers")} pages for event-driven changes such as flooding or post-install retesting.</p>
                 </a>
+                <a class="card-link" href="/well-water/family/regional">
+                    <span class="card-kicker">Family</span>
+                    <h3>Regional Guides</h3>
+                    <p class="card-meta">${familyCounts.get("regional")} pages where state geology, rules, and testing pathways change the answer.</p>
+                </a>
+                <a class="card-link" href="/well-water/family/authority">
+                    <span class="card-kicker">Family</span>
+                    <h3>Authority Articles</h3>
+                    <p class="card-meta">${familyCounts.get("authority")} pages that strengthen trust, method, and internal support for money pages.</p>
+                </a>
             </div>
         </section>
 
@@ -110,6 +123,25 @@
                 @for (var page : featuredPages)
                     <a class="card-link" href="/well-water/${page.slug()}">
                         <span class="card-kicker">${page.family()}</span>
+                        <h3>${page.h1()}</h3>
+                        <p class="card-meta">${page.metaDescription()}</p>
+                    </a>
+                @endfor
+            </div>
+        </section>
+
+        <section class="panel panel-accent">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Trust surface</p>
+                    <h2>Method, review, sources, and safety limits</h2>
+                </div>
+                <p class="section-copy">These pages explain how the public surface is supposed to behave when confidence is low, risk is high, or commerce needs to stay downstream.</p>
+            </div>
+            <div class="grid">
+                @for (var page : trustPages)
+                    <a class="card-link" href="/trust/${page.slug()}">
+                        <span class="card-kicker">${page.eyebrow()}</span>
                         <h3>${page.h1()}</h3>
                         <p class="card-meta">${page.metaDescription()}</p>
                     </a>

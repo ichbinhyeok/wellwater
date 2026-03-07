@@ -1,6 +1,8 @@
 package com.example.wellwater.web.page;
 
+import com.example.wellwater.lead.LeadCaptureContext;
 import com.example.wellwater.pseo.PseoCatalogService;
+import com.example.wellwater.pseo.PseoExperienceService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
@@ -15,20 +17,42 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class PageController {
 
     private final PseoCatalogService pseoCatalogService;
+    private final PseoExperienceService pseoExperienceService;
+    private final SeoMetadataService seoMetadataService;
+    private final TrustPageService trustPageService;
 
-    public PageController(PseoCatalogService pseoCatalogService) {
+    public PageController(
+            PseoCatalogService pseoCatalogService,
+            PseoExperienceService pseoExperienceService,
+            SeoMetadataService seoMetadataService,
+            TrustPageService trustPageService
+    ) {
         this.pseoCatalogService = pseoCatalogService;
+        this.pseoExperienceService = pseoExperienceService;
+        this.seoMetadataService = seoMetadataService;
+        this.trustPageService = trustPageService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
         model.addAttribute("familyCounts", pseoCatalogService.familyCounts());
+        model.addAttribute("totalPageCount", pseoCatalogService.allPages().size());
         model.addAttribute("featuredPages", pseoCatalogService.featured(16));
+        model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("seo", seoMetadataService.home(
+                "Private Well Water Guide | Results, Symptoms, and Next Steps",
+                "Use test results, water symptoms, or recent changes to decide what to verify next for a private well."
+        ));
         return "pages/home";
     }
 
     @GetMapping("/well-water/family/{family}")
-    public String family(@PathVariable String family, Model model, HttpServletResponse response) {
+    public String family(
+            @PathVariable String family,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model,
+            HttpServletResponse response
+    ) {
         var pages = pseoCatalogService.byFamily(family);
         if (pages.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -37,19 +61,84 @@ public class PageController {
         }
         model.addAttribute("family", family);
         model.addAttribute("pages", pages);
+        var familyView = pseoExperienceService.familyView(family, pages);
+        model.addAttribute("familyView", familyView);
+        model.addAttribute("seo", seoMetadataService.family(family, familyView));
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", null);
+        if ("regional".equals(family) || "authority".equals(family)) {
+            model.addAttribute("leadContext", new LeadCaptureContext(
+                    "Want follow-up on this " + family + " cluster?",
+                    "Leave an email and the page you were reading. This closes the gap between organic research and a direct follow-up queue.",
+                    "Request follow-up",
+                    "/well-water/family/" + family,
+                    "pseo-family",
+                    family,
+                    family,
+                    familyView.heroTitle()
+            ));
+        }
         return "pages/pseo/list";
     }
 
     @GetMapping("/well-water/{slug}")
-    public String detail(@PathVariable String slug, Model model, HttpServletResponse response) {
-        var maybePage = pseoCatalogService.findBySlug(slug);
-        if (maybePage.isEmpty()) {
+    public String detail(
+            @PathVariable String slug,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model,
+            HttpServletResponse response
+    ) {
+        var maybePageView = pseoExperienceService.detailView(slug);
+        if (maybePageView.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             model.addAttribute("path", "/well-water/" + slug);
             return "pages/not-found";
         }
-        model.addAttribute("page", maybePage.get());
+        model.addAttribute("pageView", maybePageView.get());
+        model.addAttribute("page", maybePageView.get().page());
+        model.addAttribute("seo", seoMetadataService.detail(maybePageView.get()));
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", new LeadCaptureContext(
+                maybePageView.get().page().family().equals("regional")
+                        ? "Need a state-aware follow-up?"
+                        : (maybePageView.get().page().family().equals("authority")
+                        ? "Want this method applied to your own well?"
+                        : "Want a private-well follow-up on this issue?"),
+                maybePageView.get().page().family().equals("regional")
+                        ? "Leave an email and your state context. This page already knows the cluster you came in on."
+                        : "Leave an email and a short note so this page can become a direct lead path instead of dead-end research.",
+                "Request follow-up",
+                "/well-water/" + slug,
+                "pseo-detail",
+                maybePageView.get().page().family(),
+                maybePageView.get().page().slug(),
+                maybePageView.get().page().h1()
+        ));
         return "pages/pseo/detail";
+    }
+
+    @GetMapping("/trust")
+    public String trustHub(Model model) {
+        model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("seo", seoMetadataService.trustHub(
+                "Trust And Method | Private Well Water Guide",
+                "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface."
+        ));
+        return "pages/trust/list";
+    }
+
+    @GetMapping("/trust/{slug}")
+    public String trustPage(@PathVariable String slug, Model model, HttpServletResponse response) {
+        var maybePage = trustPageService.findBySlug(slug);
+        if (maybePage.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            model.addAttribute("path", "/trust/" + slug);
+            return "pages/not-found";
+        }
+        model.addAttribute("page", maybePage.get());
+        model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("seo", seoMetadataService.trustPage(maybePage.get()));
+        return "pages/trust/view";
     }
 
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE)
@@ -59,6 +148,16 @@ public class PageController {
                 .replacePath(null)
                 .build()
                 .toUriString();
-        return pseoCatalogService.sitemapXml(baseUrl);
+        return pseoCatalogService.sitemapXml(baseUrl, trustPageService.sitemapPaths());
+    }
+
+    private String sanitizeLeadStatus(String lead) {
+        if ("success".equalsIgnoreCase(lead)) {
+            return "success";
+        }
+        if ("invalid".equalsIgnoreCase(lead)) {
+            return "invalid";
+        }
+        return "";
     }
 }

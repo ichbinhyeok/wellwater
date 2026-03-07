@@ -1,6 +1,9 @@
 @param String title
 @param String robots
 @param String description
+@param String canonicalUrl
+@param java.util.List<com.example.wellwater.web.page.SeoBreadcrumb> breadcrumbs
+@param java.util.List<String> structuredDataBlocks
 @param gg.jte.Content content
 
 <!doctype html>
@@ -10,6 +13,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="${robots}">
     <meta name="description" content="${description}">
+    @if (canonicalUrl != null && !canonicalUrl.isBlank())
+        <link rel="canonical" href="${canonicalUrl}">
+    @endif
     <title>${title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -177,6 +183,62 @@
             background: rgba(20, 34, 24, 0.06);
             color: var(--text);
             transform: translateY(-1px);
+        }
+
+        .breadcrumb-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 0 0 22px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: 999px;
+            box-shadow: 0 10px 28px rgba(25, 41, 28, 0.05);
+            color: var(--muted);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .breadcrumb-sep {
+            color: rgba(20, 34, 24, 0.28);
+        }
+
+        .breadcrumb-current {
+            color: var(--text);
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .form-grid.two {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .form-field,
+        .form-textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border-strong);
+            background: rgba(255, 255, 255, 0.88);
+            color: var(--text);
+            font: inherit;
+        }
+
+        .form-field:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--text);
+            box-shadow: 0 0 0 1px rgba(20, 34, 24, 0.12);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
         }
 
         .nav-link.nav-link-strong {
@@ -557,9 +619,20 @@
             color: var(--text);
         }
 
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 18px;
+            margin-top: 12px;
+        }
+
         @media (max-width: 960px) {
             .hero-grid,
             .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid.two {
                 grid-template-columns: 1fr;
             }
 
@@ -603,6 +676,9 @@
             }
         }
     </style>
+    @for (var structuredData : structuredDataBlocks)
+        <script type="application/ld+json">$unsafe{structuredData}</script>
+    @endfor
 </head>
 <body>
 <div class="shell">
@@ -619,14 +695,39 @@
             <a class="nav-link" href="/well-water/family/symptoms">Symptoms</a>
             <a class="nav-link" href="/well-water/family/compares">Comparisons</a>
             <a class="nav-link" href="/well-water/family/triggers">Triggers</a>
+            <a class="nav-link" href="/well-water/family/regional">Regional</a>
+            <a class="nav-link" href="/well-water/family/authority">Articles</a>
+            <a class="nav-link" href="/trust">Trust</a>
             <a class="nav-link nav-link-strong" href="/tool/result-first">Open Tool</a>
         </nav>
     </header>
+
+    @if (breadcrumbs != null && !breadcrumbs.isEmpty())
+        <nav class="breadcrumb-bar" aria-label="Breadcrumb">
+            @for (int i = 0; i < breadcrumbs.size(); i++)
+                @if (i > 0)
+                    <span class="breadcrumb-sep">/</span>
+                @endif
+                @if (i == breadcrumbs.size() - 1)
+                    <span class="breadcrumb-current">${breadcrumbs.get(i).label()}</span>
+                @else
+                    <a href="${breadcrumbs.get(i).absoluteUrl()}">${breadcrumbs.get(i).label()}</a>
+                @endif
+            @endfor
+        </nav>
+    @endif
 
     ${content}
 
     <footer class="site-footer">
         <strong>Private Well Water Guide</strong> separates public research pages from personalized noindex decision results.
+        <nav class="footer-links" aria-label="Trust and policy">
+            <a href="/trust">Trust hub</a>
+            <a href="/trust/methodology">Methodology</a>
+            <a href="/trust/review-policy">Review policy</a>
+            <a href="/trust/sources-policy">Sources policy</a>
+            <a href="/trust/safety-and-scope">Safety and scope</a>
+        </nav>
     </footer>
 </div>
 </body>

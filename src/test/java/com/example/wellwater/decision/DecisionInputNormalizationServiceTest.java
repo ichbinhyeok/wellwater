@@ -133,4 +133,44 @@ class DecisionInputNormalizationServiceTest {
         assertTrue(normalized.thresholdTriggered());
         assertTrue(normalized.thresholdSummary().contains("EPA MCL"));
     }
+
+    @Test
+    void phHighRangeThresholdIsTriggered() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "ph",
+                "9.0",
+                "su",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "whole-house",
+                "",
+                List.of(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var normalized = service.normalize(input);
+
+        assertEquals("su", normalized.canonicalUnit());
+        assertEquals(9.0d, normalized.canonicalNumericResultValue());
+        assertTrue(normalized.thresholdTriggered());
+        assertTrue(normalized.thresholdSummary().contains("EPA SMCL"));
+        assertTrue(normalized.thresholdSummary().contains("8.500"));
+    }
 }

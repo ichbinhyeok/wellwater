@@ -22,7 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class PseoCatalogService {
 
-    private static final Set<String> ALLOWED_FAMILIES = Set.of("contaminants", "symptoms", "compares", "triggers");
+    public static final List<String> FAMILY_ORDER = List.of("contaminants", "symptoms", "compares", "triggers", "regional", "authority");
+    private static final Set<String> ALLOWED_FAMILIES = Set.copyOf(FAMILY_ORDER);
     private final Path csvPath;
 
     public PseoCatalogService(@Value("${app.pseo.csv.path:./data/pseo/pages.csv}") String csvPath) {
@@ -77,31 +78,65 @@ public class PseoCatalogService {
                 .collect(Collectors.groupingBy(PseoPage::family, LinkedHashMap::new, Collectors.counting()));
 
         Map<String, Long> ordered = new LinkedHashMap<>();
-        for (String family : List.of("contaminants", "symptoms", "compares", "triggers")) {
+        for (String family : FAMILY_ORDER) {
             ordered.put(family, grouped.getOrDefault(family, 0L));
         }
         return ordered;
     }
 
     public List<PseoPage> featured(int limit) {
-        return allPages().stream()
-                .sorted(Comparator.comparing(PseoPage::family).thenComparing(PseoPage::slug))
-                .limit(Math.max(limit, 0))
-                .toList();
+        if (limit <= 0) {
+            return List.of();
+        }
+        Map<String, List<PseoPage>> byFamily = new LinkedHashMap<>();
+        for (String family : FAMILY_ORDER) {
+            byFamily.put(family, byFamily(family));
+        }
+
+        List<PseoPage> featured = new ArrayList<>();
+        int offset = 0;
+        while (featured.size() < limit) {
+            boolean addedAny = false;
+            for (String family : FAMILY_ORDER) {
+                List<PseoPage> pages = byFamily.getOrDefault(family, List.of());
+                if (offset < pages.size()) {
+                    featured.add(pages.get(offset));
+                    addedAny = true;
+                    if (featured.size() == limit) {
+                        return List.copyOf(featured);
+                    }
+                }
+            }
+            if (!addedAny) {
+                break;
+            }
+            offset++;
+        }
+        return List.copyOf(featured);
     }
 
     public String sitemapXml(String baseUrl) {
+        return sitemapXml(baseUrl, List.of());
+    }
+
+    public String sitemapXml(String baseUrl, List<String> extraPaths) {
         String normalizedBase = normalizeBaseUrl(baseUrl);
         StringBuilder xml = new StringBuilder();
         xml.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
         xml.append("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
         appendUrl(xml, normalizedBase + "/");
-        for (String family : List.of("contaminants", "symptoms", "compares", "triggers")) {
+        for (String family : FAMILY_ORDER) {
             appendUrl(xml, normalizedBase + "/well-water/family/" + family);
         }
         for (PseoPage page : allPages()) {
             appendUrl(xml, normalizedBase + "/well-water/" + page.slug());
+        }
+        for (String path : extraPaths) {
+            if (path == null || path.isBlank()) {
+                continue;
+            }
+            appendUrl(xml, normalizedBase + (path.startsWith("/") ? path : "/" + path));
         }
 
         xml.append("</urlset>");
