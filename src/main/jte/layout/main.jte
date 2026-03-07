@@ -44,7 +44,7 @@
             font-size: 0.85rem;
             margin-right: 6px;
         }
-        input, select, button {
+        input:not([type="checkbox"]), select, button {
             width: 100%;
             margin-top: 8px;
             border: 1px solid var(--border);
@@ -52,6 +52,11 @@
             padding: 10px;
             font: inherit;
             background: #fff;
+        }
+        input[type="checkbox"] {
+            width: auto;
+            margin-right: 6px;
+            margin-top: 0;
         }
         button {
             width: auto;

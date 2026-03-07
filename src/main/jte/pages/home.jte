@@ -4,7 +4,25 @@
 @template.layout.main(title = "Well Water pSEO Hub", robots = "index,follow", description = "Well water guides for contaminants symptoms compares and trigger events.", content = @`
     <section class="panel">
         <h1>Well Water Guides and Next Steps</h1>
-        <p class="muted">MVP focus: high-intent pSEO pages that drive clear next actions.</p>
+        <p class="muted">Decision engine core with pSEO acquisition surface. Use one of the three tool entry modes below.</p>
+    </section>
+
+    <section class="panel">
+        <h2>Decision Engine Entry</h2>
+        <div class="grid">
+            <a class="panel" href="/tool/result-first">
+                <h3>Result-First</h3>
+                <p class="muted">Start from lab result values.</p>
+            </a>
+            <a class="panel" href="/tool/symptom-first">
+                <h3>Symptom-First</h3>
+                <p class="muted">Start from smell/stain/taste symptoms.</p>
+            </a>
+            <a class="panel" href="/tool/trigger-first">
+                <h3>Trigger-First</h3>
+                <p class="muted">Start from flood/repair/wildfire events.</p>
+            </a>
+        </div>
     </section>
 
     <section class="panel">

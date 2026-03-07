@@ -18,6 +18,18 @@
     </section>
 
     <section class="panel">
+        <h2>Run Decision Engine</h2>
+        @if (page.family().equals("symptoms"))
+            <p><a href="/tool/symptom-first?symptom=${page.slug()}&slug=${page.slug()}">Start Symptom-First Tool</a></p>
+        @else if (page.family().equals("triggers"))
+            <p><a href="/tool/trigger-first?trigger=${page.slug()}&slug=${page.slug()}">Start Trigger-First Tool</a></p>
+        @else
+            <p><a href="/tool/result-first?analyte=${page.slug()}">Start Result-First Tool</a></p>
+        @endif
+        <p class="small muted">Engine results are personalized and rendered as noindex pages.</p>
+    </section>
+
+    <section class="panel">
         <h2>Primary Next Step</h2>
         <p><a href="${page.primaryCtaUrl()}">${page.primaryCtaLabel()}</a></p>
     </section>
