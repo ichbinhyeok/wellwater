@@ -92,6 +92,7 @@ public class DecisionRegistryService {
                 parseUrgency(value(cols, idx, "default_urgency")),
                 parseScope(value(cols, idx, "default_scope")),
                 parseActionMode(value(cols, idx, "default_action_mode")),
+                parseListField(value(cols, idx, "unit_whitelist")),
                 parseListField(value(cols, idx, "claim_requirements")),
                 parseListField(value(cols, idx, "sources"))
         );
@@ -208,4 +209,3 @@ public class DecisionRegistryService {
         return out;
     }
 }
-

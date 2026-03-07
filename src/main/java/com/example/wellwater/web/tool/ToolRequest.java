@@ -9,8 +9,14 @@ public class ToolRequest {
     private String analyteName;
     private String resultValue;
     private String unit;
+    private String qualifier;
+    private String qualifierValue;
+    private String sampleDate;
     private String sampleSource;
     private String labCertified;
+    private String state;
+    private String useScope;
+    private String existingTreatment;
     private String symptomFlag;
     private String triggerFlag;
     private boolean infantPresent;
@@ -24,8 +30,14 @@ public class ToolRequest {
                 analyteName,
                 resultValue,
                 unit,
+                qualifier,
+                qualifierValue,
+                sampleDate,
                 sampleSource,
                 labCertified,
+                state,
+                useScope,
+                existingTreatment,
                 symptomFlag,
                 triggerFlag,
                 infantPresent,
@@ -67,6 +79,30 @@ public class ToolRequest {
         this.unit = unit;
     }
 
+    public String getQualifier() {
+        return qualifier;
+    }
+
+    public void setQualifier(String qualifier) {
+        this.qualifier = qualifier;
+    }
+
+    public String getQualifierValue() {
+        return qualifierValue;
+    }
+
+    public void setQualifierValue(String qualifierValue) {
+        this.qualifierValue = qualifierValue;
+    }
+
+    public String getSampleDate() {
+        return sampleDate;
+    }
+
+    public void setSampleDate(String sampleDate) {
+        this.sampleDate = sampleDate;
+    }
+
     public String getSampleSource() {
         return sampleSource;
     }
@@ -81,6 +117,30 @@ public class ToolRequest {
 
     public void setLabCertified(String labCertified) {
         this.labCertified = labCertified;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getUseScope() {
+        return useScope;
+    }
+
+    public void setUseScope(String useScope) {
+        this.useScope = useScope;
+    }
+
+    public String getExistingTreatment() {
+        return existingTreatment;
+    }
+
+    public void setExistingTreatment(String existingTreatment) {
+        this.existingTreatment = existingTreatment;
     }
 
     public String getSymptomFlag() {
@@ -131,4 +191,3 @@ public class ToolRequest {
         this.slugHint = slugHint;
     }
 }
-

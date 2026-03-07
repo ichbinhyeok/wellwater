@@ -75,6 +75,16 @@
     <section class="panel">
         <h2>Cost And Maintenance</h2>
         <p>${result.costNote()}</p>
+        <p class="small">install range: ${result.installRange()}</p>
+        <p class="small">maintenance range: ${result.maintenanceRange()}</p>
+    </section>
+
+    <section class="panel">
+        <h2>Input Quality</h2>
+        <p class="small">sample freshness: ${result.sampleFreshness()}</p>
+        <p class="small">completeness score: ${result.completenessScore()} / 100</p>
+        <p class="small">state guidance: <a href="${result.localGuidanceUrl()}">${result.localGuidanceUrl()}</a></p>
+        <p class="small">certified lab: <a href="${result.certifiedLabUrl()}">${result.certifiedLabUrl()}</a></p>
     </section>
 
     <section class="panel">
@@ -112,4 +122,3 @@
         </ul>
     </section>
 `)
-

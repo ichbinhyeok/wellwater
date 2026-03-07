@@ -5,8 +5,14 @@ public record DecisionInput(
         String analyteName,
         String resultValue,
         String unit,
+        String qualifier,
+        String qualifierValue,
+        String sampleDate,
         String sampleSource,
         String labCertified,
+        String state,
+        String useScope,
+        String existingTreatment,
         String symptomFlag,
         String triggerFlag,
         boolean infantPresent,
@@ -20,6 +26,22 @@ public record DecisionInput(
 
     public String normalizedResultValue() {
         return normalize(resultValue);
+    }
+
+    public String normalizedUnit() {
+        return normalize(unit);
+    }
+
+    public String normalizedQualifier() {
+        return normalize(qualifier);
+    }
+
+    public String normalizedQualifierValue() {
+        return normalize(qualifierValue);
+    }
+
+    public String normalizedSampleDate() {
+        return normalize(sampleDate);
     }
 
     public String normalizedSymptom() {
@@ -38,6 +60,18 @@ public record DecisionInput(
         return normalize(sampleSource);
     }
 
+    public String normalizedState() {
+        return normalize(state);
+    }
+
+    public String normalizedUseScope() {
+        return normalize(useScope);
+    }
+
+    public String normalizedExistingTreatment() {
+        return normalize(existingTreatment);
+    }
+
     private String normalize(String value) {
         if (value == null) {
             return "";
@@ -45,4 +79,3 @@ public record DecisionInput(
         return value.trim().toLowerCase();
     }
 }
-

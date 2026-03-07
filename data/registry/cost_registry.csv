@@ -1,0 +1,7 @@
+problem_type,scope,install_range,maintenance_range,source_url
+microbial,drinking-only,$300 - $3000,$120 - $600 per year,https://www.homeadvisor.com/cost/plumbing/install-a-water-treatment-and-purification-system/
+chemical-health,drinking-only,$400 - $4000,$80 - $500 per year,https://www.homeadvisor.com/cost/plumbing/install-a-water-treatment-and-purification-system/
+chemical-health,whole-house,$2500 - $10000,$200 - $1200 per year,https://www.homeadvisor.com/cost/plumbing/install-a-water-treatment-and-purification-system/
+aesthetic-operational,whole-house,$800 - $4000,$100 - $700 per year,https://homeguide.com/costs/well-water-filtration-system-cost
+corrosion,whole-house,$900 - $6000,$150 - $900 per year,https://www.angi.com/articles/how-much-does-water-treatment-system-cost.htm
+any,any,$800 - $4000,$100 - $800 per year,https://homeguide.com/costs/well-water-filtration-system-cost

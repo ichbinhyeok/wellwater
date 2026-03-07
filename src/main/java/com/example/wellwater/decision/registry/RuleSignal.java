@@ -15,8 +15,8 @@ public record RuleSignal(
         Urgency urgency,
         Scope scope,
         ActionMode actionMode,
+        List<String> unitWhitelist,
         List<String> claimRequirements,
         List<String> sources
 ) {
 }
-

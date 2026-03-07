@@ -2,7 +2,10 @@ package com.example.wellwater.web.tool;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.decision.DecisionEngineService;
+import com.example.wellwater.decision.normalize.DecisionInputNormalizationService;
+import com.example.wellwater.decision.registry.CostRegistryService;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.ui.ExtendedModelMap;
@@ -21,12 +24,16 @@ class ToolControllerTest {
     Path tempDir;
 
     private DecisionEngineService newDecisionEngine() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
         return new DecisionEngineService(
-                new DecisionRegistryService(
-                        "./data/registry/contaminant_registry.csv",
-                        "./data/registry/symptom_registry.csv",
-                        "./data/registry/trigger_registry.csv"
-                )
+                registryService,
+                new DecisionInputNormalizationService(registryService),
+                new CostRegistryService("./data/registry/cost_registry.csv"),
+                new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
         );
     }
 
@@ -43,6 +50,7 @@ class ToolControllerTest {
         assertEquals("pages/intake/result-first", viewName);
         assertNotNull(model.getAttribute("request"));
         assertNotNull(model.getAttribute("analytes"));
+        assertNotNull(model.getAttribute("states"));
     }
 
     @Test
@@ -57,8 +65,13 @@ class ToolControllerTest {
         request.setAnalyteName("nitrate");
         request.setResultValue("14");
         request.setUnit("mg/L");
+        request.setQualifier("none");
+        request.setSampleDate("2026-02-20");
         request.setSampleSource("raw well");
         request.setLabCertified("yes");
+        request.setState("TX");
+        request.setUseScope("drinking-only");
+        request.setExistingTreatment("none");
         request.setInfantPresent(true);
 
         String viewName = controller.decisionResult(request, model);

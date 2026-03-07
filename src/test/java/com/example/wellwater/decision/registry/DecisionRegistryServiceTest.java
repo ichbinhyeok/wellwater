@@ -21,6 +21,7 @@ class DecisionRegistryServiceTest {
         assertTrue(maybe.isPresent());
         assertEquals(Tier.A, maybe.get().tier());
         assertEquals(ProblemType.CHEMICAL_HEALTH, maybe.get().problemType());
+        assertTrue(maybe.get().unitWhitelist().contains("mg/L"));
     }
 
     @Test
@@ -37,4 +38,3 @@ class DecisionRegistryServiceTest {
         assertEquals(Tier.B, maybe.get().tier());
     }
 }
-

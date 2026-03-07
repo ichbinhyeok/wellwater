@@ -165,6 +165,20 @@ public class ToolController {
                 "after-flood", "after-heavy-rain", "after-repair", "after-wildfire",
                 "home-purchase-test", "retest-after-treatment"
         ));
+        model.addAttribute("states", List.of(
+                "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
+                "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
+                "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ",
+                "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC",
+                "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"
+        ));
+        model.addAttribute("qualifiers", List.of(
+                "none", "nd", "less_than", "estimated", "positive", "negative", "unknown"
+        ));
+        model.addAttribute("useScopes", List.of("drinking-only", "whole-house", "both"));
+        model.addAttribute("existingTreatments", List.of(
+                "none", "ro", "uv", "softener", "iron filter", "carbon", "sediment", "unknown"
+        ));
     }
 
     public record RenderableCta(
@@ -174,4 +188,3 @@ public class ToolController {
     ) {
     }
 }
-

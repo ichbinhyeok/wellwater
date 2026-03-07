@@ -19,7 +19,13 @@ public record DecisionResult(
         List<String> thisWeekActions,
         List<String> laterActions,
         List<ScenarioOption> scenarios,
+        String sampleFreshness,
+        int completenessScore,
         String costNote,
+        String installRange,
+        String maintenanceRange,
+        String localGuidanceUrl,
+        String certifiedLabUrl,
         List<String> assumptions,
         List<String> sourcesUsed,
         String disclosureText,
@@ -27,4 +33,3 @@ public record DecisionResult(
         List<CtaLink> ctas
 ) {
 }
-

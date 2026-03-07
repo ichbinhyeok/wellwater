@@ -1,0 +1,9 @@
+state,local_guidance_url,certified_lab_url,source_url
+US,https://www.epa.gov/privatewells,https://www.epa.gov/dwlabcert/contact-information-certification-programs-and-certified-laboratories-drinking-water,https://www.epa.gov/privatewells
+CA,https://www.waterboards.ca.gov/water_issues/programs/gama/docs/wellowner_guide.pdf,https://www.waterboards.ca.gov/drinking_water/certlic/labs/index.html,https://www.waterboards.ca.gov/water_issues/programs/gama/docs/wellowner_guide.pdf
+TX,https://www.twdb.texas.gov/groundwater/data/privwwsamp.asp,https://www.tceq.texas.gov/goto/nelac,https://www.twdb.texas.gov/groundwater/data/privwwsamp.asp
+FL,https://www.floridahealth.gov/environmental-health/private-well-testing/index.html,https://www.floridahealth.gov/environmental-health/private-well-testing/index.html,https://www.floridahealth.gov/environmental-health/private-well-testing/index.html
+PA,https://www.pa.gov/agencies/dep/residents/my-water/private-wells/water-testing,https://www.pa.gov/services/dep/apply-for-laboratory-accreditation,https://www.pa.gov/agencies/dep/residents/my-water/private-wells/water-testing
+NY,https://www.health.ny.gov/privatewells/,https://www.wadsworth.org/regulatory/elap,https://www.health.ny.gov/privatewells/
+MA,https://www.mass.gov/info-details/private-drinking-water-testing-and-the-use-of-massdep-certified-laboratories,https://www.mass.gov/how-to/find-a-certified-laboratory-for-water-testing,https://www.mass.gov/info-details/private-drinking-water-testing-and-the-use-of-massdep-certified-laboratories
+MN,https://www.mda.state.mn.us/es/node/1298,https://www.health.state.mn.us/communities/environment/water/wells/partners/labs.html,https://www.mda.state.mn.us/es/node/1298

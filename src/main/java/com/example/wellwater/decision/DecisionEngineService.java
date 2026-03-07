@@ -11,43 +11,77 @@ import com.example.wellwater.decision.model.Scope;
 import com.example.wellwater.decision.model.ScenarioOption;
 import com.example.wellwater.decision.model.Tier;
 import com.example.wellwater.decision.model.Urgency;
+import com.example.wellwater.decision.normalize.DecisionInputNormalizationService;
+import com.example.wellwater.decision.normalize.DecisionNormalizedInput;
+import com.example.wellwater.decision.normalize.QualifierType;
+import com.example.wellwater.decision.normalize.SampleFreshness;
+import com.example.wellwater.decision.registry.CostProfile;
+import com.example.wellwater.decision.registry.CostRegistryService;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.RuleSignal;
+import com.example.wellwater.decision.registry.StateResource;
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DecisionEngineService {
 
     private final DecisionRegistryService registryService;
+    private final DecisionInputNormalizationService normalizationService;
+    private final CostRegistryService costRegistryService;
+    private final StateResourceRegistryService stateResourceRegistryService;
 
-    public DecisionEngineService(DecisionRegistryService registryService) {
+    public DecisionEngineService(
+            DecisionRegistryService registryService,
+            DecisionInputNormalizationService normalizationService,
+            CostRegistryService costRegistryService,
+            StateResourceRegistryService stateResourceRegistryService
+    ) {
         this.registryService = registryService;
+        this.normalizationService = normalizationService;
+        this.costRegistryService = costRegistryService;
+        this.stateResourceRegistryService = stateResourceRegistryService;
     }
 
     public DecisionResult decide(DecisionInput input) {
-        SignalMatch signal = resolveSignal(input);
+        DecisionNormalizedInput normalized = normalizationService.normalize(input);
+        SignalMatch signal = resolveSignal(normalized);
 
-        Tier tier = resolveTier(signal);
+        Tier tier = resolveTier(input, normalized, signal);
         ProblemType problemType = classifyProblemType(input, tier, signal);
-        Confidence confidence = scoreConfidence(input, tier);
-        Urgency urgency = classifyUrgency(input, tier, problemType, confidence, signal);
-        Scope scope = classifyScope(problemType, signal);
+        Confidence confidence = scoreConfidence(input, tier, normalized);
+        Urgency urgency = classifyUrgency(input, problemType, signal, normalized);
+        Scope scope = classifyScope(input, problemType, signal);
         ActionMode actionMode = classifyActionMode(input, urgency, problemType, signal);
         Branch branch = routeBranch(urgency, confidence, problemType, tier);
 
-        List<String> keyReasons = buildKeyReasons(input, tier, problemType, urgency, signal);
-        List<String> qualityNotes = buildQualityNotes(input, confidence, tier);
+        Optional<StateResource> stateResource = stateResourceRegistryService.findByState(normalized.stateKey());
+        Optional<CostProfile> costProfile = costRegistryService.find(problemType, scope);
+        String installRange = costProfile.map(CostProfile::installRange).orElse("N/A");
+        String maintenanceRange = costProfile.map(CostProfile::maintenanceRange).orElse("N/A");
+        String costNote = buildCostNote(costProfile);
+
+        List<String> keyReasons = buildKeyReasons(input, tier, problemType, urgency, signal, normalized);
+        List<String> qualityNotes = buildQualityNotes(input, confidence, tier, normalized);
         List<String> today = buildTodayActions(branch, actionMode);
-        List<String> thisWeek = buildThisWeekActions(branch, problemType);
+        List<String> thisWeek = buildThisWeekActions(branch, problemType, stateResource);
         List<String> later = buildLaterActions(problemType);
-        List<ScenarioOption> scenarios = buildScenarios(branch, problemType, scope, tier, signal);
+        List<ScenarioOption> scenarios = buildScenarios(branch, problemType, scope, tier, signal, installRange, maintenanceRange);
         List<String> assumptions = buildAssumptions(tier, confidence);
-        List<String> sources = buildSources(problemType, signal);
-        List<CtaLink> ctas = routeCtas(branch);
+        List<String> sources = buildSources(problemType, signal, stateResource, costProfile);
+        List<CtaLink> ctas = routeCtas(branch, stateResource);
+
+        String localGuidanceUrl = stateResource.map(StateResource::localGuidanceUrl)
+                .filter(url -> !url.isBlank())
+                .orElse("https://www.epa.gov/privatewells/protect-your-homes-water");
+        String certifiedLabUrl = stateResource.map(StateResource::certifiedLabUrl)
+                .filter(url -> !url.isBlank())
+                .orElse("https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html");
 
         return new DecisionResult(
                 input.entryMode(),
@@ -66,7 +100,13 @@ public class DecisionEngineService {
                 thisWeek,
                 later,
                 scenarios,
-                "Costs are directional only. Local plumbing, electrical, permit, and labor can change actual pricing.",
+                normalized.sampleFreshness().wireValue(),
+                normalized.completenessScore(),
+                costNote,
+                installRange,
+                maintenanceRange,
+                localGuidanceUrl,
+                certifiedLabUrl,
                 assumptions,
                 sources,
                 "Affiliate links may generate revenue after editorial review. Claims and fit must be verified before purchase.",
@@ -75,21 +115,21 @@ public class DecisionEngineService {
         );
     }
 
-    private SignalMatch resolveSignal(DecisionInput input) {
-        if (!input.normalizedAnalyte().isBlank()) {
-            var maybe = registryService.findContaminant(input.normalizedAnalyte());
+    private SignalMatch resolveSignal(DecisionNormalizedInput normalized) {
+        if (!normalized.analyteKey().isBlank()) {
+            var maybe = registryService.findContaminant(normalized.analyteKey());
             if (maybe.isPresent()) {
                 return new SignalMatch("contaminant", maybe.get());
             }
         }
-        if (!input.normalizedSymptom().isBlank()) {
-            var maybe = registryService.findSymptom(input.normalizedSymptom());
+        if (!normalized.symptomKey().isBlank()) {
+            var maybe = registryService.findSymptom(normalized.symptomKey());
             if (maybe.isPresent()) {
                 return new SignalMatch("symptom", maybe.get());
             }
         }
-        if (!input.normalizedTrigger().isBlank()) {
-            var maybe = registryService.findTrigger(input.normalizedTrigger());
+        if (!normalized.triggerKey().isBlank()) {
+            var maybe = registryService.findTrigger(normalized.triggerKey());
             if (maybe.isPresent()) {
                 return new SignalMatch("trigger", maybe.get());
             }
@@ -97,7 +137,15 @@ public class DecisionEngineService {
         return new SignalMatch("fallback", null);
     }
 
-    private Tier resolveTier(SignalMatch signal) {
+    private Tier resolveTier(DecisionInput input, DecisionNormalizedInput normalized, SignalMatch signal) {
+        if (input.entryMode().wireValue().equals("result-first")) {
+            if (!normalized.unitSupported()) {
+                return Tier.C;
+            }
+            if (normalized.sampleFreshness() == SampleFreshness.STALE) {
+                return Tier.C;
+            }
+        }
         if (signal.signal() != null) {
             return signal.signal().tier();
         }
@@ -117,7 +165,7 @@ public class DecisionEngineService {
         return ProblemType.AESTHETIC_OPERATIONAL;
     }
 
-    private Confidence scoreConfidence(DecisionInput input, Tier tier) {
+    private Confidence scoreConfidence(DecisionInput input, Tier tier, DecisionNormalizedInput normalized) {
         int score = 0;
         if (tier == Tier.A) {
             score += 2;
@@ -135,10 +183,27 @@ public class DecisionEngineService {
         } else if ("unknown".equals(input.normalizedSampleSource()) || input.normalizedSampleSource().isBlank()) {
             score -= 1;
         }
+        if (normalized.sampleFreshness() == SampleFreshness.AGING) {
+            score -= 1;
+        } else if (normalized.sampleFreshness() == SampleFreshness.STALE) {
+            score -= 2;
+        }
+        if (!normalized.unitSupported()) {
+            score -= 2;
+        }
+        if (normalized.qualifierType() == QualifierType.UNKNOWN) {
+            score -= 1;
+        }
+        if (normalized.completenessScore() < 70) {
+            score -= 1;
+        }
         if (tier == Tier.C) {
             score -= 1;
         }
         if (input.normalizedTrigger().contains("flood") || input.normalizedTrigger().contains("wildfire")) {
+            score -= 1;
+        }
+        if ("treated tap".equals(input.normalizedSampleSource()) && !input.normalizedExistingTreatment().isBlank()) {
             score -= 1;
         }
         if (score >= 3) {
@@ -150,12 +215,12 @@ public class DecisionEngineService {
         return Confidence.LOW;
     }
 
-    private Urgency classifyUrgency(DecisionInput input, Tier tier, ProblemType problemType, Confidence confidence, SignalMatch signal) {
-        String analyte = input.normalizedAnalyte();
-        String trigger = input.normalizedTrigger();
-        String resultValue = input.normalizedResultValue();
+    private Urgency classifyUrgency(DecisionInput input, ProblemType problemType, SignalMatch signal, DecisionNormalizedInput normalized) {
+        String analyte = normalized.analyteKey();
+        String trigger = normalized.triggerKey();
+
         if ((analyte.contains("coliform") || analyte.contains("e. coli") || analyte.contains("e coli"))
-                && (resultValue.contains("positive") || resultValue.contains("detected"))) {
+                && normalized.qualifierType() == QualifierType.POSITIVE) {
             return Urgency.IMMEDIATE;
         }
         if (analyte.equals("nitrate") && (input.infantPresent() || input.pregnancyPresent())) {
@@ -170,13 +235,21 @@ public class DecisionEngineService {
         if (problemType == ProblemType.MICROBIAL || problemType == ProblemType.CHEMICAL_HEALTH) {
             return Urgency.PROMPT;
         }
-        if (tier == Tier.C || confidence == Confidence.LOW) {
+        if (normalized.sampleFreshness() == SampleFreshness.STALE) {
             return Urgency.PROMPT;
         }
         return Urgency.ROUTINE;
     }
 
-    private Scope classifyScope(ProblemType problemType, SignalMatch signal) {
+    private Scope classifyScope(DecisionInput input, ProblemType problemType, SignalMatch signal) {
+        if (!input.normalizedUseScope().isBlank()) {
+            return switch (input.normalizedUseScope()) {
+                case "drinking-only", "drinking only" -> Scope.DRINKING_ONLY;
+                case "whole-house", "whole house" -> Scope.WHOLE_HOUSE;
+                case "both" -> Scope.BOTH;
+                default -> Scope.UNCLEAR;
+            };
+        }
         if (signal.signal() != null && signal.signal().scope() != Scope.UNCLEAR) {
             return signal.signal().scope();
         }
@@ -246,40 +319,54 @@ public class DecisionEngineService {
         return "You can evaluate treatment options, but keep verification and claim checks in the loop.";
     }
 
-    private List<String> buildKeyReasons(DecisionInput input, Tier tier, ProblemType type, Urgency urgency, SignalMatch signal) {
+    private List<String> buildKeyReasons(
+            DecisionInput input,
+            Tier tier,
+            ProblemType type,
+            Urgency urgency,
+            SignalMatch signal,
+            DecisionNormalizedInput normalized
+    ) {
         List<String> reasons = new ArrayList<>();
         if (signal.signal() != null) {
             reasons.add("Registry-matched " + signal.sourceType() + " signal: " + signal.signal().key() + ".");
         } else {
             reasons.add("No direct registry match. Conservative fallback routing was applied.");
         }
-        reasons.add("Support level resolved as " + tier.label() + " based on current analyte/symptom/trigger signal.");
+        reasons.add("Support level resolved as " + tier.label() + " with completeness score " + normalized.completenessScore() + ".");
         reasons.add("Problem type classified as " + type.wireValue() + " with urgency set to " + urgency.wireValue() + ".");
         if (input.infantPresent() || input.pregnancyPresent()) {
             reasons.add("Vulnerable household flag raises priority for drinking-water safety actions.");
         }
-        if (reasons.size() < 3) {
-            reasons.add("Recommendation order follows safety-before-commerce and claim-first policy.");
-        }
         return reasons;
     }
 
-    private List<String> buildQualityNotes(DecisionInput input, Confidence confidence, Tier tier) {
+    private List<String> buildQualityNotes(
+            DecisionInput input,
+            Confidence confidence,
+            Tier tier,
+            DecisionNormalizedInput normalized
+    ) {
         List<String> notes = new ArrayList<>();
+        if (!normalized.unitSupported() && input.entryMode().wireValue().equals("result-first")) {
+            notes.add("Unit is missing or unsupported for this analyte. Tier is downgraded.");
+        }
+        if (normalized.sampleFreshness() == SampleFreshness.STALE) {
+            notes.add("Sample is stale. Retest is required before strong recommendations.");
+        } else if (normalized.sampleFreshness() == SampleFreshness.AGING) {
+            notes.add("Sample is aging. Confirm with a newer sample if risk context is high.");
+        }
         if (!"yes".equals(input.normalizedLabCertified())) {
             notes.add("Certified lab status is not confirmed. Confidence is reduced.");
         }
-        if (input.normalizedResultValue().isBlank() && input.entryMode().wireValue().equals("result-first")) {
-            notes.add("Result value is missing for result-first flow.");
+        if (normalized.qualifierType() == QualifierType.UNKNOWN) {
+            notes.add("Result qualifier is unclear. Interpret with caution.");
         }
         if (tier == Tier.C) {
             notes.add("This signal is outside strong support coverage. Refer-out or assisted guidance is safer.");
         }
         if (confidence == Confidence.LOW) {
             notes.add("Low confidence: prioritize retest and local guidance before product decisions.");
-        }
-        if (notes.isEmpty()) {
-            notes.add("Input quality is sufficient for a directional recommendation.");
         }
         return notes;
     }
@@ -300,7 +387,7 @@ public class DecisionEngineService {
         return actions;
     }
 
-    private List<String> buildThisWeekActions(Branch branch, ProblemType type) {
+    private List<String> buildThisWeekActions(Branch branch, ProblemType type, Optional<StateResource> stateResource) {
         List<String> actions = new ArrayList<>();
         actions.add("Run or schedule certified testing for confirmation.");
         if (type == ProblemType.CORROSION) {
@@ -310,6 +397,11 @@ public class DecisionEngineService {
         } else {
             actions.add("Coordinate local guidance where event or health context is involved.");
         }
+        stateResource.ifPresent(resource -> {
+            if (!resource.localGuidanceUrl().isBlank()) {
+                actions.add("State guidance available: " + resource.localGuidanceUrl());
+            }
+        });
         if (branch != Branch.GREEN) {
             actions.add("Keep commerce decisions secondary until confidence improves.");
         }
@@ -327,11 +419,20 @@ public class DecisionEngineService {
         return actions;
     }
 
-    private List<ScenarioOption> buildScenarios(Branch branch, ProblemType type, Scope scope, Tier tier, SignalMatch signal) {
+    private List<ScenarioOption> buildScenarios(
+            Branch branch,
+            ProblemType type,
+            Scope scope,
+            Tier tier,
+            SignalMatch signal,
+            String installRange,
+            String maintenanceRange
+    ) {
         List<ScenarioOption> out = new ArrayList<>();
         List<String> claims = signal.signal() == null || signal.signal().claimRequirements().isEmpty()
                 ? List.of("target contaminant reduction claim", "certified method fit")
                 : signal.signal().claimRequirements();
+
         out.add(new ScenarioOption(
                 "verify-first",
                 "Verify First",
@@ -346,35 +447,19 @@ public class DecisionEngineService {
                 "certified_lab"
         ));
 
-        if (type == ProblemType.AESTHETIC_OPERATIONAL || type == ProblemType.CORROSION || scope == Scope.WHOLE_HOUSE) {
-            out.add(new ScenarioOption(
-                    "whole-house",
-                    "Whole-House Treatment Path",
-                    "whole-house-treatment",
-                    "Useful when symptoms impact multiple fixtures and operations.",
-                    "Higher install complexity and maintenance load.",
-                    "whole-house",
-                    claims,
-                    "$900 - $4,000+",
-                    "$120 - $600/year",
-                    "Compare categories by claim and maintenance pattern.",
-                    "category_compare"
-            ));
-        } else {
-            out.add(new ScenarioOption(
-                    "drinking-only",
-                    "Drinking-Only Protection",
-                    "drinking-protection",
-                    "Useful for exposure control before broad system decisions.",
-                    "Does not address non-drinking fixture issues.",
-                    "drinking-only",
-                    claims,
-                    "$150 - $900",
-                    "$60 - $240/year",
-                    "Use claim-based filtering for drinking use first.",
-                    "category_compare"
-            ));
-        }
+        out.add(new ScenarioOption(
+                scope == Scope.WHOLE_HOUSE ? "whole-house" : "drinking-only",
+                scope == Scope.WHOLE_HOUSE ? "Whole-House Treatment Path" : "Drinking-Only Protection",
+                scope == Scope.WHOLE_HOUSE ? "whole-house-treatment" : "drinking-protection",
+                "Use claim-based selection tied to your current problem type and support level.",
+                "Do not skip verification and local guidance when confidence is low.",
+                scope.wireValue(),
+                claims,
+                installRange,
+                maintenanceRange,
+                "Compare categories by claim and maintenance profile.",
+                "category_compare"
+        ));
 
         if (branch != Branch.GREEN || tier != Tier.A) {
             out.add(new ScenarioOption(
@@ -395,42 +480,67 @@ public class DecisionEngineService {
     }
 
     private List<String> buildAssumptions(Tier tier, Confidence confidence) {
-        List<String> assumptions = new ArrayList<>();
-        assumptions.add("This output is educational decision support and not legal/medical advice.");
-        assumptions.add("Support level is currently " + tier.label() + " and confidence is " + confidence.label() + ".");
-        assumptions.add("Model/claim verification is required before any final purchase.");
-        return assumptions;
+        return List.of(
+                "This output is educational decision support and not legal/medical advice.",
+                "Support level is currently " + tier.label() + " and confidence is " + confidence.label() + ".",
+                "Model/claim verification is required before any final purchase."
+        );
     }
 
-    private List<String> buildSources(ProblemType type, SignalMatch signal) {
+    private String buildCostNote(Optional<CostProfile> profile) {
+        if (profile.isPresent()) {
+            return "Directional estimate from registry. Install: " + profile.get().installRange()
+                    + ", maintenance: " + profile.get().maintenanceRange()
+                    + ". Local labor, permit, and system complexity can change actual pricing.";
+        }
+        return "Costs are directional only. Local plumbing, electrical, permit, and labor can change actual pricing.";
+    }
+
+    private List<String> buildSources(
+            ProblemType type,
+            SignalMatch signal,
+            Optional<StateResource> stateResource,
+            Optional<CostProfile> costProfile
+    ) {
         LinkedHashSet<String> sources = new LinkedHashSet<>();
         if (signal.signal() != null) {
             sources.addAll(signal.signal().sources());
         }
+        stateResource.map(StateResource::sourceUrl)
+                .filter(url -> !url.isBlank())
+                .ifPresent(sources::add);
+        costProfile.map(CostProfile::sourceUrl)
+                .filter(url -> !url.isBlank())
+                .ifPresent(sources::add);
+
         sources.add("https://www.epa.gov/privatewells");
         sources.add("https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html");
         if (type == ProblemType.CHEMICAL_HEALTH) {
             sources.add("https://www.epa.gov/sdwa/drinking-water-regulations-and-contaminants");
         }
-        if (signal.signal() != null && signal.signal().key().contains("wildfire")) {
-            sources.add("https://www.cdc.gov/environmental-health-services/php/water/private-wells-after-a-wildfire.html");
-        }
         return new ArrayList<>(sources);
     }
 
-    private List<CtaLink> routeCtas(Branch branch) {
+    private List<CtaLink> routeCtas(Branch branch, Optional<StateResource> stateResource) {
+        String localGuidanceUrl = stateResource.map(StateResource::localGuidanceUrl)
+                .filter(url -> !url.isBlank())
+                .orElse("https://www.epa.gov/privatewells/protect-your-homes-water");
+        String certifiedLabUrl = stateResource.map(StateResource::certifiedLabUrl)
+                .filter(url -> !url.isBlank())
+                .orElse("https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html");
+
         if (branch == Branch.RED) {
             return List.of(
                     new CtaLink("action_guide", "Review Immediate Action Guidance", "https://www.cdc.gov/water-emergency/about/drinking-water-advisories-an-overview.html"),
-                    new CtaLink("local_guidance", "Find Local Guidance / Certified Lab", "https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html"),
-                    new CtaLink("retest", "Plan Retest Sequence", "https://www.cdc.gov/drinking-water/safety/guidelines-for-treating-well-water.html"),
-                    new CtaLink("category_compare", "Compare Treatment Categories", "/well-water/family/compares")
+                    new CtaLink("local_guidance", "Check State / Local Guidance", localGuidanceUrl),
+                    new CtaLink("certified_lab", "Find Certified Lab", certifiedLabUrl),
+                    new CtaLink("category_compare", "Compare Treatment Categories (After Safety Steps)", "/well-water/family/compares")
             );
         }
         if (branch == Branch.AMBER) {
             return List.of(
-                    new CtaLink("retest", "Get Better Data First", "https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html"),
-                    new CtaLink("local_guidance", "Check Local Guidance", "https://www.epa.gov/privatewells/protect-your-homes-water"),
+                    new CtaLink("retest", "Get Better Data First", certifiedLabUrl),
+                    new CtaLink("local_guidance", "Check State / Local Guidance", localGuidanceUrl),
                     new CtaLink("inspect_source", "Inspect Source / System Conditions", "/well-water/family/triggers"),
                     new CtaLink("category_compare", "Compare Categories (Secondary)", "/well-water/family/compares")
             );
@@ -438,7 +548,7 @@ public class DecisionEngineService {
         return List.of(
                 new CtaLink("category_compare", "Compare Treatment Categories", "/well-water/family/compares"),
                 new CtaLink("local_quote", "Get Local Quote Context", "https://www.google.com/search?q=well+water+treatment+professional+near+me"),
-                new CtaLink("save_report", "Retest and Verify Over Time", "https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html")
+                new CtaLink("save_report", "Retest and Verify Over Time", certifiedLabUrl)
         );
     }
 
@@ -448,3 +558,4 @@ public class DecisionEngineService {
     ) {
     }
 }
+
