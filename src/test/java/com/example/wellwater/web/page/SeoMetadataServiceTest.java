@@ -2,6 +2,7 @@ package com.example.wellwater.web.page;
 
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
+import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,8 @@ class SeoMetadataServiceTest {
     private final PseoCatalogService catalogService = new PseoCatalogService("./data/pseo/pages.csv");
     private final PseoExperienceService experienceService = new PseoExperienceService(
             catalogService,
-            new PseoCitationRegistryService("./data/pseo/page_sources.csv")
+            new PseoCitationRegistryService("./data/pseo/page_sources.csv"),
+            new PseoDecisionDocService()
     );
     private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://wellwater.example");
     private final TrustPageService trustPageService = new TrustPageService();
@@ -26,6 +28,14 @@ class SeoMetadataServiceTest {
         assertEquals(3, metadata.breadcrumbs().size());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Article\"")));
+    }
+
+    @Test
+    void decisionDocPagesEmitFaqStructuredData() {
+        SeoMetadata metadata = seoMetadataService.detail(experienceService.detailView("nitrate").orElseThrow());
+
+        assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"FAQPage\"")));
+        assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Question\"")));
     }
 
     @Test

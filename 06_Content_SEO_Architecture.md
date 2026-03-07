@@ -1,202 +1,175 @@
-# 문서 6. Content & SEO Architecture
+﻿# Content And SEO Architecture
 
-## 1. 목적
+## 1. Goal
 
-이 문서는 public indexable surface를 설계한다.  
-제품 엔진의 전체 범위와 SEO 공개 범위를 구분하는 것이 핵심이다.
+The indexable surface exists to win problem-intent search and hand the user into a decision path.
 
-## 2. SEO 기본 원칙
+This repo is not trying to rank broad product-review queries first.
+It is trying to rank situation queries where the user needs the next safe step.
 
-- broad review SEO를 피한다.
-- problem-intent SEO를 잡는다.
-- tool은 traffic page가 아니라 conversion engine이다.
-- symptom / contaminant / trigger / compare 페이지가 유입 엔진이다.
-- result pages는 개인화 asset이므로 기본 noindex다.
+## 2. Surface Split
 
-## 3. 핵심 query family
+### Indexable public surface
+- `/`
+- `/well-water/family/{family}`
+- `/well-water/{slug}`
+- `/trust`
+- `/trust/{slug}`
 
-### Family A. 결과 해석형
-- well water test results
-- interpret well water lab report
-- high nitrate well water
-- positive coliform well water
-- arsenic in well water what to do
+### Noindex decision surface
+- `/tool/result-first`
+- `/tool/symptom-first`
+- `/tool/trigger-first`
+- `/tool/result`
 
-### Family B. 증상형
-- rotten egg smell well water
-- orange stains well water
-- black stains well water
-- metallic taste well water
-- cloudy well water
-- scale buildup well water
+Public pages orient the situation.
+Noindex result pages do the more personalized reasoning.
 
-### Family C. 비교형
-- UV vs RO for well water
-- softener vs iron filter
-- whole-house vs under-sink RO
-- test kit vs certified lab
-- best treatment for high iron well water
+## 3. Current Page Families
 
-### Family D. 사건형
-- after flood well water test
+### Contaminants
+Use when the user already has a named analyte or lab line.
+Examples:
+- nitrate
+- arsenic
+- coliform
+- PFAS
+- radon
+- pH
+
+### Symptoms
+Use when the user only has visible or sensory clues.
+Examples:
+- rotten egg smell
+- orange stains
+- black stains
+- metallic taste
+- cloudy water
+- blue-green stains
+
+### Triggers
+Use when the decision changes because of an event.
+Examples:
+- after flood
+- after repair
+- home purchase test
 - retest after treatment
-- new house with well water
-- well water changed taste or smell
-- after well repair test
+- after wildfire
+- after power outage
 
-## 4. 초기 indexable surface
+### Compares
+Use when the user is close to a category choice, not a generic product search.
+Examples:
+- UV vs chlorination
+- RO vs adsorptive media for arsenic
+- acid neutralizer vs soda ash
+- carbon vs RO
+- point-of-entry vs point-of-use
 
-초기 공개는 35~45페이지를 목표로 한다.
+### Regional
+Use when geology, state testing pathways, or local rules change the correct next action.
+Examples:
+- New Hampshire arsenic
+- New Jersey PWTA
+- Florida sulfur smell
+- Connecticut low pH
+- New York PFAS
 
-### 4-1. Hub
-- /well-water-test-results/
-- /well-water-treatment-selector/
+### Authority
+Use when the user needs a trust-building or claim-check document.
+Examples:
+- how to read a well-water lab report
+- when not to buy treatment yet
+- how to verify water treatment claims
+- private well sampling mistakes that break results
 
-### 4-2. Contaminants
-- /well-water/nitrate/
-- /well-water/arsenic/
-- /well-water/coliform/
-- /well-water/e-coli/
-- /well-water/iron/
-- /well-water/manganese/
-- /well-water/hardness/
-- /well-water/ph/
-- /well-water/tds/
-- /well-water/sulfate/
+## 4. Current Inventory
 
-### 4-3. Symptoms
-- /well-water/rotten-egg-smell/
-- /well-water/orange-stains/
-- /well-water/black-stains/
-- /well-water/metallic-taste/
-- /well-water/cloudy-water/
-- /well-water/scale-buildup/
+Current pSEO inventory:
+- contaminants: 22
+- symptoms: 14
+- compares: 16
+- triggers: 12
+- regional: 15
+- authority: 19
 
-### 4-4. Compare
-- /well-water/uv-vs-ro/
-- /well-water/softener-vs-iron-filter/
-- /well-water/whole-house-vs-under-sink-ro/
-- /well-water/test-kit-vs-certified-lab/
-- /well-water/iron-filter-vs-softener/
+Total pSEO pages: 98
 
-### 4-5. Situations / Triggers
-- /well-water/after-flood/
-- /well-water/after-heavy-rain/
-- /well-water/after-repair/
-- /well-water/home-purchase-test/
-- /well-water/retest-after-treatment/
+## 5. Internal Link Logic
 
-### 4-6. Trust / Methodology
-- /well-water/how-it-works/
-- /well-water/methodology/
-- /well-water/state-certified-labs/
-- /well-water/what-we-can-and-cannot-tell-you/
+The site should behave like a graph, not a pile of isolated pages.
 
-## 5. 페이지 템플릿
+Current link directions:
+- family hub -> detail page
+- detail page -> tool handoff
+- detail page -> related pages
+- detail page -> internal compare path
+- regional page -> matching contaminant, symptom, compare, and authority pages
+- authority page -> matching compare pages or core cluster pages
 
-## 5-1. Symptom page
-구조:
-1. 문제 정의
-2. 가능한 원인
-3. 언제 바로 검사해야 하는가
-4. 권장 검사 항목
-5. risk vs nuisance framing
-6. result tool CTA
-7. 관련 treatment / compare 링크
+## 6. Commercial Positioning
 
-## 5-2. Contaminant page
-구조:
-1. 이것이 무엇인가
-2. health vs nuisance 구분
-3. 검사 결과가 의미하는 것
-4. typical next actions
-5. treatment category landscape
-6. verify/retest guidance
-7. tool CTA
+The commercial layer is currently internal-first.
 
-## 5-3. Trigger page
-구조:
-1. 왜 이 사건이 중요한가
-2. 오늘 해야 할 일
-3. 무엇을 검사할 것인가
-4. boil/do-not-boil ambiguity 해소
-5. result tool CTA
-6. local guidance CTA
+That means:
+- public pages do not jump straight to vendor pages
+- money CTAs now point to internal compare or authority surfaces
+- testing and verification come before vendor routing
+- lead capture remains live where the page has enough intent and trust
 
-## 5-4. Compare page
-구조:
-1. 언제 A가 맞는가
-2. 언제 B가 맞는가
-3. whole-house vs drinking-only
-4. maintenance 차이
-5. cost direction
-6. claim check
-7. path chooser CTA
+This is intentional.
+Until verified partners exist, internal compare pages are the correct commercial bridge.
 
-## 5-5. Methodology/Trust page
-구조:
-1. benchmark vs compliance
-2. supported / assisted / refer-out
-3. claim-based recommendation
-4. local guidance routing
-5. disclosure
+## 7. Core Decision-Doc Layer
 
-## 6. 내부 링크 구조
+The highest-intent public pages now carry deeper answer blocks:
+- one-line call
+- health vs nuisance split
+- retest timing
+- three actions before buying
+- common confusions
+- FAQ
 
-- symptom → testing → tool
-- trigger → testing/local guidance → tool
-- contaminant → tool / compare / treatment
-- compare → tool / category pages
-- methodology → tool
-- 결과 페이지 → 관련 static pages + save/PDF
+Current core set:
+- rotten-egg-smell
+- orange-stains
+- black-stains
+- cloudy-water
+- metallic-taste
+- after-flood
+- after-repair
+- home-purchase-test
+- retest-after-treatment
+- nitrate
+- coliform
+- arsenic
 
-## 7. index / noindex 원칙
+## 8. Structured Search Signals
 
-### index
-- static pages
-- hub pages
-- compare pages
-- methodology pages
+Public pages currently include:
+- canonical URL
+- breadcrumb markup
+- JSON-LD
 
-### noindex
-- personalized result pages
-- temporary share links
-- thin pagination / search results
-- low-information landing variants
+Trust pages use static page markup.
+Detail pages use structured data tied to the page context and breadcrumb hierarchy.
 
-## 8. pSEO 확장 규칙
+## 9. Content Rule
 
-초기에는 무리한 대량 생성 금지.  
-확장은 아래 세 축까지만 허용한다.
+Do not grow by cloning state names or swapping nouns in thin templates.
 
-1. symptom × situation
-2. contaminant × treatment
-3. symptom × treatment
+A new page family or page variant is justified only when:
+- the query intent is distinct
+- the next action changes
+- the evidence hierarchy changes
+- the page can link into a meaningful cluster
 
-예:
-- rotten-egg-smell-after-rain
-- nitrate-treatment-options
-- orange-stains-vs-iron-filter
+## 10. Near-Term Growth Rule
 
-확장 조건:
-- 고유 query intent가 명확할 것
-- static template를 넘는 실질 차이가 있을 것
-- 동일한 CTA/본문만 바꾼 thin page가 아닐 것
+The next content gains should come from:
+- deepening high-intent pages
+- adding scenario-specific compare pages
+- expanding state clusters where the next action genuinely changes
+- adding authority pages that unlock partner trust later
 
-## 9. 콘텐츠 운영 원칙
-
-- explanation 먼저, commerce 나중
-- “best” 남발 금지
-- 한 페이지에서 health와 nuisance를 섞더라도 위계가 분명해야 함
-- methodology page를 숨기지 말 것
-- unsupported 페이지도 trust asset이 될 수 있음
-
-## 10. 측정 항목
-
-- page family별 sessions
-- family별 CTR
-- symptom → tool click
-- trigger → local guidance click
-- contaminant → scenario compare click
-- compare page → CTA click
-- methodology page 도달률
+The next gains should not come from broad generic affiliate pages.

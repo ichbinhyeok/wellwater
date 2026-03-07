@@ -33,6 +33,32 @@ public class PseoExperienceService {
     private static final Set<String> STOP_WORDS = Set.of(
             "in", "well", "water", "for", "and", "the", "to", "what", "how", "from", "with", "after", "vs", "guide", "next", "steps", "first"
     );
+    private static final List<String> HOME_PRIORITY_SLUGS = List.of(
+            "rotten-egg-smell",
+            "orange-stains",
+            "cloudy-water",
+            "after-flood",
+            "home-purchase-test",
+            "nitrate",
+            "arsenic",
+            "coliform",
+            "ph",
+            "pfas",
+            "test-kit-vs-certified-lab",
+            "new-jersey-pwta-private-well-testing",
+            "connecticut-low-ph-blue-green-stains",
+            "new-york-pfas-private-wells",
+            "private-well-sampling-mistakes-that-break-results",
+            "how-to-read-a-well-water-lab-report"
+    );
+    private static final Map<String, List<String>> FAMILY_STARTER_SLUGS = Map.of(
+            "contaminants", List.of("nitrate", "arsenic", "coliform"),
+            "symptoms", List.of("rotten-egg-smell", "orange-stains", "cloudy-water"),
+            "compares", List.of("test-kit-vs-certified-lab", "uv-vs-chlorination", "whole-house-vs-under-sink-ro"),
+            "triggers", List.of("after-flood", "home-purchase-test", "retest-after-treatment"),
+            "regional", List.of("new-hampshire-arsenic-well-water", "new-jersey-pwta-private-well-testing", "florida-rotten-egg-smell-well-water"),
+            "authority", List.of("how-to-read-a-well-water-lab-report", "when-not-to-buy-treatment-yet", "private-well-sampling-mistakes-that-break-results")
+    );
     private static final Map<String, Set<String>> CLUSTER_COMPANIONS = Map.ofEntries(
             Map.entry("new-hampshire-arsenic-well-water", Set.of("arsenic", "radon", "uranium", "test-kit-vs-certified-lab", "mail-in-lab-vs-local-certified-lab", "ro-vs-adsorptive-media-for-arsenic", "arsenic-bedrock-testing-checklist", "private-well-home-sale-testing-by-state", "home-sale-private-well-testing-checklist")),
             Map.entry("new-jersey-pwta-private-well-testing", Set.of("home-purchase-test", "mail-in-lab-vs-local-certified-lab", "test-kit-vs-certified-lab", "pfas", "arsenic", "private-well-home-sale-testing-by-state", "new-jersey-pwta-vs-full-household-panel", "private-well-sampling-mistakes-that-break-results", "home-sale-private-well-testing-checklist")),
@@ -62,18 +88,48 @@ public class PseoExperienceService {
 
     private final PseoCatalogService catalogService;
     private final PseoCitationRegistryService citationRegistryService;
+    private final PseoDecisionDocService decisionDocService;
 
-    public PseoExperienceService(PseoCatalogService catalogService, PseoCitationRegistryService citationRegistryService) {
+    public PseoExperienceService(
+            PseoCatalogService catalogService,
+            PseoCitationRegistryService citationRegistryService,
+            PseoDecisionDocService decisionDocService
+    ) {
         this.catalogService = catalogService;
         this.citationRegistryService = citationRegistryService;
+        this.decisionDocService = decisionDocService;
     }
 
     public Optional<PseoDetailView> detailView(String slug) {
         return catalogService.findBySlug(slug).map(page -> toDetailView(page, catalogService.allPages()));
     }
 
+    public List<PseoPage> priorityPages(int limit) {
+        if (limit <= 0) {
+            return List.of();
+        }
+        List<PseoPage> allPages = catalogService.allPages();
+        LinkedHashMap<String, PseoPage> bySlug = allPages.stream()
+                .collect(Collectors.toMap(PseoPage::slug, page -> page, (left, right) -> left, LinkedHashMap::new));
+
+        List<PseoPage> ordered = new ArrayList<>();
+        addBySlugOrder(ordered, bySlug, HOME_PRIORITY_SLUGS, limit);
+        if (ordered.size() < limit) {
+            addUnique(ordered, allPages.stream()
+                    .filter(page -> decisionDocService.findBySlug(page.slug()).isPresent())
+                    .toList(), limit);
+        }
+        if (ordered.size() < limit) {
+            addUnique(ordered, catalogService.featured(limit * 2), limit);
+        }
+        return List.copyOf(ordered);
+    }
+
     public PseoFamilyView familyView(String family, List<PseoPage> pages) {
         int size = pages == null ? 0 : pages.size();
+        List<PseoPage> starterPages = familyStarterPages(family, pages);
+        List<String> commonMistakes = familyCommonMistakes(family);
+        List<String> beforeToolChecks = familyBeforeToolChecks(family);
         return switch (family) {
             case "contaminants" -> new PseoFamilyView(
                     family,
@@ -81,7 +137,10 @@ public class PseoExperienceService {
                     "Named-analyte pages for health, corrosion, and nuisance interpretation before the tool takes over.",
                     size + " pages aimed at result interpretation, confirmatory testing, and scope decisions.",
                     "Start From Lab Results",
-                    "/tool/result-first"
+                    "/tool/result-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             case "symptoms" -> new PseoFamilyView(
                     family,
@@ -89,7 +148,10 @@ public class PseoExperienceService {
                     "Pages for odor, stains, taste, residue, and other visible clues when clean lab data is missing.",
                     size + " pages aimed at diagnostic thinking before anyone buys the wrong category.",
                     "Start From Symptoms",
-                    "/tool/symptom-first"
+                    "/tool/symptom-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             case "compares" -> new PseoFamilyView(
                     family,
@@ -97,7 +159,10 @@ public class PseoExperienceService {
                     "Category-vs-category pages built to slow premature buying and force better scope and claim checks.",
                     size + " pages comparing product paths without pretending every problem has the same fix.",
                     "Start From Lab Results",
-                    "/tool/result-first"
+                    "/tool/result-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             case "triggers" -> new PseoFamilyView(
                     family,
@@ -105,7 +170,10 @@ public class PseoExperienceService {
                     "Event-driven pages for flood, repair, vacancy, wildfire, and other moments when retest timing matters.",
                     size + " pages aimed at response order, retest timing, and escalation logic.",
                     "Start From Recent Trigger",
-                    "/tool/trigger-first"
+                    "/tool/trigger-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             case "regional" -> new PseoFamilyView(
                     family,
@@ -113,7 +181,10 @@ public class PseoExperienceService {
                     "State-specific pages that connect geology, regulation, and local testing pathways to a practical next step.",
                     size + " pages aimed at location-shaped search intent rather than generic national answers.",
                     "Start With Your State Context",
-                    "/tool/result-first"
+                    "/tool/result-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             case "authority" -> new PseoFamilyView(
                     family,
@@ -121,7 +192,10 @@ public class PseoExperienceService {
                     "Support articles that explain how to read reports, verify claims, and avoid bad testing and buying assumptions.",
                     size + " pages aimed at trust, method clarity, and stronger internal support for money pages.",
                     "Open Decision Tool",
-                    "/tool/result-first"
+                    "/tool/result-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
             default -> new PseoFamilyView(
                     family,
@@ -129,7 +203,10 @@ public class PseoExperienceService {
                     "Indexable well-water guide family.",
                     size + " pages in this family.",
                     "Open Tool",
-                    "/tool/result-first"
+                    "/tool/result-first",
+                    starterPages,
+                    commonMistakes,
+                    beforeToolChecks
             );
         };
     }
@@ -148,6 +225,7 @@ public class PseoExperienceService {
                 doNotBuyYet(page, riskLens),
                 entryHint,
                 quickAnswers(page, riskLens, entryHint),
+                decisionDocService.findBySlug(page.slug()).orElse(null),
                 relatedSections(page, allPages, riskLens),
                 citations(page)
         );
@@ -308,6 +386,100 @@ public class PseoExperienceService {
                 new PseoQuickAnswer("Do not buy yet", doNotBuyYet(page, riskLens)),
                 new PseoQuickAnswer(entryHint.label(), entryHint.reason())
         );
+    }
+
+    private List<PseoPage> familyStarterPages(String family, List<PseoPage> pages) {
+        if (pages == null || pages.isEmpty()) {
+            return List.of();
+        }
+        LinkedHashMap<String, PseoPage> bySlug = pages.stream()
+                .collect(Collectors.toMap(PseoPage::slug, page -> page, (left, right) -> left, LinkedHashMap::new));
+        List<PseoPage> starters = new ArrayList<>();
+        addBySlugOrder(starters, bySlug, FAMILY_STARTER_SLUGS.getOrDefault(family, List.of()), 3);
+        if (starters.size() < 3) {
+            addUnique(starters, pages, 3);
+        }
+        return List.copyOf(starters);
+    }
+
+    private List<String> familyCommonMistakes(String family) {
+        return switch (family) {
+            case "contaminants" -> List.of(
+                    "Treating one analyte name like a complete treatment verdict.",
+                    "Skipping use-case scope and assuming every issue is whole-house.",
+                    "Letting a scary contaminant label outrun the evidence quality."
+            );
+            case "symptoms" -> List.of(
+                    "Buying from one visible clue before mapping where and when it appears.",
+                    "Confusing corrosion, nuisance minerals, and source contamination.",
+                    "Assuming a hot-water-only symptom means a whole-house problem."
+            );
+            case "compares" -> List.of(
+                    "Using a compare page as the first page instead of after narrowing the problem.",
+                    "Comparing product categories before testing or scope is clear.",
+                    "Treating category claims like proof of fit for the household."
+            );
+            case "triggers" -> List.of(
+                    "Using old data as if the event changed nothing.",
+                    "Shopping before the event resets sampling confidence.",
+                    "Treating flood, repair, and vacancy like the same kind of trigger."
+            );
+            case "regional" -> List.of(
+                    "Assuming a national answer fits local geology or state process.",
+                    "Ignoring state lab pathways and sale or inspection context.",
+                    "Swapping a state name into a generic answer without changing the next step."
+            );
+            case "authority" -> List.of(
+                    "Reading a method page but still shopping from weak evidence.",
+                    "Treating a trust article like a verdict page.",
+                    "Using product claims as stronger evidence than lab or agency guidance."
+            );
+            default -> List.of(
+                    "Starting from product choice instead of problem shape.",
+                    "Treating weak evidence like a final verdict.",
+                    "Skipping the tool when the page still leaves scope unresolved."
+            );
+        };
+    }
+
+    private List<String> familyBeforeToolChecks(String family) {
+        return switch (family) {
+            case "contaminants" -> List.of(
+                    "Confirm the analyte name, unit, and sample age.",
+                    "Decide whether the issue is drinking-only or whole-house.",
+                    "Note any infant, pregnancy, flood, or repair context that changes urgency."
+            );
+            case "symptoms" -> List.of(
+                    "Map where the symptom appears: one fixture, hot only, cold only, or whole-house.",
+                    "Note whether the pattern followed repair, rain, or another event.",
+                    "Write down any paired clues such as stains, taste, odor, or cloudiness."
+            );
+            case "compares" -> List.of(
+                    "Make sure you know the likely problem type before opening a compare page.",
+                    "Check whether testing or state guidance should happen first.",
+                    "Use compare pages to narrow categories, not to skip verification."
+            );
+            case "triggers" -> List.of(
+                    "List the event that changed the system and when it happened.",
+                    "Treat older results as potentially weaker evidence until rechecked.",
+                    "Decide whether temporary safer water or local guidance should come first."
+            );
+            case "regional" -> List.of(
+                    "Confirm the state or geology context actually changes the next action.",
+                    "Check whether the page points to state labs, rules, or risk patterns.",
+                    "Use the state-aware tool handoff once you know your local context."
+            );
+            case "authority" -> List.of(
+                    "Use these pages to tighten method, not to replace the tool.",
+                    "Move from article -> cluster page -> tool instead of article -> shopping.",
+                    "Keep the strongest source and the biggest unknown in view."
+            );
+            default -> List.of(
+                    "Figure out whether the page is a clue page, a compare page, or a local-context page.",
+                    "Identify the strongest signal you already have.",
+                    "Open the tool when the page still leaves uncertainty in scope or urgency."
+            );
+        };
     }
 
     private List<PseoRelatedSection> relatedSections(PseoPage page, List<PseoPage> allPages, String riskLens) {
@@ -481,5 +653,28 @@ public class PseoExperienceService {
                 .filter(token -> !token.isBlank())
                 .filter(token -> !STOP_WORDS.contains(token))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    private void addBySlugOrder(List<PseoPage> target, Map<String, PseoPage> bySlug, List<String> orderedSlugs, int limit) {
+        for (String slug : orderedSlugs) {
+            if (target.size() == limit) {
+                return;
+            }
+            PseoPage page = bySlug.get(slug);
+            if (page != null && target.stream().noneMatch(existing -> existing.slug().equals(page.slug()))) {
+                target.add(page);
+            }
+        }
+    }
+
+    private void addUnique(List<PseoPage> target, List<PseoPage> candidates, int limit) {
+        for (PseoPage candidate : candidates) {
+            if (target.size() == limit) {
+                return;
+            }
+            if (target.stream().noneMatch(existing -> existing.slug().equals(candidate.slug()))) {
+                target.add(candidate);
+            }
+        }
     }
 }

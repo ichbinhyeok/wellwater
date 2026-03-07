@@ -12,7 +12,8 @@ class PseoExperienceServiceTest {
 
     private final PseoCatalogService catalogService = new PseoCatalogService("./data/pseo/pages.csv");
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
-    private final PseoExperienceService experienceService = new PseoExperienceService(catalogService, citationRegistryService);
+    private final PseoDecisionDocService decisionDocService = new PseoDecisionDocService();
+    private final PseoExperienceService experienceService = new PseoExperienceService(catalogService, citationRegistryService, decisionDocService);
 
     @Test
     void detailViewAddsDerivedMetadataAndRelatedSections() {
@@ -22,6 +23,7 @@ class PseoExperienceServiceTest {
         assertEquals("Health / chemical", detailView.riskLabel());
         assertTrue(detailView.doNotBuyYet().contains("Do not buy"));
         assertFalse(detailView.quickAnswers().isEmpty());
+        assertTrue(detailView.decisionDoc() != null);
         assertFalse(detailView.relatedSections().isEmpty());
         assertFalse(detailView.citations().isEmpty());
         assertTrue(detailView.relatedSections().stream().flatMap(section -> section.pages().stream()).anyMatch(page -> !page.slug().equals("nitrate")));
@@ -33,6 +35,9 @@ class PseoExperienceServiceTest {
 
         assertEquals("Symptom-first troubleshooting guides", familyView.heroTitle());
         assertEquals("/tool/symptom-first", familyView.primaryToolHref());
+        assertEquals(3, familyView.starterPages().size());
+        assertEquals(3, familyView.commonMistakes().size());
+        assertEquals(3, familyView.beforeToolChecks().size());
     }
 
     @Test
@@ -67,5 +72,65 @@ class PseoExperienceServiceTest {
         assertTrue(newJersey.relatedSections().stream()
                 .flatMap(section -> section.pages().stream())
                 .anyMatch(page -> page.slug().equals("new-jersey-pwta-vs-full-household-panel")));
+    }
+
+    @Test
+    void coreDecisionDocsCoverTwelveHighIntentPages() {
+        List<String> slugs = List.of(
+                "rotten-egg-smell",
+                "orange-stains",
+                "black-stains",
+                "cloudy-water",
+                "metallic-taste",
+                "after-flood",
+                "after-repair",
+                "home-purchase-test",
+                "retest-after-treatment",
+                "nitrate",
+                "coliform",
+                "arsenic"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertFalse(detailView.decisionDoc().faqs().isEmpty(), slug);
+            assertFalse(detailView.decisionDoc().commonConfusions().isEmpty(), slug);
+        }
+    }
+
+    @Test
+    void priorityPagesPreferManualHighIntentOrder() {
+        List<PseoPage> priorityPages = experienceService.priorityPages(6);
+
+        assertEquals(6, priorityPages.size());
+        assertEquals("rotten-egg-smell", priorityPages.get(0).slug());
+        assertEquals("orange-stains", priorityPages.get(1).slug());
+        assertEquals("cloudy-water", priorityPages.get(2).slug());
+    }
+
+    @Test
+    void secondWaveDecisionDocsCoverNextTwelvePages() {
+        List<String> slugs = List.of(
+                "lead",
+                "pfas",
+                "radon",
+                "ph",
+                "blue-green-stains",
+                "sulfur-smell-hot-water",
+                "after-heavy-rain",
+                "new-baby-at-home",
+                "pregnancy-in-home",
+                "test-kit-vs-certified-lab",
+                "mail-in-lab-vs-local-certified-lab",
+                "private-well-sampling-mistakes-that-break-results"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertFalse(detailView.decisionDoc().faqs().isEmpty(), slug);
+            assertFalse(detailView.decisionDoc().nextSteps().isEmpty(), slug);
+        }
     }
 }

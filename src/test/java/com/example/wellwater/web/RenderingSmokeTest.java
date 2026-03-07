@@ -24,6 +24,8 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Guide")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"http://localhost:8080/\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Priority pages")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Rotten Egg Smell in Well Water")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional Guides")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority Articles")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust surface")))
@@ -67,6 +69,9 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Breadcrumb")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first?analyte=nitrate&amp;slug=nitrate")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Do not buy yet")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("One-line call")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Three actions before you buy anything")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Questions that should be answered before a purchase")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Request follow-up")))
@@ -94,6 +99,8 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/well-water/family/authority"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority and methodology articles")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Start with these pages in this family")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What this hub should help you avoid")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")));
     }
 

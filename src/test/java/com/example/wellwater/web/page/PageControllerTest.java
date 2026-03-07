@@ -2,7 +2,9 @@ package com.example.wellwater.web.page;
 
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
+import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
+import com.example.wellwater.pseo.PseoFamilyView;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -21,7 +23,7 @@ class PageControllerTest {
     private final TrustPageService trustPageService = new TrustPageService();
     private final PageController controller = new PageController(
             catalogService,
-            new PseoExperienceService(catalogService, citationRegistryService),
+            new PseoExperienceService(catalogService, citationRegistryService, new PseoDecisionDocService()),
             seoMetadataService,
             trustPageService
     );
@@ -34,7 +36,7 @@ class PageControllerTest {
         assertEquals("pages/home", viewName);
         assertNotNull(model.getAttribute("familyCounts"));
         assertNotNull(model.getAttribute("totalPageCount"));
-        assertNotNull(model.getAttribute("featuredPages"));
+        assertNotNull(model.getAttribute("priorityPages"));
         assertNotNull(model.getAttribute("trustPages"));
         assertNotNull(model.getAttribute("seo"));
     }
@@ -49,6 +51,9 @@ class PageControllerTest {
         assertEquals(200, response.getStatus());
         assertNotNull(model.getAttribute("pages"));
         assertNotNull(model.getAttribute("familyView"));
+        PseoFamilyView familyView = (PseoFamilyView) model.getAttribute("familyView");
+        assertNotNull(familyView);
+        assertEquals(3, familyView.starterPages().size());
     }
 
     @Test

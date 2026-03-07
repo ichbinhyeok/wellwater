@@ -1,6 +1,7 @@
 package com.example.wellwater.web.page;
 
 import com.example.wellwater.pseo.PseoDetailView;
+import com.example.wellwater.pseo.PseoFaqItem;
 import com.example.wellwater.pseo.PseoFamilyView;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -88,6 +89,9 @@ public class SeoMetadataService {
 
         List<String> blocks = new ArrayList<>();
         blocks.add(pageJson(pageView, canonicalUrl));
+        if (pageView.decisionDoc() != null && !pageView.decisionDoc().faqs().isEmpty()) {
+            blocks.add(faqJson(pageView.decisionDoc().faqs()));
+        }
         blocks.add(breadcrumbJson(breadcrumbs));
 
         return new SeoMetadata(canonicalUrl, breadcrumbs, List.copyOf(blocks));
@@ -178,6 +182,26 @@ public class SeoMetadataService {
         payload.put("@type", "BreadcrumbList");
         payload.put("itemListElement", array(items));
         return object(payload);
+    }
+
+    private String faqJson(List<PseoFaqItem> faqs) {
+        List<Map<String, Object>> questions = new ArrayList<>();
+        for (PseoFaqItem faq : faqs) {
+            questions.add(Map.of(
+                    "@type", "Question",
+                    "name", faq.question(),
+                    "acceptedAnswer", Map.of(
+                            "@type", "Answer",
+                            "text", faq.answer()
+                    )
+            ));
+        }
+
+        return object(Map.of(
+                "@context", "https://schema.org",
+                "@type", "FAQPage",
+                "mainEntity", questions
+        ));
     }
 
     private String pageType(PseoDetailView pageView) {

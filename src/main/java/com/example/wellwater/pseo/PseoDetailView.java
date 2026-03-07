@@ -13,6 +13,7 @@ public record PseoDetailView(
         String doNotBuyYet,
         PseoEntryHint entryHint,
         List<PseoQuickAnswer> quickAnswers,
+        PseoDecisionDoc decisionDoc,
         List<PseoRelatedSection> relatedSections,
         List<PseoCitation> citations
 ) {

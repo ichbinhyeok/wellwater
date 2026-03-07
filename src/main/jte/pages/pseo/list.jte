@@ -30,6 +30,55 @@
             </div>
         </section>
 
+        <section class="panel panel-accent">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Priority reads</p>
+                    <h2>Start with these pages in this family</h2>
+                </div>
+                <p class="section-copy">This keeps the family hub from behaving like a flat index. The goal is to move visitors into the strongest entry points first.</p>
+            </div>
+            <div class="grid">
+                @for (var starter : familyView.starterPages())
+                    <a class="card-link card-link-accent" href="/well-water/${starter.slug()}">
+                        <span class="card-kicker">${starter.family()}</span>
+                        <h3>${starter.h1()}</h3>
+                        <p class="card-meta">${starter.metaDescription()}</p>
+                    </a>
+                @endfor
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Family guidance</p>
+                    <h2>What this hub should help you avoid</h2>
+                </div>
+                <p class="section-copy">Good hub pages do more than list URLs. They explain the common mistake pattern and what to check before the tool takes over.</p>
+            </div>
+            <div class="grid">
+                <article class="card-link card-link-accent">
+                    <span class="card-kicker">Common mistake</span>
+                    <h3>What people get wrong first in this family</h3>
+                    <div class="stack" style="gap: 10px;">
+                        @for (var mistake : familyView.commonMistakes())
+                            <p class="card-meta">${mistake}</p>
+                        @endfor
+                    </div>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Before the tool</span>
+                    <h3>Three checks before opening the decision flow</h3>
+                    <div class="stack" style="gap: 10px;">
+                        @for (var check : familyView.beforeToolChecks())
+                            <p class="card-meta">${check}</p>
+                        @endfor
+                    </div>
+                </article>
+            </div>
+        </section>
+
         <section class="panel">
             <div class="section-header">
                 <div>

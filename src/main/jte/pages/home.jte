@@ -1,6 +1,6 @@
 @param java.util.Map<String, Long> familyCounts
 @param Integer totalPageCount
-@param java.util.List<com.example.wellwater.pseo.PseoPage> featuredPages
+@param java.util.List<com.example.wellwater.pseo.PseoPage> priorityPages
 @param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
 @param com.example.wellwater.web.page.SeoMetadata seo
 
@@ -114,13 +114,13 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Popular guides</p>
-                    <h2>Fast paths into the highest-signal pages</h2>
+                    <p class="brand-kicker">Priority pages</p>
+                    <h2>Start with the pages most likely to earn organic trust</h2>
                 </div>
-                <p class="section-copy">Featured pages should feel like practical starting points, not a flat sitemap.</p>
+                <p class="section-copy">These are the pages the site should push hardest because they match strong search intent and lead naturally into the tool or compare flow.</p>
             </div>
             <div class="grid">
-                @for (var page : featuredPages)
+                @for (var page : priorityPages)
                     <a class="card-link" href="/well-water/${page.slug()}">
                         <span class="card-kicker">${page.family()}</span>
                         <h3>${page.h1()}</h3>

@@ -114,7 +114,7 @@ public class DecisionEngineService {
                 normalized.thresholdSummary(),
                 assumptions,
                 sources,
-                "Affiliate links may generate revenue after editorial review. Claims and fit must be verified before purchase.",
+                "Commercial links stay behind testing, verification, and editorial review. Claims and fit must be verified before any purchase path.",
                 branch != Branch.GREEN,
                 ctas
         );

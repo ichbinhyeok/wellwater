@@ -52,6 +52,32 @@
             </div>
         </section>
 
+        @if(pageView.decisionDoc() != null)
+            <section class="panel">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Decision doc</p>
+                        <h2>One-line call, scope split, and retest logic</h2>
+                    </div>
+                    <p class="section-copy">These deeper blocks only appear on the highest-intent pages where public search traffic is close to a real decision.</p>
+                </div>
+                <div class="grid">
+                    <article class="card-link card-link-accent">
+                        <span class="card-kicker">One-line call</span>
+                        <p class="card-meta">${pageView.decisionDoc().oneLineVerdict()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Health vs nuisance</span>
+                        <p class="card-meta">${pageView.decisionDoc().healthVsNuisance()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Retest timing</span>
+                        <p class="card-meta">${pageView.decisionDoc().retestTiming()}</p>
+                    </article>
+                </div>
+            </section>
+        @endif
+
         <section class="detail-grid">
             <div class="detail-stack">
                 <section class="panel panel-accent">
@@ -77,6 +103,42 @@
                         <p>${pageView.page().whatToTest()}</p>
                     </div>
                 </section>
+
+                @if(pageView.decisionDoc() != null)
+                    <section class="panel">
+                        <div class="section-header">
+                            <div>
+                                <p class="brand-kicker">Next moves</p>
+                                <h2>Three actions before you buy anything</h2>
+                            </div>
+                        </div>
+                        <div class="stack" style="gap: 12px;">
+                            @for (var step : pageView.decisionDoc().nextSteps())
+                                <article class="card-link">
+                                    <span class="card-kicker">Action</span>
+                                    <p class="card-meta">${step}</p>
+                                </article>
+                            @endfor
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="section-header">
+                            <div>
+                                <p class="brand-kicker">Common confusion</p>
+                                <h2>What people usually get wrong here</h2>
+                            </div>
+                        </div>
+                        <div class="stack" style="gap: 12px;">
+                            @for (var confusion : pageView.decisionDoc().commonConfusions())
+                                <article class="card-link">
+                                    <span class="card-kicker">Avoid this mistake</span>
+                                    <p class="card-meta">${confusion}</p>
+                                </article>
+                            @endfor
+                        </div>
+                    </section>
+                @endif
 
                 <section class="panel">
                     <div class="section-header">
@@ -133,12 +195,12 @@
                 <section class="panel">
                     <div class="section-header">
                         <div>
-                            <p class="brand-kicker">Research</p>
-                            <h2>Options and pricing</h2>
+                            <p class="brand-kicker">Commercial research</p>
+                            <h2>Compare paths before vendor links</h2>
                         </div>
                     </div>
                     <a class="card-link" href="${pageView.page().moneyCtaUrl()}">
-                        <span class="card-kicker">Commercial follow-up</span>
+                        <span class="card-kicker">Internal compare path</span>
                         <h3>${pageView.page().moneyCtaLabel()}</h3>
                         <p class="card-meta">${pageView.page().disclosure()}</p>
                     </a>
@@ -205,6 +267,26 @@
                 </section>
             </aside>
         </section>
+
+        @if(pageView.decisionDoc() != null && !pageView.decisionDoc().faqs().isEmpty())
+            <section class="panel">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">FAQ</p>
+                        <h2>Questions that should be answered before a purchase</h2>
+                    </div>
+                </div>
+                <div class="stack" style="gap: 14px;">
+                    @for (var faq : pageView.decisionDoc().faqs())
+                        <article class="card-link">
+                            <span class="card-kicker">Question</span>
+                            <h3>${faq.question()}</h3>
+                            <p class="card-meta">${faq.answer()}</p>
+                        </article>
+                    @endfor
+                </div>
+            </section>
+        @endif
 
         <section class="panel">
             <div class="section-header">

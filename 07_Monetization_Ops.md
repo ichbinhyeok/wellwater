@@ -1,182 +1,148 @@
-# 문서 7. Monetization & Ops
+﻿# Monetization And Ops
 
-## 1. 목적
+## 1. Current Monetization Stance
 
-이 문서는 수익화 구조와 운영 원칙을 정리한다.  
-핵심은 **판정 이후 수익화**다.
+This product is not currently partner-link heavy.
 
-## 2. 수익화 스택
+The active money path is:
+1. problem framing
+2. verification or testing guidance
+3. internal compare surface
+4. lead capture or future partner handoff
 
-### Layer 1. Testing
-적합한 사용자:
-- symptom-first
-- trigger-first
-- stale/insufficient result
-- low-confidence result
+That is the right order for this niche.
+Private well decisions lose trust fast if the site shops before it verifies.
 
-장점:
-- 사용자 여정에 자연스럽다
-- 신뢰를 깎지 않는다
-- treatment revenue의 전단 퍼널이 된다
+## 2. Current Revenue Layers
 
-대표 CTA:
-- Test your water first
-- Find a certified lab
-- Get a broader test
+### Layer 1. Testing And Verification
+Best fit for:
+- symptom-first traffic
+- trigger-first traffic
+- stale or weak lab data
+- microbial or flood-related paths
 
-### Layer 2. Equipment Affiliate
-적합한 사용자:
-- result-first
-- nuisance/operational
-- drinking-use problem이 명확함
-- confidence medium/high
+Current surfaces:
+- certified lab guidance
+- state resource links
+- test interpretation pages
+- sampling and methodology authority pages
 
-원칙:
-- 브랜드 추천보다 category compare
-- claim requirements 먼저
-- scenario 아래에서만 노출
+### Layer 2. Internal Compare Pages
+Best fit for:
+- users who already understand the likely category
+- users who need scope, fit, and claim logic before shopping
+- clusters such as arsenic, nitrate, sulfur odor, PFAS, corrosion, radon
 
-대표 CTA:
-- Compare certified treatment categories
-- See options for drinking-water protection
-- Compare whole-house options
+Current surfaces:
+- compare family pages
+- scenario-specific compare pages
+- claim-check authority pages
 
-### Layer 3. Local Quote / Lead
-적합한 사용자:
-- whole-house install 가능성 높음
-- 복합 시스템
-- install complexity
-- source/plumbing inspection 필요
-- local pro handoff가 더 자연스러운 케이스
+### Layer 3. Lead Capture
+Best fit for:
+- regional pages
+- authority pages
+- high-intent detail pages
+- users who want a follow-up rather than a single answer
 
-대표 CTA:
-- Get a local quote
-- Talk to a treatment professional
-- Get help inspecting your system
+Current surfaces:
+- lead form on regional family page
+- lead form on authority family page
+- lead form on pSEO detail pages
+- admin dashboard lead read side
 
-### Layer 4. Verification / Repeat Revenue
-적합한 사용자:
-- existing treatment yes
-- post-install
-- recurring symptoms
-- maintenance/replacement need
+### Layer 4. Future Partner Routing
+This is not the main surface yet.
 
-대표 CTA:
-- Retest now
-- Verify your treatment
-- Check maintenance steps
+When it goes live, it should attach only where:
+- the problem type is already narrowed
+- the use-case scope is clear
+- the page already explains what the product cannot solve
+- testing and state guidance are not being skipped
 
-## 3. branch별 CTA 우선순위
+## 3. What Changed
 
-## 3-1. Red branch
-1. 행동 가이드
-2. local guidance / certified lab
-3. retest
-4. 그다음 compare
+The repo previously leaned on placeholder Amazon search URLs in `pages.csv`.
+That is no longer the active path.
 
-## 3-2. Amber branch
-1. better data
-2. retest
-3. inspect source
-4. compare는 보조
+Current rule:
+- secondary money CTAs point to internal compare or authority pages
+- disclosure copy stays evidence-first
+- partner links can be wired later without changing the user journey philosophy
 
-## 3-3. Green branch
-1. category compare
-2. local quote
-3. save/PDF
+## 4. CTA Order By Branch
 
-## 4. Offer Registry 운영
+### Red
+1. action guidance
+2. state or local guidance
+3. certified lab
+4. compare pages only after safety steps
 
-모든 상업 오퍼는 아래 필드를 갖는다.
-- offer type
-- vendor
-- applicable branch
-- applicable analyte/problem family
-- payout type
-- current public terms
-- cookie/approval notes
-- last verified date
-- disclosure copy
-- active/inactive flag
+### Amber
+1. get better data
+2. inspect source or sample quality
+3. local guidance
+4. compare pages as secondary research
 
-원칙:
-- 운영팀이 정기 refresh
-- terms가 불명확하면 inactive 처리
-- branch fit이 약하면 노출하지 않음
+### Green
+1. compare categories
+2. lead or quote context if the scope is larger than DIY
+3. retest or verification follow-up
 
-## 5. Cost Estimate 운영
+## 5. Best Current Monetization Clusters
 
-비용은 “quote”가 아니라 “directional estimate”다.  
-비용 레이어는 아래 정보를 가진다.
-- install range
-- maintenance range
-- replacement range
-- source
-- date checked
-- confidence band
+These clusters can reasonably support future partner wiring:
+- arsenic
+- nitrate
+- sulfur smell
+- iron or orange stains
+- low pH and corrosion
+- PFAS
+- radon
+- UV or microbial follow-up after verification
 
-비용 노출 규칙:
-- result page에는 범위만
-- 상세 견적은 lead/quote로 연결
-- 배관, 전기, permit, 지역 인건비는 별도 가능성 명시
+These clusters are still mainly testing or lead paths, not direct affiliate paths:
+- home purchase testing
+- state testing rules
+- sampling mistakes
+- flood recovery
+- wildfire response
 
-## 6. 운영 리듬
+## 6. Partner Activation Gate
 
-### 매주
-- top pages review
-- broken CTA check
-- high-exit result branches review
-- disclosure placement QA
+Before a partner or vendor channel goes live, the page should already do four things well:
+- explain the likely problem shape
+- explain what not to buy yet
+- explain what to verify first
+- route to a scenario-level compare page instead of a generic product page
 
-### 격주
-- offer health check
-- cost range sanity check
-- top converting branches enrichment
+If a page cannot clear that bar, it should stay on an internal compare or lead path.
 
-### 매월
-- partner terms refresh
-- public pricing/commission refresh
-- state resource spot check
-- unsupported/low-confidence 로그 리뷰
+## 7. KPI
 
-## 7. 절대 금지
-
-- verdict 위에 affiliate 카드 배치
-- unsupported branch에서 product push
-- low-confidence 결과에서 강한 장비 추천
-- cost를 확정값처럼 표기
-- same CTA를 모든 page family에 일괄 적용
-
-## 8. 운영상 필요한 문서/대시보드
-
-- offer registry sheet
-- cost registry sheet
-- state resource sheet
-- unsupported cases log
-- low-confidence cases log
-- partner approval tracker
-- CTA performance dashboard
-
-## 9. 측정 항목
-
-### Monetization KPI
-- kit CTA click
-- kit CVR
-- category compare click
-- equipment CVR
+Primary money KPIs:
 - lead submit rate
-- revenue per result view
-- revenue per organic session
+- lead by family
+- lead by slug
+- internal compare click-through rate
+- result-view to CTA click rate
+- revenue per qualified session after partner activation
 
-### Quality KPI
+Quality guardrail KPIs:
 - retest-first recommendation share
 - unsupported rate
-- stale sample rate
 - low-confidence rate
-- emergency branch share
+- stale sample rate
+- red or amber branch exit rate
 
-## 10. 최종 원칙
+## 8. Current Operating Rule
 
-수익화는 강한 구조가 맞다.  
-하지만 이 제품의 moat는 payout이 아니라 **신뢰를 잃지 않는 판정 설계**다.  
-그래서 수익화는 항상 결과 해석의 부산물처럼 보여야 한다.
+Do not optimize for affiliate clicks before the page earns trust.
+
+The project should behave like:
+- a decision engine first
+- a lead and compare router second
+- a partner surface third
+
+That is also the fastest route to durable revenue in this niche.
