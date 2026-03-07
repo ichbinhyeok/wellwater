@@ -1,5 +1,7 @@
 package com.example.wellwater.decision.model;
 
+import java.util.List;
+
 public record DecisionInput(
         EntryMode entryMode,
         String analyteName,
@@ -13,13 +15,25 @@ public record DecisionInput(
         String state,
         String useScope,
         String existingTreatment,
+        List<String> existingTreatments,
         String symptomFlag,
         String triggerFlag,
+        String labName,
+        String householdSize,
+        String smellType,
+        String stainType,
+        String tasteType,
+        String locationScope,
+        String changeTiming,
         boolean infantPresent,
         boolean pregnancyPresent,
         boolean immunocompromisedPresent,
         String slugHint
 ) {
+    public DecisionInput {
+        existingTreatments = existingTreatments == null ? List.of() : List.copyOf(existingTreatments);
+    }
+
     public String normalizedAnalyte() {
         return normalize(analyteName);
     }
@@ -69,7 +83,43 @@ public record DecisionInput(
     }
 
     public String normalizedExistingTreatment() {
-        return normalize(existingTreatment);
+        String primary = normalize(existingTreatment);
+        if (!primary.isBlank()) {
+            return primary;
+        }
+        return normalizedExistingTreatments().stream().findFirst().orElse("");
+    }
+
+    public List<String> normalizedExistingTreatments() {
+        return normalizeList(existingTreatments);
+    }
+
+    public String normalizedLabName() {
+        return normalize(labName);
+    }
+
+    public String normalizedHouseholdSize() {
+        return normalize(householdSize);
+    }
+
+    public String normalizedSmellType() {
+        return normalize(smellType);
+    }
+
+    public String normalizedStainType() {
+        return normalize(stainType);
+    }
+
+    public String normalizedTasteType() {
+        return normalize(tasteType);
+    }
+
+    public String normalizedLocationScope() {
+        return normalize(locationScope);
+    }
+
+    public String normalizedChangeTiming() {
+        return normalize(changeTiming);
     }
 
     private String normalize(String value) {
@@ -77,5 +127,12 @@ public record DecisionInput(
             return "";
         }
         return value.trim().toLowerCase();
+    }
+
+    private List<String> normalizeList(List<String> values) {
+        return values.stream()
+                .map(this::normalize)
+                .filter(value -> !value.isBlank())
+                .toList();
     }
 }

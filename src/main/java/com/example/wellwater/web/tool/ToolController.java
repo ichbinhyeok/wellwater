@@ -5,6 +5,8 @@ import com.example.wellwater.decision.DecisionEngineService;
 import com.example.wellwater.decision.model.CtaLink;
 import com.example.wellwater.decision.model.DecisionInput;
 import com.example.wellwater.decision.model.DecisionResult;
+import com.example.wellwater.decision.registry.DecisionRegistryService;
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,28 +16,57 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
 public class ToolController {
 
+    private static final Set<String> STATIC_ALLOWED_OUTBOUND_HOSTS = Set.of(
+            "www.epa.gov",
+            "epa.gov",
+            "www.cdc.gov",
+            "cdc.gov",
+            "www.google.com",
+            "google.com"
+    );
+
     private final DecisionEngineService decisionEngineService;
     private final AnalyticsEventService analyticsEventService;
+    private final DecisionRegistryService decisionRegistryService;
+    private final Set<String> allowedOutboundHosts;
 
-    public ToolController(DecisionEngineService decisionEngineService, AnalyticsEventService analyticsEventService) {
+    public ToolController(
+            DecisionEngineService decisionEngineService,
+            AnalyticsEventService analyticsEventService,
+            DecisionRegistryService decisionRegistryService,
+            StateResourceRegistryService stateResourceRegistryService
+    ) {
         this.decisionEngineService = decisionEngineService;
         this.analyticsEventService = analyticsEventService;
+        this.decisionRegistryService = decisionRegistryService;
+        LinkedHashSet<String> hosts = new LinkedHashSet<>(STATIC_ALLOWED_OUTBOUND_HOSTS);
+        hosts.addAll(stateResourceRegistryService.allowedOutboundHosts());
+        this.allowedOutboundHosts = Set.copyOf(hosts);
     }
 
     @GetMapping("/tool/result-first")
-    public String resultFirst(@RequestParam(required = false) String analyte, Model model) {
+    public String resultFirst(
+            @RequestParam(required = false) String analyte,
+            @RequestParam(required = false) String slug,
+            Model model
+    ) {
         ToolRequest request = new ToolRequest();
         request.setEntryMode("result-first");
         request.setAnalyteName(analyte);
+        request.setSlugHint(slug);
         addSharedOptions(model);
         model.addAttribute("request", request);
-        analyticsEventService.logEvent("entry_mode_selected", "result-first", null, analyte, null, null, null, null, "landing");
+        analyticsEventService.logEvent("entry_mode_selected", "result-first", null, preferredSlug(slug, analyte), null, null, null, null, "landing");
         return "pages/intake/result-first";
     }
 
@@ -145,26 +176,40 @@ public class ToolController {
         return new RenderableCta(cta.type(), cta.label(), outboundUrl);
     }
 
+    private String preferredSlug(String slug, String fallback) {
+        if (slug != null && !slug.isBlank()) {
+            return slug;
+        }
+        return fallback;
+    }
+
     private boolean isAllowedTarget(String target) {
         if (target == null || target.isBlank()) {
             return false;
         }
-        return target.startsWith("http://") || target.startsWith("https://") || target.startsWith("/");
+        String candidate = target.trim();
+        try {
+            URI uri = URI.create(candidate);
+            if (!uri.isAbsolute()) {
+                return candidate.startsWith("/") && !candidate.startsWith("//") && uri.getScheme() == null && uri.getHost() == null;
+            }
+            if (!"https".equalsIgnoreCase(uri.getScheme())) {
+                return false;
+            }
+            String host = uri.getHost();
+            if (host == null || host.isBlank()) {
+                return false;
+            }
+            return allowedOutboundHosts.contains(host.toLowerCase(Locale.ROOT));
+        } catch (IllegalArgumentException ignored) {
+            return false;
+        }
     }
 
     private void addSharedOptions(Model model) {
-        model.addAttribute("analytes", List.of(
-                "nitrate", "arsenic", "total coliform", "e. coli", "iron",
-                "manganese", "hardness", "ph", "tds", "sulfate", "lead", "pfas"
-        ));
-        model.addAttribute("symptoms", List.of(
-                "rotten-egg-smell", "orange-stains", "black-stains", "metallic-taste",
-                "cloudy-water", "scale-buildup", "blue-green-stains"
-        ));
-        model.addAttribute("triggers", List.of(
-                "after-flood", "after-heavy-rain", "after-repair", "after-wildfire",
-                "home-purchase-test", "retest-after-treatment"
-        ));
+        model.addAttribute("analytes", decisionRegistryService.contaminantKeys());
+        model.addAttribute("symptoms", decisionRegistryService.symptomKeys());
+        model.addAttribute("triggers", decisionRegistryService.triggerKeys());
         model.addAttribute("states", List.of(
                 "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA",
                 "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD",
@@ -177,8 +222,13 @@ public class ToolController {
         ));
         model.addAttribute("useScopes", List.of("drinking-only", "whole-house", "both"));
         model.addAttribute("existingTreatments", List.of(
-                "none", "ro", "uv", "softener", "iron filter", "carbon", "sediment", "unknown"
+                "ro", "uv", "softener", "iron filter", "carbon", "sediment", "unknown"
         ));
+        model.addAttribute("smellTypes", List.of("rotten-egg", "chemical", "musty", "other"));
+        model.addAttribute("stainTypes", List.of("orange", "black", "blue-green"));
+        model.addAttribute("tasteTypes", List.of("metallic", "salty", "bitter"));
+        model.addAttribute("locationScopes", List.of("one-fixture", "hot-only", "cold-only", "whole-house", "unknown"));
+        model.addAttribute("changeTimings", List.of("after-rain", "after-repair", "gradual", "sudden", "unknown"));
     }
 
     public record RenderableCta(

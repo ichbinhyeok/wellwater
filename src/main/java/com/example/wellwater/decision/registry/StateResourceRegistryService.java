@@ -5,15 +5,19 @@ import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class StateResourceRegistryService {
@@ -38,6 +42,16 @@ public class StateResourceRegistryService {
         return rows.stream()
                 .filter(row -> row.stateCode().equalsIgnoreCase("US"))
                 .findFirst();
+    }
+
+    public Set<String> allowedOutboundHosts() {
+        LinkedHashSet<String> hosts = new LinkedHashSet<>();
+        for (StateResource row : load()) {
+            addHost(hosts, row.localGuidanceUrl());
+            addHost(hosts, row.certifiedLabUrl());
+            addHost(hosts, row.sourceUrl());
+        }
+        return Set.copyOf(hosts);
     }
 
     private List<StateResource> load() {
@@ -114,5 +128,19 @@ public class StateResourceRegistryService {
         }
         out.add(current.toString());
         return out;
+    }
+
+    private void addHost(Set<String> hosts, String url) {
+        if (url == null || url.isBlank()) {
+            return;
+        }
+        try {
+            URI uri = URI.create(url.trim());
+            if (uri.getHost() != null && !uri.getHost().isBlank()) {
+                hosts.add(uri.getHost().toLowerCase(Locale.ROOT));
+            }
+        } catch (IllegalArgumentException ignored) {
+            // Ignore malformed registry URLs so one bad row does not break startup.
+        }
     }
 }

@@ -3,6 +3,9 @@ package com.example.wellwater.web.tool;
 import com.example.wellwater.decision.model.DecisionInput;
 import com.example.wellwater.decision.model.EntryMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ToolRequest {
 
     private String entryMode;
@@ -17,14 +20,23 @@ public class ToolRequest {
     private String state;
     private String useScope;
     private String existingTreatment;
+    private List<String> existingTreatments = new ArrayList<>();
     private String symptomFlag;
     private String triggerFlag;
+    private String labName;
+    private String householdSize;
+    private String smellType;
+    private String stainType;
+    private String tasteType;
+    private String locationScope;
+    private String changeTiming;
     private boolean infantPresent;
     private boolean pregnancyPresent;
     private boolean immunocompromisedPresent;
     private String slugHint;
 
     public DecisionInput toDecisionInput() {
+        String primaryExistingTreatment = resolvePrimaryExistingTreatment();
         return new DecisionInput(
                 EntryMode.fromWire(entryMode),
                 analyteName,
@@ -37,14 +49,32 @@ public class ToolRequest {
                 labCertified,
                 state,
                 useScope,
-                existingTreatment,
+                primaryExistingTreatment,
+                List.copyOf(existingTreatments),
                 symptomFlag,
                 triggerFlag,
+                labName,
+                householdSize,
+                smellType,
+                stainType,
+                tasteType,
+                locationScope,
+                changeTiming,
                 infantPresent,
                 pregnancyPresent,
                 immunocompromisedPresent,
                 slugHint
         );
+    }
+
+    private String resolvePrimaryExistingTreatment() {
+        if (existingTreatment != null && !existingTreatment.isBlank()) {
+            return existingTreatment;
+        }
+        if (!existingTreatments.isEmpty()) {
+            return existingTreatments.get(0);
+        }
+        return "";
     }
 
     public String getEntryMode() {
@@ -143,6 +173,24 @@ public class ToolRequest {
         this.existingTreatment = existingTreatment;
     }
 
+    public List<String> getExistingTreatments() {
+        return existingTreatments;
+    }
+
+    public void setExistingTreatments(List<String> existingTreatments) {
+        this.existingTreatments = existingTreatments == null ? new ArrayList<>() : new ArrayList<>(existingTreatments);
+    }
+
+    public boolean hasExistingTreatment(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            return false;
+        }
+        if (candidate.equalsIgnoreCase(existingTreatment)) {
+            return true;
+        }
+        return existingTreatments.stream().anyMatch(value -> candidate.equalsIgnoreCase(value));
+    }
+
     public String getSymptomFlag() {
         return symptomFlag;
     }
@@ -157,6 +205,62 @@ public class ToolRequest {
 
     public void setTriggerFlag(String triggerFlag) {
         this.triggerFlag = triggerFlag;
+    }
+
+    public String getLabName() {
+        return labName;
+    }
+
+    public void setLabName(String labName) {
+        this.labName = labName;
+    }
+
+    public String getHouseholdSize() {
+        return householdSize;
+    }
+
+    public void setHouseholdSize(String householdSize) {
+        this.householdSize = householdSize;
+    }
+
+    public String getSmellType() {
+        return smellType;
+    }
+
+    public void setSmellType(String smellType) {
+        this.smellType = smellType;
+    }
+
+    public String getStainType() {
+        return stainType;
+    }
+
+    public void setStainType(String stainType) {
+        this.stainType = stainType;
+    }
+
+    public String getTasteType() {
+        return tasteType;
+    }
+
+    public void setTasteType(String tasteType) {
+        this.tasteType = tasteType;
+    }
+
+    public String getLocationScope() {
+        return locationScope;
+    }
+
+    public void setLocationScope(String locationScope) {
+        this.locationScope = locationScope;
+    }
+
+    public String getChangeTiming() {
+        return changeTiming;
+    }
+
+    public void setChangeTiming(String changeTiming) {
+        this.changeTiming = changeTiming;
     }
 
     public boolean isInfantPresent() {

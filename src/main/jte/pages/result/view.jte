@@ -18,23 +18,23 @@
             </div>
 
             <div class="bg-zinc-50 rounded-2xl border border-zinc-200 p-5 mb-8">
-                <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Input Context</p>
+                <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-4">Decision Summary</p>
                 <div class="space-y-3">
                     <div class="flex justify-between items-center pb-3 border-b border-zinc-200/60">
-                        <span class="text-sm font-medium text-zinc-500">Tier</span>
-                        <span class="text-sm font-semibold text-zinc-900">${result.tier().label()}</span>
+                        <span class="text-sm font-medium text-zinc-500">Priority</span>
+                        <span class="text-sm font-semibold text-zinc-900">${result.consumerPriorityLabel()}</span>
                     </div>
                     <div class="flex justify-between items-center pb-3 border-b border-zinc-200/60">
-                        <span class="text-sm font-medium text-zinc-500">Branch</span>
-                        <span class="text-sm font-semibold text-zinc-900">${result.branch().label()}</span>
+                        <span class="text-sm font-medium text-zinc-500">Support</span>
+                        <span class="text-sm font-semibold text-zinc-900">${result.consumerSupportLabel()}</span>
                     </div>
                     <div class="flex justify-between items-center pb-3 border-b border-zinc-200/60">
-                        <span class="text-sm font-medium text-zinc-500">Urgency</span>
-                        <span class="text-sm font-semibold text-zinc-900">${result.urgency().wireValue()}</span>
+                        <span class="text-sm font-medium text-zinc-500">Likely Scope</span>
+                        <span class="text-sm font-semibold text-zinc-900">${result.consumerScopeLabel()}</span>
                     </div>
                     <div class="flex justify-between items-center">
-                        <span class="text-sm font-medium text-zinc-500">Session ID</span>
-                        <span class="text-[10px] font-mono text-zinc-400 truncate w-32 text-right">${sessionId}</span>
+                        <span class="text-sm font-medium text-zinc-500">Confidence</span>
+                        <span class="text-sm font-semibold text-zinc-900">${result.confidence().label()}</span>
                     </div>
                 </div>
             </div>
@@ -55,7 +55,7 @@
         <div id="mobile-summary" class="lg:hidden px-6 pb-4 bg-white/95 backdrop-blur-md flex items-center justify-between border-b border-zinc-100 transition-opacity duration-300 relative z-20 cursor-pointer" onclick="toggleBottomSheet()">
             <div>
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${result.branch().name().equals("RED") ? "bg-danger/10 text-danger" : (result.branch().name().equals("GREEN") ? "bg-safe/10 text-safe" : "bg-warn/10 text-warn")} mb-1 tracking-wide uppercase">
-                    ${result.tier().label()}
+                    ${result.consumerSupportLabel()}
                 </span>
                 <p class="text-sm font-semibold text-zinc-900 truncate w-48">${result.primaryVerdictLabel()}</p>
             </div>
@@ -88,7 +88,7 @@
                 <div class="bg-white rounded-2xl p-6 lg:p-8 border ${result.branch().name().equals("RED") ? "border-danger/30 ring-danger/10 ring-1" : "border-zinc-200"} shadow-subtle relative overflow-hidden">
                     @if(result.branch().name().equals("RED"))
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-danger"></div>
-                    @else if(result.branch().name().equals("AMBER"))
+                    @elseif(result.branch().name().equals("AMBER"))
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-warn"></div>
                     @else
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-safe"></div>
@@ -101,7 +101,7 @@
                             @else
                                 <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
                             @endif
-                            ${result.tier().label()}
+                            ${result.consumerSupportLabel()}
                         </span>
                         <span class="text-xs font-bold text-zinc-400 uppercase tracking-widest">${result.confidence().label()}</span>
                     </div>
@@ -180,16 +180,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             @for(int i = 0; i < result.scenarios().size(); i++)
                                 !{var scenario = result.scenarios().get(i);}
-                                <div class="border ${i == result.scenarios().size() - 1 ? "border-[1.5px] border-zinc-900 bg-zinc-50 shadow-sm relative" : "border-zinc-200 hover:border-zinc-300"} rounded-xl p-5 flex flex-col transition-all">
-                                    @if(i == result.scenarios().size() - 1)
-                                        <div class="absolute -top-2.5 right-4 bg-zinc-900 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full tracking-wider">RECOMMENDED</div>
+                                <div class="border ${result.isRecommendedScenario(scenario) ? "border-[1.5px] border-zinc-900 bg-zinc-50 shadow-sm relative" : "border-zinc-200 hover:border-zinc-300"} rounded-xl p-5 flex flex-col transition-all">
+                                    @if(result.isRecommendedScenario(scenario))
+                                        <div class="absolute -top-2.5 right-4 bg-zinc-900 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full tracking-wider">BEST FIT</div>
                                     @endif
-                                    
+                                     
                                     <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5">${scenario.scenarioType()}</div>
                                     <div class="font-bold text-zinc-900 mb-2">${scenario.scenarioTitle()}</div>
                                     <div class="text-sm text-zinc-600 mb-4 flex-1 leading-relaxed">${scenario.fitReason()}</div>
-                                    
-                                    <div class="pt-4 border-t ${i == result.scenarios().size() - 1 ? "border-zinc-200" : "border-zinc-100"} flex flex-col gap-2 mt-auto">
+                                     
+                                    <div class="pt-4 border-t ${result.isRecommendedScenario(scenario) ? "border-zinc-200" : "border-zinc-100"} flex flex-col gap-2 mt-auto">
                                         <div class="flex items-center justify-between">
                                             <span class="text-xs font-semibold text-zinc-500 w-16">범위</span>
                                             <span class="text-xs font-medium text-zinc-900 text-right">${scenario.recommendedScope()}</span>
@@ -217,6 +217,10 @@
                         <div class="space-y-2 text-sm text-zinc-600">
                             <div class="flex justify-between"><span class="text-zinc-500">신선도:</span> <span class="font-medium text-zinc-900">${result.sampleFreshness()}</span></div>
                             <div class="flex justify-between"><span class="text-zinc-500">데이터 완전성:</span> <span class="font-medium text-zinc-900">${result.completenessScore()}/100</span></div>
+                            @if(result.hasThresholdSummary())
+                                <div class="flex justify-between gap-3"><span class="text-zinc-500">Threshold Check</span> <span class="font-medium text-zinc-900 text-right">${result.thresholdSummary()}</span></div>
+                            @endif
+                            <div class="flex justify-between gap-3"><span class="text-zinc-500">Rule Version</span> <span class="font-medium text-zinc-900 text-right">${result.decisionVersion()}</span></div>
                             @for(var note : result.dataQualityNotes())
                                 <p class="text-xs italic text-zinc-500 mt-2">${note}</p>
                             @endfor

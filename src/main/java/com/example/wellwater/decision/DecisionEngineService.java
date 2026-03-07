@@ -31,6 +31,8 @@ import java.util.Optional;
 @Service
 public class DecisionEngineService {
 
+    private static final String DECISION_VERSION = "decision-engine-v0.3.0";
+
     private final DecisionRegistryService registryService;
     private final DecisionInputNormalizationService normalizationService;
     private final CostRegistryService costRegistryService;
@@ -54,11 +56,11 @@ public class DecisionEngineService {
 
         Tier tier = resolveTier(input, normalized, signal);
         ProblemType problemType = classifyProblemType(input, tier, signal);
-        Confidence confidence = scoreConfidence(input, tier, normalized);
+        Confidence confidence = scoreConfidence(input, tier, normalized, signal);
         Urgency urgency = classifyUrgency(input, problemType, signal, normalized);
         Scope scope = classifyScope(input, problemType, signal);
-        ActionMode actionMode = classifyActionMode(input, urgency, problemType, signal);
-        Branch branch = routeBranch(urgency, confidence, problemType, tier);
+        ActionMode actionMode = classifyActionMode(input, urgency, problemType, signal, normalized);
+        Branch branch = routeBranch(urgency, confidence, problemType, tier, normalized);
 
         Optional<StateResource> stateResource = stateResourceRegistryService.findByState(normalized.stateKey());
         Optional<CostProfile> costProfile = costRegistryService.find(problemType, scope);
@@ -67,7 +69,7 @@ public class DecisionEngineService {
         String costNote = buildCostNote(costProfile);
 
         List<String> keyReasons = buildKeyReasons(input, tier, problemType, urgency, signal, normalized);
-        List<String> qualityNotes = buildQualityNotes(input, confidence, tier, normalized);
+        List<String> qualityNotes = buildQualityNotes(input, confidence, tier, signal, normalized);
         List<String> today = buildTodayActions(branch, actionMode);
         List<String> thisWeek = buildThisWeekActions(branch, problemType, stateResource);
         List<String> later = buildLaterActions(problemType);
@@ -107,6 +109,9 @@ public class DecisionEngineService {
                 maintenanceRange,
                 localGuidanceUrl,
                 certifiedLabUrl,
+                DECISION_VERSION,
+                signal.signal() == null ? "" : signal.signal().sourceVersion(),
+                normalized.thresholdSummary(),
                 assumptions,
                 sources,
                 "Affiliate links may generate revenue after editorial review. Claims and fit must be verified before purchase.",
@@ -156,6 +161,19 @@ public class DecisionEngineService {
         if (signal.signal() != null) {
             return signal.signal().problemType();
         }
+        if ("chemical".equals(input.normalizedSmellType())) {
+            return ProblemType.CHEMICAL_HEALTH;
+        }
+        if ("metallic".equals(input.normalizedTasteType()) || "blue-green".equals(input.normalizedStainType())) {
+            return ProblemType.CORROSION;
+        }
+        if ("rotten-egg".equals(input.normalizedSmellType())
+                || "orange".equals(input.normalizedStainType())
+                || "black".equals(input.normalizedStainType())
+                || "salty".equals(input.normalizedTasteType())
+                || "bitter".equals(input.normalizedTasteType())) {
+            return ProblemType.AESTHETIC_OPERATIONAL;
+        }
         if (tier == Tier.C) {
             return ProblemType.UNSUPPORTED;
         }
@@ -165,7 +183,7 @@ public class DecisionEngineService {
         return ProblemType.AESTHETIC_OPERATIONAL;
     }
 
-    private Confidence scoreConfidence(DecisionInput input, Tier tier, DecisionNormalizedInput normalized) {
+    private Confidence scoreConfidence(DecisionInput input, Tier tier, DecisionNormalizedInput normalized, SignalMatch signal) {
         int score = 0;
         if (tier == Tier.A) {
             score += 2;
@@ -178,10 +196,21 @@ public class DecisionEngineService {
         } else {
             score -= 1;
         }
+        if (normalized.canonicalNumericResultValue() != null
+                && normalized.unitSupported()
+                && !"treated tap".equals(input.normalizedSampleSource())) {
+            score += 1;
+        }
         if ("raw well".equals(input.normalizedSampleSource())) {
             score += 1;
         } else if ("unknown".equals(input.normalizedSampleSource()) || input.normalizedSampleSource().isBlank()) {
             score -= 1;
+        }
+        if (hasSecondaryContext(input)) {
+            score += 1;
+        }
+        if (usesDerivedSignal(input, normalized, signal)) {
+            score += 1;
         }
         if (normalized.sampleFreshness() == SampleFreshness.AGING) {
             score -= 1;
@@ -204,6 +233,9 @@ public class DecisionEngineService {
             score -= 1;
         }
         if ("treated tap".equals(input.normalizedSampleSource()) && !input.normalizedExistingTreatment().isBlank()) {
+            score -= 1;
+        }
+        if ("treated tap".equals(input.normalizedSampleSource()) && input.normalizedExistingTreatments().size() > 1) {
             score -= 1;
         }
         if (score >= 3) {
@@ -229,6 +261,9 @@ public class DecisionEngineService {
         if (trigger.contains("flood") || trigger.contains("wildfire")) {
             return Urgency.IMMEDIATE;
         }
+        if ("chemical".equals(input.normalizedSmellType()) && "sudden".equals(input.normalizedChangeTiming())) {
+            return Urgency.PROMPT;
+        }
         if (signal.signal() != null) {
             return signal.signal().urgency();
         }
@@ -250,6 +285,9 @@ public class DecisionEngineService {
                 default -> Scope.UNCLEAR;
             };
         }
+        if ("whole-house".equals(input.normalizedLocationScope()) || "whole house".equals(input.normalizedLocationScope())) {
+            return Scope.WHOLE_HOUSE;
+        }
         if (signal.signal() != null && signal.signal().scope() != Scope.UNCLEAR) {
             return signal.signal().scope();
         }
@@ -262,10 +300,25 @@ public class DecisionEngineService {
         return Scope.UNCLEAR;
     }
 
-    private ActionMode classifyActionMode(DecisionInput input, Urgency urgency, ProblemType problemType, SignalMatch signal) {
+    private ActionMode classifyActionMode(
+            DecisionInput input,
+            Urgency urgency,
+            ProblemType problemType,
+            SignalMatch signal,
+            DecisionNormalizedInput normalized
+    ) {
         String trigger = input.normalizedTrigger();
         if (trigger.contains("flood") || trigger.contains("wildfire")) {
             return ActionMode.CONTACT_LOCAL_GUIDANCE;
+        }
+        if (trigger.contains("retest-after-treatment")) {
+            return ActionMode.RETEST;
+        }
+        if (normalized.thresholdTriggered() && problemType == ProblemType.CHEMICAL_HEALTH) {
+            return ActionMode.RETEST;
+        }
+        if ("treated tap".equals(input.normalizedSampleSource()) && !input.normalizedExistingTreatments().isEmpty()) {
+            return ActionMode.RETEST;
         }
         if (signal.signal() != null) {
             return signal.signal().actionMode();
@@ -285,12 +338,22 @@ public class DecisionEngineService {
         return ActionMode.RETEST;
     }
 
-    private Branch routeBranch(Urgency urgency, Confidence confidence, ProblemType problemType, Tier tier) {
+    private Branch routeBranch(
+            Urgency urgency,
+            Confidence confidence,
+            ProblemType problemType,
+            Tier tier,
+            DecisionNormalizedInput normalized
+    ) {
         if (urgency == Urgency.IMMEDIATE) {
             return Branch.RED;
         }
         if ((problemType == ProblemType.MICROBIAL || problemType == ProblemType.CHEMICAL_HEALTH) && confidence == Confidence.LOW) {
             return Branch.RED;
+        }
+        if (normalized.thresholdTriggered()
+                && (problemType == ProblemType.CHEMICAL_HEALTH || problemType == ProblemType.CORROSION)) {
+            return Branch.AMBER;
         }
         if (confidence == Confidence.LOW || tier != Tier.A) {
             return Branch.AMBER;
@@ -335,6 +398,15 @@ public class DecisionEngineService {
         }
         reasons.add("Support level resolved as " + tier.label() + " with completeness score " + normalized.completenessScore() + ".");
         reasons.add("Problem type classified as " + type.wireValue() + " with urgency set to " + urgency.wireValue() + ".");
+        if (normalized.thresholdTriggered() && !normalized.thresholdSummary().isBlank()) {
+            reasons.add("Registry threshold check: " + normalized.thresholdSummary() + ".");
+        }
+        if (usesDerivedSignal(input, normalized, signal)) {
+            reasons.add("Secondary context from smell, stain, taste, or timing was used to strengthen signal matching.");
+        }
+        if (!input.normalizedLocationScope().isBlank() && scopeHintSupportsWholeHouse(input, type)) {
+            reasons.add("Issue location context suggests a broader whole-house pattern.");
+        }
         if (input.infantPresent() || input.pregnancyPresent()) {
             reasons.add("Vulnerable household flag raises priority for drinking-water safety actions.");
         }
@@ -345,11 +417,18 @@ public class DecisionEngineService {
             DecisionInput input,
             Confidence confidence,
             Tier tier,
+            SignalMatch signal,
             DecisionNormalizedInput normalized
     ) {
         List<String> notes = new ArrayList<>();
         if (!normalized.unitSupported() && input.entryMode().wireValue().equals("result-first")) {
             notes.add("Unit is missing or unsupported for this analyte. Tier is downgraded.");
+        }
+        if (normalized.unitConverted() && normalized.canonicalNumericResultValue() != null) {
+            notes.add("Entered unit was converted to canonical registry unit " + normalized.canonicalUnit() + " for threshold comparison.");
+        }
+        if (!normalized.thresholdTriggered() && !normalized.thresholdSummary().isBlank()) {
+            notes.add("Threshold check completed: " + normalized.thresholdSummary() + ".");
         }
         if (normalized.sampleFreshness() == SampleFreshness.STALE) {
             notes.add("Sample is stale. Retest is required before strong recommendations.");
@@ -358,6 +437,12 @@ public class DecisionEngineService {
         }
         if (!"yes".equals(input.normalizedLabCertified())) {
             notes.add("Certified lab status is not confirmed. Confidence is reduced.");
+        }
+        if ("treated tap".equals(input.normalizedSampleSource()) && input.normalizedExistingTreatments().size() > 1) {
+            notes.add("Multiple active treatments are already in place on a treated tap sample. Verify raw-vs-treated context before strong conclusions.");
+        }
+        if ("yes".equals(input.normalizedLabCertified()) && input.normalizedLabName().isBlank()) {
+            notes.add("Lab is marked certified, but lab identity is missing. Keep the paper trail for later verification.");
         }
         if (normalized.qualifierType() == QualifierType.UNKNOWN) {
             notes.add("Result qualifier is unclear. Interpret with caution.");
@@ -368,7 +453,34 @@ public class DecisionEngineService {
         if (confidence == Confidence.LOW) {
             notes.add("Low confidence: prioritize retest and local guidance before product decisions.");
         }
+        if (signal.signal() != null && !signal.signal().sourceVersion().isBlank()) {
+            notes.add("Registry source version: " + signal.signal().sourceVersion() + ".");
+        }
+        notes.add("Decision rules version: " + DECISION_VERSION + ".");
         return notes;
+    }
+
+    private boolean hasSecondaryContext(DecisionInput input) {
+        return !input.normalizedSmellType().isBlank()
+                || !input.normalizedStainType().isBlank()
+                || !input.normalizedTasteType().isBlank()
+                || !input.normalizedLocationScope().isBlank()
+                || !input.normalizedChangeTiming().isBlank();
+    }
+
+    private boolean usesDerivedSignal(DecisionInput input, DecisionNormalizedInput normalized, SignalMatch signal) {
+        if (signal.signal() == null) {
+            return false;
+        }
+        boolean derivedSymptom = input.normalizedSymptom().isBlank() && !normalized.symptomKey().isBlank();
+        boolean derivedTrigger = input.normalizedTrigger().isBlank() && !normalized.triggerKey().isBlank();
+        return derivedSymptom || derivedTrigger;
+    }
+
+    private boolean scopeHintSupportsWholeHouse(DecisionInput input, ProblemType type) {
+        String locationScope = input.normalizedLocationScope();
+        return ("whole-house".equals(locationScope) || "whole house".equals(locationScope))
+                && (type == ProblemType.AESTHETIC_OPERATIONAL || type == ProblemType.CORROSION);
     }
 
     private List<String> buildTodayActions(Branch branch, ActionMode mode) {

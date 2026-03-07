@@ -1,61 +1,120 @@
 @param java.util.Map<String, Long> familyCounts
 @param java.util.List<com.example.wellwater.pseo.PseoPage> featuredPages
 
-@template.layout.main(title = "Well Water pSEO Hub", robots = "index,follow", description = "Well water guides for contaminants symptoms compares and trigger events.", content = @`
-    <section class="panel">
-        <h1>Well Water Guides and Next Steps</h1>
-        <p class="muted">Decision engine core with pSEO acquisition surface. Use one of the three tool entry modes below.</p>
-    </section>
+@template.layout.main(title = "Private Well Water Guide | Results, Symptoms, and Next Steps", robots = "index,follow", description = "Use test results, water symptoms, or recent changes to decide what to verify next for a private well.", content = @`
+    <main class="stack">
+        <section class="hero">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow">Decision-first research surface</span>
+                    <h1>Private well answers built around the next safe step.</h1>
+                    <p class="hero-lead">Start with a lab result, a water symptom, or a recent change. The public pages help you orient fast. The tool turns that context into a noindex decision result.</p>
+                    <div class="hero-actions">
+                        <a class="button-link" href="/tool/result-first">Start From Lab Results</a>
+                        <a class="button-link-secondary" href="/well-water/family/contaminants">Browse Guides</a>
+                    </div>
+                </div>
+                <aside class="hero-note">
+                    <strong>Three ways in</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Use the same engine from three real-world starting points instead of forcing every visit through one generic form.</p>
+                    <div class="hero-metrics">
+                        <div class="metric">
+                            <strong>3</strong>
+                            <span>entry modes</span>
+                        </div>
+                        <div class="metric">
+                            <strong>${familyCounts.get("contaminants") + familyCounts.get("symptoms") + familyCounts.get("compares") + familyCounts.get("triggers")}</strong>
+                            <span>public guide pages</span>
+                        </div>
+                        <div class="metric">
+                            <strong>Noindex</strong>
+                            <span>personalized results</span>
+                        </div>
+                        <div class="metric">
+                            <strong>Claim-based</strong>
+                            <span>after verdict</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
 
-    <section class="panel">
-        <h2>Decision Engine Entry</h2>
-        <div class="grid">
-            <a class="panel" href="/tool/result-first">
-                <h3>Result-First</h3>
-                <p class="muted">Start from lab result values.</p>
-            </a>
-            <a class="panel" href="/tool/symptom-first">
-                <h3>Symptom-First</h3>
-                <p class="muted">Start from smell/stain/taste symptoms.</p>
-            </a>
-            <a class="panel" href="/tool/trigger-first">
-                <h3>Trigger-First</h3>
-                <p class="muted">Start from flood/repair/wildfire events.</p>
-            </a>
-        </div>
-    </section>
-
-    <section class="panel">
-        <h2>Page Families</h2>
-        <div class="grid">
-            <a class="panel" href="/well-water/family/contaminants">
-                <h3>Contaminants</h3>
-                <p class="muted">${familyCounts.get("contaminants")} pages</p>
-            </a>
-            <a class="panel" href="/well-water/family/symptoms">
-                <h3>Symptoms</h3>
-                <p class="muted">${familyCounts.get("symptoms")} pages</p>
-            </a>
-            <a class="panel" href="/well-water/family/compares">
-                <h3>Compares</h3>
-                <p class="muted">${familyCounts.get("compares")} pages</p>
-            </a>
-            <a class="panel" href="/well-water/family/triggers">
-                <h3>Triggers</h3>
-                <p class="muted">${familyCounts.get("triggers")} pages</p>
-            </a>
-        </div>
-    </section>
-
-    <section class="panel">
-        <h2>Featured Pages</h2>
-        <div class="grid">
-            @for (var page : featuredPages)
-                <a class="panel" href="/well-water/${page.slug()}">
-                    <h3>${page.h1()}</h3>
-                    <p class="small muted">${page.family()}</p>
+        <section class="panel panel-accent">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Start here</p>
+                    <h2>Choose the signal you already have</h2>
+                </div>
+                <p class="section-copy">The intake paths match how private well owners actually arrive: a report, a symptom, or a sudden change.</p>
+            </div>
+            <div class="grid">
+                <a class="card-link card-link-accent" href="/tool/result-first">
+                    <span class="card-kicker">Result-first</span>
+                    <h3>Lab Results</h3>
+                    <p class="card-meta">Enter one analyte from a recent report and move straight into verification logic, scope, and next actions.</p>
                 </a>
-            @endfor
-        </div>
-    </section>
+                <a class="card-link" href="/tool/symptom-first">
+                    <span class="card-kicker">Symptom-first</span>
+                    <h3>Symptoms</h3>
+                    <p class="card-meta">Start from smell, stain, taste, cloudiness, or another visible pattern when you do not have clean lab data yet.</p>
+                </a>
+                <a class="card-link" href="/tool/trigger-first">
+                    <span class="card-kicker">Trigger-first</span>
+                    <h3>Recent Changes</h3>
+                    <p class="card-meta">Use flooding, repairs, treatment changes, or wildfire context to decide whether to retest, inspect, or escalate.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Public research</p>
+                    <h2>Browse high-intent guide families</h2>
+                </div>
+                <p class="section-copy">These pages are meant to be indexable acquisition surfaces. They orient the problem before the personalized tool takes over.</p>
+            </div>
+            <div class="grid grid-compact">
+                <a class="card-link" href="/well-water/family/contaminants">
+                    <span class="card-kicker">Family</span>
+                    <h3>Contaminants</h3>
+                    <p class="card-meta">${familyCounts.get("contaminants")} pages covering named analytes and contamination concerns.</p>
+                </a>
+                <a class="card-link" href="/well-water/family/symptoms">
+                    <span class="card-kicker">Family</span>
+                    <h3>Water Symptoms</h3>
+                    <p class="card-meta">${familyCounts.get("symptoms")} pages for signs like stains, odor, taste, and visible changes.</p>
+                </a>
+                <a class="card-link" href="/well-water/family/compares">
+                    <span class="card-kicker">Family</span>
+                    <h3>Treatment Comparisons</h3>
+                    <p class="card-meta">${familyCounts.get("compares")} pages comparing categories without forcing a premature product choice.</p>
+                </a>
+                <a class="card-link" href="/well-water/family/triggers">
+                    <span class="card-kicker">Family</span>
+                    <h3>Recent Triggers</h3>
+                    <p class="card-meta">${familyCounts.get("triggers")} pages for event-driven changes such as flooding or post-install retesting.</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Popular guides</p>
+                    <h2>Fast paths into the highest-signal pages</h2>
+                </div>
+                <p class="section-copy">Featured pages should feel like practical starting points, not a flat sitemap.</p>
+            </div>
+            <div class="grid">
+                @for (var page : featuredPages)
+                    <a class="card-link" href="/well-water/${page.slug()}">
+                        <span class="card-kicker">${page.family()}</span>
+                        <h3>${page.h1()}</h3>
+                        <p class="card-meta">${page.metaDescription()}</p>
+                    </a>
+                @endfor
+            </div>
+        </section>
+    </main>
 `)

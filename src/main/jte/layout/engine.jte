@@ -6,7 +6,7 @@
 @param gg.jte.Content rightPanel
 
 <!DOCTYPE html>
-<html lang="en" class="antialiased text-zinc-900 bg-zinc-50">
+<html lang="en" class="antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,100 +14,153 @@
     <meta name="description" content="${description}">
     <title>${title}</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Manrope', 'sans-serif'],
+                        display: ['Sora', 'sans-serif']
+                    },
                     colors: {
                         zinc: {
-                            50: '#fafafa', 100: '#f4f4f5', 200: '#e4e4e7', 300: '#d4d4d8', 400: '#a1a1aa', 500: '#71717a', 600: '#52525b', 700: '#3f3f46', 800: '#27272a', 900: '#18181b',
-                        }, safe: '#10b981', warn: '#f59e0b', danger: '#ef4444',
+                            50: '#f6f7f3', 100: '#edf0e7', 200: '#d9e0d0', 300: '#b8c4b0',
+                            400: '#879488', 500: '#5f6f63', 600: '#405144', 700: '#2d3b31',
+                            800: '#1d271f', 900: '#121914'
+                        },
+                        safe: '#1f9d73',
+                        warn: '#d8862d',
+                        danger: '#d2553f',
+                        accent: '#0f766e',
+                        accentdeep: '#154d57'
                     },
                     boxShadow: {
-                        'subtle': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
-                        'float': '0 8px 30px rgba(0, 0, 0, 0.12)',
+                        'subtle': '0 16px 40px rgba(25, 42, 28, 0.08)',
+                        'float': '0 24px 60px rgba(25, 42, 28, 0.14)'
                     }
                 }
             }
         }
     </script>
     <style>
-        ::-webkit-scrollbar { width: 6px; }
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(15, 118, 110, 0.16), transparent 28%),
+                radial-gradient(circle at top right, rgba(216, 134, 45, 0.14), transparent 26%),
+                linear-gradient(180deg, #eef2ea 0%, #f4f6f2 48%, #f8f8f4 100%);
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
-        .glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(95, 111, 99, 0.35); border-radius: 999px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(95, 111, 99, 0.55); }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .engine-frame {
+            position: relative;
+            z-index: 1;
+        }
+        .engine-shell {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+        }
+        .engine-left {
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(250, 251, 247, 0.88));
+            box-shadow: inset -1px 0 0 rgba(20, 34, 24, 0.06);
+        }
+        .engine-right {
+            background:
+                linear-gradient(180deg, rgba(244, 247, 241, 0.88), rgba(250, 250, 247, 0.78));
+        }
+        .engine-nav {
+            background: rgba(18, 25, 20, 0.04);
+            border: 1px solid rgba(18, 25, 20, 0.06);
+        }
+        .engine-kicker {
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+        .engine-brand {
+            box-shadow: 0 16px 30px rgba(15, 118, 110, 0.22);
+        }
         @media (max-width: 1023px) {
             .mobile-bottom-sheet {
-                position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
-                border-top-left-radius: 24px; border-top-right-radius: 24px;
-                box-shadow: 0 -10px 40px rgba(0,0,0,0.1); max-height: 85vh;
-                transform: translateY(calc(100% - 80px)); transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 50;
+                border-top-left-radius: 28px;
+                border-top-right-radius: 28px;
+                box-shadow: 0 -12px 42px rgba(16, 30, 21, 0.14);
+                max-height: 88vh;
+                transform: translateY(calc(100% - 82px));
+                transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
             }
             .mobile-bottom-sheet.expanded { transform: translateY(0); }
         }
     </style>
 </head>
-<body class="bg-zinc-50 h-screen w-full overflow-hidden flex flex-col lg:flex-row">
+<body class="min-h-screen w-full overflow-hidden text-zinc-900">
+    <div class="engine-frame h-screen w-full px-3 py-3 lg:px-5 lg:py-5">
+        <div class="engine-shell h-full rounded-[28px] lg:rounded-[34px] overflow-hidden flex flex-col lg:flex-row shadow-float">
+            <section class="engine-left w-full lg:w-1/2 h-full flex flex-col relative z-30 overflow-y-auto no-scrollbar pt-6 lg:pt-8 px-6 lg:px-10 xl:px-14">
+                <header class="mb-8 flex items-center justify-between gap-4">
+                    <div class="flex items-center gap-4 min-w-0">
+                        <a href="/" class="engine-brand w-11 h-11 rounded-2xl bg-gradient-to-br from-accent to-accentdeep text-white flex items-center justify-center font-display font-semibold tracking-tight">
+                            WW
+                        </a>
+                        <div class="min-w-0">
+                            <p class="engine-kicker text-[11px] font-bold text-zinc-500 mb-1">Decision Engine</p>
+                            <h1 class="font-display text-xl font-semibold tracking-tight text-zinc-900">Well Water Verdict</h1>
+                        </div>
+                    </div>
+                    <a href="/tool/${activeEntryMode}" class="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">Reset</a>
+                </header>
 
-    <!-- Left Panel: Input / Triage (50%) -->
-    <section class="w-full lg:w-1/2 h-full flex flex-col relative z-30 bg-white border-r border-zinc-200 overflow-y-auto no-scrollbar shadow-[4px_0_24px_rgba(0,0,0,0.02)] pt-6 lg:pt-10 px-6 lg:px-12 xl:px-20">
-        <!-- Header -->
-        <header class="mb-8 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <a href="/" class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center hover:bg-zinc-800 transition-colors">
-                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                </a>
-                <h1 class="text-xl font-semibold tracking-tight text-zinc-900">Well Water Verdict</h1>
-            </div>
-            <a href="/tool/${activeEntryMode}" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Reset</a>
-        </header>
+                <div class="engine-nav p-1 rounded-2xl flex mb-8">
+                    <a href="/tool/result-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"result-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Lab Results</a>
+                    <a href="/tool/symptom-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"symptom-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Symptoms</a>
+                    <a href="/tool/trigger-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"trigger-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Recent Triggers</a>
+                </div>
 
-        <!-- Segmented Control -->
-        <div class="bg-zinc-100 p-1 rounded-xl flex mb-10">
-            <a href="/tool/result-first" class="flex-1 py-2.5 text-center text-sm font-medium ${"result-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-lg shadow-sm ring-1 ring-zinc-900/5" : "text-zinc-500 hover:text-zinc-700"} transition-all">진단서 입력</a>
-            <a href="/tool/symptom-first" class="flex-1 py-2.5 text-center text-sm font-medium ${"symptom-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-lg shadow-sm ring-1 ring-zinc-900/5" : "text-zinc-500 hover:text-zinc-700"} transition-all">증상 선택</a>
-            <a href="/tool/trigger-first" class="flex-1 py-2.5 text-center text-sm font-medium ${"trigger-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-lg shadow-sm ring-1 ring-zinc-900/5" : "text-zinc-500 hover:text-zinc-700"} transition-all">사건 발생</a>
+                <div class="flex-1 pb-32 lg:pb-12">
+                    ${leftPanel}
+                </div>
+            </section>
+
+            <section class="engine-right w-full lg:w-1/2 h-full flex flex-col mobile-bottom-sheet lg:relative lg:transform-none lg:z-0 py-0 lg:py-8 px-0 lg:px-10 xl:px-14 overflow-visible lg:overflow-y-auto no-scrollbar">
+                ${rightPanel}
+            </section>
         </div>
-
-        <div class="flex-1 pb-32 lg:pb-12">
-            ${leftPanel}
-        </div>
-    </section>
-
-    <!-- Right Panel: Output / Verdict (50%) -->
-    <section class="w-full lg:w-1/2 h-full flex flex-col bg-zinc-50 mobile-bottom-sheet lg:relative lg:transform-none lg:z-0 py-0 lg:py-10 px-0 lg:px-12 xl:px-20 overflow-visible lg:overflow-y-auto no-scrollbar border-l border-zinc-200/50">
-        ${rightPanel}
-    </section>
+    </div>
 
     <script>
         function toggleBottomSheet() {
             const sheet = document.querySelector('.mobile-bottom-sheet');
             const icon = document.getElementById('chevron-icon');
             const summary = document.getElementById('mobile-summary');
-            if(!sheet) return;
+            if (!sheet) return;
             sheet.classList.toggle('expanded');
-            
+
             if (sheet.classList.contains('expanded')) {
-                if(icon) icon.classList.remove('rotate-180');
-                if(summary) {
+                if (icon) icon.classList.remove('rotate-180');
+                if (summary) {
                     summary.classList.add('opacity-0');
                     setTimeout(() => summary.classList.add('hidden'), 300);
                 }
             } else {
-                if(icon) icon.classList.add('rotate-180');
-                if(summary) {
+                if (icon) icon.classList.add('rotate-180');
+                if (summary) {
                     summary.classList.remove('hidden');
                     setTimeout(() => summary.classList.remove('opacity-0'), 10);
                 }
             }
         }
-        
-        // Ensure bottom sheet auto-expands on mobile if result exists (via a script in view.jte)
     </script>
 </body>
 </html>

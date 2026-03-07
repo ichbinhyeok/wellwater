@@ -8,7 +8,12 @@ public record DecisionNormalizedInput(
         QualifierType qualifierType,
         Double numericResultValue,
         Double qualifierNumericValue,
+        String canonicalUnit,
+        Double canonicalNumericResultValue,
         boolean unitSupported,
+        boolean unitConverted,
+        boolean thresholdTriggered,
+        String thresholdSummary,
         SampleFreshness sampleFreshness,
         int completenessScore
 ) {

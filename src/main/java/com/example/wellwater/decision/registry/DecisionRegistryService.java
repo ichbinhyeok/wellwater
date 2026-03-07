@@ -42,19 +42,38 @@ public class DecisionRegistryService {
         return findByKey(loadSignals(contaminantPath, "canonical_name"), key);
     }
 
+    public List<String> contaminantKeys() {
+        return new ArrayList<>(loadSignals(contaminantPath, "canonical_name").keySet());
+    }
+
     public Optional<RuleSignal> findSymptom(String key) {
         return findByKey(loadSignals(symptomPath, "symptom_name"), key);
+    }
+
+    public List<String> symptomKeys() {
+        return new ArrayList<>(loadSignals(symptomPath, "symptom_name").keySet());
     }
 
     public Optional<RuleSignal> findTrigger(String key) {
         return findByKey(loadSignals(triggerPath, "trigger_name"), key);
     }
 
+    public List<String> triggerKeys() {
+        return new ArrayList<>(loadSignals(triggerPath, "trigger_name").keySet());
+    }
+
     private Optional<RuleSignal> findByKey(Map<String, RuleSignal> map, String key) {
         if (key == null || key.isBlank()) {
             return Optional.empty();
         }
-        return Optional.ofNullable(map.get(key.trim().toLowerCase()));
+        String normalizedKey = key.trim().toLowerCase();
+        RuleSignal direct = map.get(normalizedKey);
+        if (direct != null) {
+            return Optional.of(direct);
+        }
+        return map.values().stream()
+                .filter(signal -> signal.aliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(normalizedKey)))
+                .findFirst();
     }
 
     private Map<String, RuleSignal> loadSignals(Path path, String keyColumn) {
@@ -87,14 +106,18 @@ public class DecisionRegistryService {
         String key = value(cols, idx, keyColumn).toLowerCase();
         return new RuleSignal(
                 key,
+                parseListField(value(cols, idx, "aliases")),
                 parseTier(value(cols, idx, "support_tier")),
                 parseProblemType(value(cols, idx, "problem_type_default")),
                 parseUrgency(value(cols, idx, "default_urgency")),
                 parseScope(value(cols, idx, "default_scope")),
                 parseActionMode(value(cols, idx, "default_action_mode")),
                 parseListField(value(cols, idx, "unit_whitelist")),
+                value(cols, idx, "canonical_unit"),
+                parseListField(value(cols, idx, "threshold_refs")),
                 parseListField(value(cols, idx, "claim_requirements")),
-                parseListField(value(cols, idx, "sources"))
+                parseListField(value(cols, idx, "sources")),
+                value(cols, idx, "source_version")
         );
     }
 

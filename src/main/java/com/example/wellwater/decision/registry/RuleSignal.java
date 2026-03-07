@@ -10,13 +10,17 @@ import java.util.List;
 
 public record RuleSignal(
         String key,
+        List<String> aliases,
         Tier tier,
         ProblemType problemType,
         Urgency urgency,
         Scope scope,
         ActionMode actionMode,
         List<String> unitWhitelist,
+        String canonicalUnit,
+        List<String> thresholdRefs,
         List<String> claimRequirements,
-        List<String> sources
+        List<String> sources,
+        String sourceVersion
 ) {
 }

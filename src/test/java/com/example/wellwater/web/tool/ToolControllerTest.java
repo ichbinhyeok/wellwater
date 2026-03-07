@@ -37,27 +37,46 @@ class ToolControllerTest {
         );
     }
 
+    private StateResourceRegistryService newStateResourceRegistry() {
+        return new StateResourceRegistryService("./data/registry/state_resource_registry.csv");
+    }
+
     @Test
     void resultFirstViewLoads() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
         ToolController controller = new ToolController(
                 newDecisionEngine(),
-                new AnalyticsEventService(tempDir.resolve("events.csv").toString())
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
         );
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.resultFirst("nitrate", model);
+        String viewName = controller.resultFirst("nitrate", "nitrate", model);
 
         assertEquals("pages/intake/result-first", viewName);
         assertNotNull(model.getAttribute("request"));
         assertNotNull(model.getAttribute("analytes"));
         assertNotNull(model.getAttribute("states"));
+        assertTrue(((java.util.List<?>) model.getAttribute("analytes")).contains("radon"));
     }
 
     @Test
     void postResultProducesViewWithResultAndCtas() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
         ToolController controller = new ToolController(
                 newDecisionEngine(),
-                new AnalyticsEventService(tempDir.resolve("events.csv").toString())
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
         );
         Model model = new ExtendedModelMap();
         ToolRequest request = new ToolRequest();
@@ -84,9 +103,16 @@ class ToolControllerTest {
 
     @Test
     void outboundRejectsUnsafeTarget() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
         ToolController controller = new ToolController(
                 newDecisionEngine(),
-                new AnalyticsEventService(tempDir.resolve("events.csv").toString())
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
         );
 
         RedirectView view = controller.outbound(
@@ -99,6 +125,88 @@ class ToolControllerTest {
                 "nitrate"
         );
 
-        assertTrue(view.getUrl().equals("/"));
+        assertEquals("/", view.getUrl());
+    }
+
+    @Test
+    void outboundRejectsArbitraryExternalTarget() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
+        ToolController controller = new ToolController(
+                newDecisionEngine(),
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
+        );
+
+        RedirectView view = controller.outbound(
+                "https://example.com/not-allowed",
+                "local_guidance",
+                "result-first",
+                "session-2",
+                "Tier A",
+                "Green",
+                "nitrate"
+        );
+
+        assertEquals("/", view.getUrl());
+    }
+
+    @Test
+    void outboundRejectsProtocolRelativeTarget() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
+        ToolController controller = new ToolController(
+                newDecisionEngine(),
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
+        );
+
+        RedirectView view = controller.outbound(
+                "//example.com/not-allowed",
+                "local_guidance",
+                "result-first",
+                "session-3",
+                "Tier A",
+                "Green",
+                "nitrate"
+        );
+
+        assertEquals("/", view.getUrl());
+    }
+
+    @Test
+    void outboundAllowsKnownStateGuidanceUrl() {
+        DecisionRegistryService registryService = new DecisionRegistryService(
+                "./data/registry/contaminant_registry.csv",
+                "./data/registry/symptom_registry.csv",
+                "./data/registry/trigger_registry.csv"
+        );
+        ToolController controller = new ToolController(
+                newDecisionEngine(),
+                new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
+                registryService,
+                newStateResourceRegistry()
+        );
+        String target = "https://www.pa.gov/agencies/dep/residents/my-water/private-wells/water-testing";
+
+        RedirectView view = controller.outbound(
+                target,
+                "local_guidance",
+                "result-first",
+                "session-4",
+                "Tier A",
+                "Green",
+                "nitrate"
+        );
+
+        assertEquals(target, view.getUrl());
     }
 }
