@@ -2,6 +2,7 @@ package com.example.wellwater.web.tool;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.decision.DecisionEngineService;
+import com.example.wellwater.decision.registry.DecisionRegistryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.ui.ExtendedModelMap;
@@ -19,10 +20,20 @@ class ToolControllerTest {
     @TempDir
     Path tempDir;
 
+    private DecisionEngineService newDecisionEngine() {
+        return new DecisionEngineService(
+                new DecisionRegistryService(
+                        "./data/registry/contaminant_registry.csv",
+                        "./data/registry/symptom_registry.csv",
+                        "./data/registry/trigger_registry.csv"
+                )
+        );
+    }
+
     @Test
     void resultFirstViewLoads() {
         ToolController controller = new ToolController(
-                new DecisionEngineService(),
+                newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString())
         );
         Model model = new ExtendedModelMap();
@@ -37,7 +48,7 @@ class ToolControllerTest {
     @Test
     void postResultProducesViewWithResultAndCtas() {
         ToolController controller = new ToolController(
-                new DecisionEngineService(),
+                newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString())
         );
         Model model = new ExtendedModelMap();
@@ -61,7 +72,7 @@ class ToolControllerTest {
     @Test
     void outboundRejectsUnsafeTarget() {
         ToolController controller = new ToolController(
-                new DecisionEngineService(),
+                newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString())
         );
 
@@ -78,4 +89,3 @@ class ToolControllerTest {
         assertTrue(view.getUrl().equals("/"));
     }
 }
-

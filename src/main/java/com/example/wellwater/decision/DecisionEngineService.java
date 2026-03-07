@@ -11,41 +11,42 @@ import com.example.wellwater.decision.model.Scope;
 import com.example.wellwater.decision.model.ScenarioOption;
 import com.example.wellwater.decision.model.Tier;
 import com.example.wellwater.decision.model.Urgency;
+import com.example.wellwater.decision.registry.DecisionRegistryService;
+import com.example.wellwater.decision.registry.RuleSignal;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class DecisionEngineService {
 
-    private static final Set<String> TIER_A_ANALYTES = Set.of(
-            "total coliform", "coliform", "e. coli", "e coli", "nitrate", "arsenic",
-            "iron", "manganese", "hardness", "ph", "tds", "sulfate", "sulfur odor", "sulfur"
-    );
-    private static final Set<String> TIER_B_ANALYTES = Set.of(
-            "lead", "pfas", "radium", "radon", "pesticides", "herbicides", "vocs", "voc",
-            "uranium", "chromium", "barium", "selenium"
-    );
+    private final DecisionRegistryService registryService;
+
+    public DecisionEngineService(DecisionRegistryService registryService) {
+        this.registryService = registryService;
+    }
 
     public DecisionResult decide(DecisionInput input) {
-        Tier tier = resolveTier(input);
-        ProblemType problemType = classifyProblemType(input, tier);
+        SignalMatch signal = resolveSignal(input);
+
+        Tier tier = resolveTier(signal);
+        ProblemType problemType = classifyProblemType(input, tier, signal);
         Confidence confidence = scoreConfidence(input, tier);
-        Urgency urgency = classifyUrgency(input, tier, problemType, confidence);
-        Scope scope = classifyScope(input, problemType);
-        ActionMode actionMode = classifyActionMode(input, urgency, problemType);
+        Urgency urgency = classifyUrgency(input, tier, problemType, confidence, signal);
+        Scope scope = classifyScope(problemType, signal);
+        ActionMode actionMode = classifyActionMode(input, urgency, problemType, signal);
         Branch branch = routeBranch(urgency, confidence, problemType, tier);
 
-        List<String> keyReasons = buildKeyReasons(input, tier, problemType, urgency);
+        List<String> keyReasons = buildKeyReasons(input, tier, problemType, urgency, signal);
         List<String> qualityNotes = buildQualityNotes(input, confidence, tier);
         List<String> today = buildTodayActions(branch, actionMode);
         List<String> thisWeek = buildThisWeekActions(branch, problemType);
         List<String> later = buildLaterActions(problemType);
-        List<ScenarioOption> scenarios = buildScenarios(branch, problemType, scope, tier);
+        List<ScenarioOption> scenarios = buildScenarios(branch, problemType, scope, tier, signal);
         List<String> assumptions = buildAssumptions(tier, confidence);
-        List<String> sources = buildSources(input, problemType);
+        List<String> sources = buildSources(problemType, signal);
         List<CtaLink> ctas = routeCtas(branch);
 
         return new DecisionResult(
@@ -74,83 +75,44 @@ public class DecisionEngineService {
         );
     }
 
-    private Tier resolveTier(DecisionInput input) {
-        String analyte = input.normalizedAnalyte();
-        if (!analyte.isBlank()) {
-            if (TIER_A_ANALYTES.contains(analyte)) {
-                return Tier.A;
+    private SignalMatch resolveSignal(DecisionInput input) {
+        if (!input.normalizedAnalyte().isBlank()) {
+            var maybe = registryService.findContaminant(input.normalizedAnalyte());
+            if (maybe.isPresent()) {
+                return new SignalMatch("contaminant", maybe.get());
             }
-            if (TIER_B_ANALYTES.contains(analyte)) {
-                return Tier.B;
-            }
-            return Tier.C;
         }
-
-        String symptom = input.normalizedSymptom();
-        if (!symptom.isBlank()) {
-            if (symptom.contains("rotten") || symptom.contains("orange") || symptom.contains("black")
-                    || symptom.contains("metallic") || symptom.contains("cloudy")
-                    || symptom.contains("scale") || symptom.contains("blue-green")) {
-                return Tier.A;
+        if (!input.normalizedSymptom().isBlank()) {
+            var maybe = registryService.findSymptom(input.normalizedSymptom());
+            if (maybe.isPresent()) {
+                return new SignalMatch("symptom", maybe.get());
             }
-            return Tier.C;
         }
-
-        String trigger = input.normalizedTrigger();
-        if (!trigger.isBlank()) {
-            if (trigger.contains("flood") || trigger.contains("wildfire")
-                    || trigger.contains("repair") || trigger.contains("rain")) {
-                return Tier.B;
+        if (!input.normalizedTrigger().isBlank()) {
+            var maybe = registryService.findTrigger(input.normalizedTrigger());
+            if (maybe.isPresent()) {
+                return new SignalMatch("trigger", maybe.get());
             }
-            return Tier.C;
+        }
+        return new SignalMatch("fallback", null);
+    }
+
+    private Tier resolveTier(SignalMatch signal) {
+        if (signal.signal() != null) {
+            return signal.signal().tier();
         }
         return Tier.C;
     }
 
-    private ProblemType classifyProblemType(DecisionInput input, Tier tier) {
-        String analyte = input.normalizedAnalyte();
-        if (!analyte.isBlank()) {
-            if (analyte.contains("coliform") || analyte.contains("e. coli") || analyte.contains("e coli")) {
-                return ProblemType.MICROBIAL;
-            }
-            if (analyte.equals("nitrate") || analyte.equals("arsenic")
-                    || analyte.equals("lead") || analyte.equals("pfas")
-                    || analyte.equals("radon") || analyte.equals("radium")
-                    || analyte.equals("uranium") || analyte.equals("chromium")
-                    || analyte.equals("barium") || analyte.equals("selenium")) {
-                return ProblemType.CHEMICAL_HEALTH;
-            }
-            if (analyte.equals("ph") || analyte.equals("copper")) {
-                return ProblemType.CORROSION;
-            }
-            if (analyte.equals("iron") || analyte.equals("manganese")
-                    || analyte.equals("hardness") || analyte.equals("tds")
-                    || analyte.equals("sulfate") || analyte.equals("sulfur")
-                    || analyte.equals("chloride") || analyte.equals("sodium")) {
-                return ProblemType.AESTHETIC_OPERATIONAL;
-            }
+    private ProblemType classifyProblemType(DecisionInput input, Tier tier, SignalMatch signal) {
+        if (signal.signal() != null) {
+            return signal.signal().problemType();
         }
-
-        String symptom = input.normalizedSymptom();
-        if (!symptom.isBlank()) {
-            if (symptom.contains("blue-green") || symptom.contains("metallic")) {
-                return ProblemType.CORROSION;
-            }
-            return ProblemType.AESTHETIC_OPERATIONAL;
-        }
-
-        String trigger = input.normalizedTrigger();
-        if (!trigger.isBlank()) {
-            if (trigger.contains("flood") || trigger.contains("wildfire")) {
-                return ProblemType.CHEMICAL_HEALTH;
-            }
-            if (trigger.contains("rain") || trigger.contains("repair")) {
-                return ProblemType.MICROBIAL;
-            }
-        }
-
         if (tier == Tier.C) {
             return ProblemType.UNSUPPORTED;
+        }
+        if (!input.normalizedTrigger().isBlank()) {
+            return ProblemType.CHEMICAL_HEALTH;
         }
         return ProblemType.AESTHETIC_OPERATIONAL;
     }
@@ -188,7 +150,7 @@ public class DecisionEngineService {
         return Confidence.LOW;
     }
 
-    private Urgency classifyUrgency(DecisionInput input, Tier tier, ProblemType problemType, Confidence confidence) {
+    private Urgency classifyUrgency(DecisionInput input, Tier tier, ProblemType problemType, Confidence confidence, SignalMatch signal) {
         String analyte = input.normalizedAnalyte();
         String trigger = input.normalizedTrigger();
         String resultValue = input.normalizedResultValue();
@@ -202,6 +164,9 @@ public class DecisionEngineService {
         if (trigger.contains("flood") || trigger.contains("wildfire")) {
             return Urgency.IMMEDIATE;
         }
+        if (signal.signal() != null) {
+            return signal.signal().urgency();
+        }
         if (problemType == ProblemType.MICROBIAL || problemType == ProblemType.CHEMICAL_HEALTH) {
             return Urgency.PROMPT;
         }
@@ -211,9 +176,9 @@ public class DecisionEngineService {
         return Urgency.ROUTINE;
     }
 
-    private Scope classifyScope(DecisionInput input, ProblemType problemType) {
-        if ("both".equalsIgnoreCase(input.normalizedSampleSource())) {
-            return Scope.BOTH;
+    private Scope classifyScope(ProblemType problemType, SignalMatch signal) {
+        if (signal.signal() != null && signal.signal().scope() != Scope.UNCLEAR) {
+            return signal.signal().scope();
         }
         if (problemType == ProblemType.MICROBIAL || problemType == ProblemType.CHEMICAL_HEALTH) {
             return Scope.DRINKING_ONLY;
@@ -224,10 +189,13 @@ public class DecisionEngineService {
         return Scope.UNCLEAR;
     }
 
-    private ActionMode classifyActionMode(DecisionInput input, Urgency urgency, ProblemType problemType) {
+    private ActionMode classifyActionMode(DecisionInput input, Urgency urgency, ProblemType problemType, SignalMatch signal) {
         String trigger = input.normalizedTrigger();
         if (trigger.contains("flood") || trigger.contains("wildfire")) {
             return ActionMode.CONTACT_LOCAL_GUIDANCE;
+        }
+        if (signal.signal() != null) {
+            return signal.signal().actionMode();
         }
         if (urgency == Urgency.IMMEDIATE && problemType == ProblemType.MICROBIAL) {
             return ActionMode.USE_ALTERNATE_WATER;
@@ -278,8 +246,13 @@ public class DecisionEngineService {
         return "You can evaluate treatment options, but keep verification and claim checks in the loop.";
     }
 
-    private List<String> buildKeyReasons(DecisionInput input, Tier tier, ProblemType type, Urgency urgency) {
+    private List<String> buildKeyReasons(DecisionInput input, Tier tier, ProblemType type, Urgency urgency, SignalMatch signal) {
         List<String> reasons = new ArrayList<>();
+        if (signal.signal() != null) {
+            reasons.add("Registry-matched " + signal.sourceType() + " signal: " + signal.signal().key() + ".");
+        } else {
+            reasons.add("No direct registry match. Conservative fallback routing was applied.");
+        }
         reasons.add("Support level resolved as " + tier.label() + " based on current analyte/symptom/trigger signal.");
         reasons.add("Problem type classified as " + type.wireValue() + " with urgency set to " + urgency.wireValue() + ".");
         if (input.infantPresent() || input.pregnancyPresent()) {
@@ -354,8 +327,11 @@ public class DecisionEngineService {
         return actions;
     }
 
-    private List<ScenarioOption> buildScenarios(Branch branch, ProblemType type, Scope scope, Tier tier) {
+    private List<ScenarioOption> buildScenarios(Branch branch, ProblemType type, Scope scope, Tier tier, SignalMatch signal) {
         List<ScenarioOption> out = new ArrayList<>();
+        List<String> claims = signal.signal() == null || signal.signal().claimRequirements().isEmpty()
+                ? List.of("target contaminant reduction claim", "certified method fit")
+                : signal.signal().claimRequirements();
         out.add(new ScenarioOption(
                 "verify-first",
                 "Verify First",
@@ -378,7 +354,7 @@ public class DecisionEngineService {
                     "Useful when symptoms impact multiple fixtures and operations.",
                     "Higher install complexity and maintenance load.",
                     "whole-house",
-                    List.of("claim fit by nuisance profile", "maintenance fit"),
+                    claims,
                     "$900 - $4,000+",
                     "$120 - $600/year",
                     "Compare categories by claim and maintenance pattern.",
@@ -392,7 +368,7 @@ public class DecisionEngineService {
                     "Useful for exposure control before broad system decisions.",
                     "Does not address non-drinking fixture issues.",
                     "drinking-only",
-                    List.of("target contaminant reduction claim"),
+                    claims,
                     "$150 - $900",
                     "$60 - $240/year",
                     "Use claim-based filtering for drinking use first.",
@@ -426,17 +402,20 @@ public class DecisionEngineService {
         return assumptions;
     }
 
-    private List<String> buildSources(DecisionInput input, ProblemType type) {
-        List<String> sources = new ArrayList<>();
+    private List<String> buildSources(ProblemType type, SignalMatch signal) {
+        LinkedHashSet<String> sources = new LinkedHashSet<>();
+        if (signal.signal() != null) {
+            sources.addAll(signal.signal().sources());
+        }
         sources.add("https://www.epa.gov/privatewells");
         sources.add("https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html");
         if (type == ProblemType.CHEMICAL_HEALTH) {
             sources.add("https://www.epa.gov/sdwa/drinking-water-regulations-and-contaminants");
         }
-        if (input.normalizedTrigger().contains("wildfire")) {
+        if (signal.signal() != null && signal.signal().key().contains("wildfire")) {
             sources.add("https://www.cdc.gov/environmental-health-services/php/water/private-wells-after-a-wildfire.html");
         }
-        return sources;
+        return new ArrayList<>(sources);
     }
 
     private List<CtaLink> routeCtas(Branch branch) {
@@ -462,5 +441,10 @@ public class DecisionEngineService {
                 new CtaLink("save_report", "Retest and Verify Over Time", "https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html")
         );
     }
-}
 
+    private record SignalMatch(
+            String sourceType,
+            RuleSignal signal
+    ) {
+    }
+}

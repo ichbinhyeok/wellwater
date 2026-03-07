@@ -7,13 +7,20 @@ import com.example.wellwater.decision.model.EntryMode;
 import com.example.wellwater.decision.model.ProblemType;
 import com.example.wellwater.decision.model.Tier;
 import com.example.wellwater.decision.model.Urgency;
+import com.example.wellwater.decision.registry.DecisionRegistryService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DecisionEngineServiceTest {
 
-    private final DecisionEngineService service = new DecisionEngineService();
+    private final DecisionEngineService service = new DecisionEngineService(
+            new DecisionRegistryService(
+                    "./data/registry/contaminant_registry.csv",
+                    "./data/registry/symptom_registry.csv",
+                    "./data/registry/trigger_registry.csv"
+            )
+    );
 
     @Test
     void nitrateWithInfantRoutesToImmediateRed() {
@@ -89,4 +96,3 @@ class DecisionEngineServiceTest {
         assertEquals(Branch.GREEN, result.branch());
     }
 }
-

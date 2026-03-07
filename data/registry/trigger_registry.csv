@@ -1,0 +1,8 @@
+trigger_name,support_tier,problem_type_default,default_urgency,default_scope,default_action_mode,claim_requirements,sources
+after-flood,B,chemical-health,immediate,drinking-only,contact_local_guidance,post-flood testing protocol|local guidance requirement,https://www.epa.gov/privatewells/what-do-your-private-well-after-flood|https://www.cdc.gov/water-emergency/about/how-to-disinfect-wells-after-an-emergency.html
+after-heavy-rain,B,microbial,prompt,drinking-only,retest,bacteria retest suitability|event-triggered testing claim,https://www.epa.gov/privatewells/protect-your-homes-water|https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html
+after-repair,B,microbial,prompt,drinking-only,retest,post-repair retest method|source inspection requirement,https://www.epa.gov/privatewells/protect-your-homes-water|https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html
+after-wildfire,B,chemical-health,immediate,drinking-only,contact_local_guidance,post-wildfire testing protocol|local guidance requirement,https://www.cdc.gov/environmental-health-services/php/water/private-wells-after-a-wildfire.html|https://www.epa.gov/privatewells
+home-purchase-test,B,chemical-health,prompt,both,retest,home purchase test panel suitability|certified lab requirement,https://www.epa.gov/privatewells|https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html
+retest-after-treatment,A,aesthetic-operational,routine,both,retest,verification schedule claim|maintenance follow-up claim,https://www.cdc.gov/drinking-water/safety/guidelines-for-treating-well-water.html|https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html
+

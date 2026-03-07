@@ -1,0 +1,9 @@
+symptom_name,support_tier,problem_type_default,default_urgency,default_scope,default_action_mode,claim_requirements,sources
+rotten-egg-smell,A,aesthetic-operational,prompt,whole-house,compare_treatment,sulfur odor treatment suitability|verification retest claim,https://extension.psu.edu/hydrogen-sulfide-rotten-egg-odor-in-water-wells/|https://www.epa.gov/privatewells
+orange-stains,A,aesthetic-operational,routine,whole-house,compare_treatment,iron manganese treatment suitability|maintenance fit claim,https://www.epa.gov/privatewells|https://www.health.state.mn.us/wellwaterqlty
+black-stains,A,aesthetic-operational,routine,whole-house,compare_treatment,manganese reduction claim|whole-house suitability claim,https://www.epa.gov/privatewells|https://www.health.state.mn.us/wellwaterqlty
+metallic-taste,A,corrosion,prompt,whole-house,inspect_source,corrosion control suitability claim|lead follow-up claim,https://www.epa.gov/privatewells|https://www.health.state.mn.us/wellwaterqlty
+cloudy-water,A,aesthetic-operational,prompt,whole-house,retest,turbidity clarification suitability|retest-first claim,https://www.cdc.gov/drinking-water/safety/guidelines-for-testing-well-water.html|https://www.epa.gov/privatewells
+scale-buildup,A,aesthetic-operational,routine,whole-house,compare_treatment,hardness treatment suitability|maintenance fit claim,https://www.epa.gov/privatewells|https://www.epa.gov/sdwa/secondary-drinking-water-standards-guidance-nuisance-chemicals
+blue-green-stains,A,corrosion,prompt,whole-house,inspect_source,copper/corrosion follow-up claim|source inspection claim,https://www.health.state.mn.us/wellwaterqlty|https://www.epa.gov/privatewells
+
