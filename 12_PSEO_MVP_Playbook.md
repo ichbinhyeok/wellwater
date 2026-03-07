@@ -1,90 +1,194 @@
-# 문서 12. pSEO MVP Playbook
+﻿# 문서 12. Decision Engine MVP Playbook (CSV-first)
 
 ## 1. 목표
 
-목표는 `well water pSEO` 트래픽을 만들고 수익화 루프를 검증하는 것이다.  
-현재 단계의 핵심 KPI는 아래 3개다.
+이 단계의 MVP는 `pSEO 사이트`가 아니라 **Decision Engine MVP**다.
 
-1. indexable 페이지 수
-2. 유입 페이지당 CTA 클릭률
-3. 월 수익(광고+제휴 합산)
+- 제품 핵심: private well decision engine
+- 유입 엔진: pSEO
+- 수익 구조: 판정 이후 CTA(lead/affiliate)
 
-## 2. 이번에 살린 것
+핵심 KPI:
+1. completed decision sessions
+2. verdict 이후 CTA click rate
+3. 월 수익(lead + affiliate)
 
-기존 문서에서 아래만 MVP에 남긴다.
+## 2. 범위 정렬 (문서 00~10 기준)
 
-- `06_Content_SEO_Architecture.md`의 page family 구조
-- `07_Monetization_Ops.md`의 disclosure 및 CTA 원칙
-- `05_Trust_Compliance_Guidelines.md`의 과잉확신 금지 문구 원칙
-- `09_Execution_Roadmap_KPI.md`의 측정 중심 운영 리듬
+아래는 MVP에서 **반드시 포함**한다.
 
-## 3. 이번에 뺀 것
+1. 3입구 + 1엔진
+- result-first
+- symptom-first
+- trigger-first
+- 세 입구는 하나의 판정 엔진으로 연결
 
-MVP에서는 아래를 제외한다.
+2. 판정 구조
+- Tier A / Tier B / Tier C
+- multi-axis verdict
+  - urgency
+  - scope
+  - problem_type
+  - action_mode
+- confidence (High / Medium / Low)
 
-- decision engine runtime 로직
-- multi-axis verdict 계산
+3. 추천 구조
+- brand-first 금지
+- claim-based recommendation 필수
+
+4. 화면/정책
+- 결과 화면 7블록
+- safety before commerce
+- red/amber/green CTA 우선순위
+- personalized result는 noindex
+
+5. pSEO 역할
+- pSEO는 유입층으로 유지
+- public surface는 index
+- pSEO -> 엔진 진입 CTA를 명시적으로 연결
+
+## 3. 이번 MVP에서 제외 (의도적)
+
+아래만 제외한다.
+
 - DB/Flyway
-- admin 운영 도구
-- ingest API 복잡도
+- admin 운영 UI
+- OCR/파일 파싱 자동화
+- 계정/히스토리
+- 복잡한 ingest API
+- city/zip 대량 페이지
 
-## 4. 현재 기술 구조
+즉, **CSV를 쓰기 위해 admin/DB를 제외**하는 것이며,
+decision engine 자체를 제외하는 것이 아니다.
 
-- 렌더링: Spring Boot + JTE SSR
-- 데이터 소스: `data/pseo/pages.csv`
-- 라우팅:
-  - `/`
-  - `/well-water/family/{family}`
-  - `/well-water/{slug}`
-  - `/sitemap.xml`
+## 4. 현재 상태 진단 (2026-03-07)
 
-## 5. CSV 스키마
+현재 레포는 아래까지 구현됨.
 
-파일: `data/pseo/pages.csv`
+- pSEO public surface
+- pSEO CSV 60페이지
+- source/search 메타 기록
+- sitemap
 
-필수 컬럼:
-- `family` (`contaminants|symptoms|compares|triggers`)
-- `slug`
-- `title`
-- `h1`
-- `meta_description`
-- `intro`
-- `action_now`
-- `what_to_test`
-- `primary_cta_label`
-- `primary_cta_url`
-- `money_cta_label`
-- `money_cta_url`
-- `disclosure`
-- `source_url`
-- `search_query`
-- `search_performed_at`
-- `fetched_at`
+현재 미구현 핵심.
 
-## 6. 원천 데이터 수집 규칙
+- 3입구 엔진 라우트
+- Tier 분기
+- multi-axis classifier
+- claim-based scenario compare
+- result 7블록(noindex)
+- verdict 기반 CTA routing
+- decision session analytics
 
-원천 데이터는 수집 시마다 반드시 인터넷 검색으로 확인한다.
+## 5. MVP 아키텍처 (CSV-first)
 
-운영 체크:
-1. `source_url` 비어 있으면 배포 금지
-2. `search_query` 비어 있으면 배포 금지
-3. `search_performed_at` 비어 있으면 배포 금지
+## 5-1. Surface 분리
 
-## 7. 2주 실행 사이클
+1. Public Index Surface (index)
+- `/`
+- `/well-water/family/{family}`
+- `/well-water/{slug}`
+- trust/methodology/static pages
 
-주 1:
-1. 키워드/페이지 추가 10개
-2. 내부링크 보강
-3. CTA 문구 A/B 1개
+2. Decision Surface (noindex)
+- `/tool/result-first`
+- `/tool/symptom-first`
+- `/tool/trigger-first`
+- `/tool/result`
+- `/tool/result/{sessionId}` (share 시 만료/제한)
 
-주 2:
-1. GSC 노출/클릭 상위 20페이지 개선
-2. 수익 전환 상위 10페이지 CTA 위치 개선
-3. 저성과 페이지 10개 리라이트
+## 5-2. 데이터 저장 원칙
 
-## 8. 다음 우선순위
+DB 없이 CSV 사용.
 
-1. `pages.csv`를 26개에서 60개까지 확장
-2. family별 인트로 텍스트를 intent별로 세분화
-3. sitemap 제출/인덱싱 점검 자동 체크리스트 추가
+- `data/pseo/pages.csv`
+- `data/registry/contaminant_registry.csv`
+- `data/registry/symptom_registry.csv`
+- `data/registry/treatment_capability_registry.csv`
+- `data/registry/cost_registry.csv`
+- `data/registry/state_resource_registry.csv`
+- `data/registry/offer_registry.csv`
+- `data/registry/copy_block_registry.csv`
+- `data/registry/registry_change_audit.csv`
 
+원천 데이터 수집은 문서 11 정책을 따른다.
+- 수집/갱신 시 인터넷 검색 필수
+- source metadata 필수
+
+## 6. 결과 화면 필수 블록 (고정)
+
+1. Primary Verdict
+2. Why This Verdict
+3. Action Timeline (Today / This Week / Later)
+4. Scenario Compare (2~4안)
+5. Cost & Maintenance (directional)
+6. Sources & Assumptions
+7. CTA (branch 기반)
+
+순서 고정 원칙:
+- verdict -> why -> scenario -> CTA
+- safety branch에서 commerce CTA 상단 금지
+
+## 7. 2주 실행 계획 (엔진 MVP 복구)
+
+## Week 1
+
+1. 엔진 코어 최소 구현
+- entry DTO + validation
+- Tier resolver
+- multi-axis classifier (최소 규칙)
+- confidence scorer
+
+2. result-first E2E
+- `/tool/result-first` 입력
+- `/tool/result` 렌더
+- 결과 7블록 뼈대
+
+3. noindex 정책
+- decision result 템플릿 robots=noindex,nofollow
+
+## Week 2
+
+1. symptom-first / trigger-first 연결
+- triage -> result engine
+
+2. CTA router
+- red/amber/green 순서 강제
+- claim-based copy 우선
+
+3. 측정
+- `entry_mode_selected`
+- `test_completed`
+- `result_viewed`
+- `cta_clicked`
+
+4. pSEO -> tool 연결 강화
+- 상위 pSEO 페이지에 engine CTA 명시
+
+## 8. 품질 게이트 (MVP 출시 전 필수)
+
+1. 3입구 모두 결과 페이지까지 동작
+2. QA 6케이스 자동 테스트 통과
+3. Tier A analyte 최소 지원
+4. unsupported/low-confidence 분기 노출
+5. result 페이지 noindex 적용
+6. 첫 상업 CTA는 verdict 아래
+7. source/claim/disclosure 문구 QA 통과
+
+## 9. 페르소나 역할 (MVP 운영)
+
+- Owner-A (Product): 범위 고정, 출시 승인
+- Owner-B (Backend): engine rule/decision 구현
+- Owner-C (Frontend): JTE skeleton, 정보 위계
+- Owner-D (Trust): 카피/CTA 순서 승인
+- Owner-E (Data-Ops): registry/source freshness
+- Owner-F (QA): 6케이스 회귀 + 정책 검증
+
+## 10. 다음 즉시 작업 (P0)
+
+1. 3입구 라우트 + JTE 입력 폼 생성
+2. decision payload 모델 + Tier/multi-axis 최소 엔진
+3. result 7블록 템플릿 + noindex
+4. red/amber/green CTA router
+5. analytics 이벤트 CSV 로그
+6. pSEO 상세 -> tool 진입 CTA 연결

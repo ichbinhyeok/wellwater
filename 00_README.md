@@ -1,7 +1,7 @@
 # Well Water Verdict 문서 세트
 
-> 현재 실행 모드: `pSEO MVP`  
-> decision engine 문서는 확장 단계 참고용이며, 활성 범위는 `12_PSEO_MVP_Playbook.md` 기준.
+> 현재 실행 모드: `Decision Engine MVP (CSV-first)`  
+> 활성 범위는 `12_PSEO_MVP_Playbook.md` 기준이며, pSEO는 유입층이고 decision engine이 제품 핵심이다.
 
 이 문서 세트는 아래 세 가지 입력을 통합해 재구성한 실행용 패키지다.
 
@@ -55,7 +55,7 @@
     원천 데이터 수집/검증/출처 기록/신선도 SLA 정책. 리서치, Trust, Ops, 엔지니어링용.
 
 12. `12_PSEO_MVP_Playbook.md`  
-    현재 활성 실행 문서. pSEO MVP 범위와 운영 루프를 정의.
+    현재 활성 실행 문서. Decision Engine MVP(무DB/무어드민, CSV-first)와 pSEO 유입 운영 루프를 함께 정의.
 
 ## 문서 간 경계
 

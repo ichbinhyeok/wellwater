@@ -32,11 +32,14 @@
 - 상충 출처가 있으면 보수적 해석 + 추가 확인 상태로 보류한다.
 
 4. 기록
-- pSEO CSV(`data/pseo/pages.csv`)에 아래 메타데이터를 함께 저장한다.
+- 현재 pSEO MVP의 `data/pseo/pages.csv`에는 아래 필드를 필수 저장한다.
   - `source_url`
-  - `source_publisher`
+  - `search_query`
+  - `search_performed_at` (UTC)
   - `fetched_at` (UTC)
-  - `effective_date` (있으면 필수)
+- decision/registry CSV(`data/registry/*.csv`)에는 아래 확장 메타데이터를 저장한다.
+  - `source_publisher`
+  - `effective_date` (확인 가능 시 필수)
   - `source_type` (federal/state/university/standard/commercial)
   - `notes` (판단 근거 요약)
 

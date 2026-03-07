@@ -1,6 +1,6 @@
 # 문서 10. Implementation Plan (Spring Boot + JTE)
 
-> 상태: Post-MVP 확장용 참고 문서  
+> 상태: Engine MVP 구현 상세 참고 문서 (CSV-first)  
 > 현재 활성 실행안은 `12_PSEO_MVP_Playbook.md`
 
 ## 1. 목적
