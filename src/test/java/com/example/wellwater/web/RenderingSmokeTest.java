@@ -81,6 +81,16 @@ class RenderingSmokeTest {
     }
 
     @Test
+    void secondWaveWinnerPageRendersDecisionSplitsAndEscalation() throws Exception {
+        mockMvc.perform(get("/well-water/pfas"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("PFAS in Well Water What To Do")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What changes the decision fastest")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Escalate now if")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")));
+    }
+
+    @Test
     void regionalPageRendersStateAwareHandoff() throws Exception {
         mockMvc.perform(get("/well-water/new-hampshire-arsenic-well-water"))
                 .andExpect(status().isOk())

@@ -71,7 +71,7 @@ public class PseoDecisionDocService {
                             item("What is the most useful next signal?", "Whether the stains travel with taste, pH clues, or only show up in certain locations.")
                     )
             )),
-            Map.entry("black-stains", doc(
+            Map.entry("black-stains", winnerDoc(
                     "Black staining is a clue, not a diagnosis. Separate nuisance minerals, fixture conditions, and source patterns before buying treatment.",
                     "If black residue is isolated or cosmetic, it often behaves more like a nuisance problem; if it moves with taste, odor, or broader water changes, it needs a more disciplined scope check.",
                     List.of(
@@ -85,6 +85,16 @@ public class PseoDecisionDocService {
                             "A weak symptom map creates bad compare-page decisions."
                     ),
                     "Re-evaluate after fixture service, water-heater work, or any event that changes where the staining shows up.",
+                    splits(
+                            split("One fixture or one branch", "Keep the page focused on fixture conditions and plumbing interaction before whole-house treatment enters the discussion."),
+                            split("Hot-water-linked residue", "Bias the page toward heater or hot-line diagnosis instead of a blanket whole-house assumption."),
+                            split("Black staining plus odor or sediment", "Widen the page to include broader nuisance or source-pattern checks before compare-page shopping.")
+                    ),
+                    List.of(
+                            "Escalate if the staining suddenly spreads from one fixture to the whole house.",
+                            "Escalate if black staining is paired with odor, sediment, or broader water-quality change.",
+                            "Escalate if the page is treating one stain clue like a settled system-wide diagnosis."
+                    ),
                     faq(
                             item("Does black staining automatically mean manganese?", "It can point that way, but the pattern still needs confirmation before you treat it like a settled diagnosis."),
                             item("Do I need whole-house equipment immediately?", "Not from the stain alone. First decide whether the source is fixture-specific, hot-water-only, or system-wide."),
@@ -181,7 +191,7 @@ public class PseoDecisionDocService {
                             item("What is the right posture after flooding?", "Verification-first, safety-first, and slower commerce.")
                     )
             )),
-            Map.entry("after-repair", doc(
+            Map.entry("after-repair", winnerDoc(
                     "After well repair, the question is not just what changed. It is whether the repair reset what you should test and trust.",
                     "Some post-repair changes are temporary operational noise, while others mean the system should be retested before you trust either old data or new treatment assumptions.",
                     List.of(
@@ -195,6 +205,16 @@ public class PseoDecisionDocService {
                             "A repair may change sampling confidence and what counts as a comparable result."
                     ),
                     "Retest after the system settles from the repair and again if the same pattern persists beyond the immediate post-repair window.",
+                    splits(
+                            split("Symptom changed immediately after repair", "Treat the page as post-repair noise first and avoid interpreting the first change like settled truth."),
+                            split("Same issue persists after the system settles", "Raise the chance that the underlying problem remains and needs tighter retesting."),
+                            split("Repair changed the sampling path or plumbing conditions", "Lower confidence in older results and rebuild the evidence before shopping.")
+                    ),
+                    List.of(
+                            "Escalate if the repair likely changed sample comparability or plumbing conditions.",
+                            "Escalate if the same pattern returns after the initial post-repair settling window.",
+                            "Escalate if treatment browsing starts before the repair-versus-underlying-problem question is answered."
+                    ),
                     faq(
                             item("Should I compare treatment right after a repair?", "Not until you know whether the repair changed the symptom, the sample quality, or the underlying problem scope."),
                             item("Do old results still count?", "Sometimes, but repairs can reduce the comparability of older results."),
@@ -231,7 +251,7 @@ public class PseoDecisionDocService {
                             item("What improves this page's value?", "State context, certified labs, and a clear split between sale requirements and household safety planning.")
                     )
             )),
-            Map.entry("retest-after-treatment", doc(
+            Map.entry("retest-after-treatment", winnerDoc(
                     "Retesting after treatment is how you verify the fix instead of assuming the equipment claim was enough.",
                     "This is less about health versus nuisance and more about proof versus assumption: if the intervention changed the system, you still need to verify the outcome on the right timeline.",
                     List.of(
@@ -245,6 +265,16 @@ public class PseoDecisionDocService {
                             "Skipping retesting weakens both trust and repeat revenue opportunities."
                     ),
                     "Retest according to the treatment category, the contaminant or symptom being monitored, and any state or lab guidance linked to the issue.",
+                    splits(
+                            split("Water seems better but no new test exists", "Treat the page as proof-gap first and avoid assuming the install solved the verified problem."),
+                            split("Retest still shows the problem", "Move the page back into scope, fit, and verification mode instead of doubling down on the same category."),
+                            split("Treatment claim was broad or sales-led", "Use retesting to decide whether the claim matched the actual household problem in the first place.")
+                    ),
+                    List.of(
+                            "Escalate if subjective improvement is replacing post-treatment verification.",
+                            "Escalate if the retest still looks bad or incomplete after the install.",
+                            "Escalate if the treatment category was chosen from weak evidence and now needs stronger proof."
+                    ),
                     faq(
                             item("Why retest after treatment if the water already seems better?", "Because subjective improvement is weaker evidence than post-treatment verification."),
                             item("Does every treatment need the same retest timing?", "No. The timeline should fit the treatment type and the original problem."),
@@ -371,7 +401,7 @@ public class PseoDecisionDocService {
                             item("What changes urgency here?", "Vulnerable households, corrosion clues, and uncertainty about where the lead is coming from.")
                     )
             )),
-            Map.entry("pfas", doc(
+            Map.entry("pfas", winnerDoc(
                     "PFAS is a claim-check and scope discipline problem before it becomes a product shortlist.",
                     "This is a health-oriented page where testing confidence, exposure scope, and treatment claims all matter more than broad filter marketing.",
                     List.of(
@@ -385,13 +415,23 @@ public class PseoDecisionDocService {
                             "Whole-house and point-of-use choices are not interchangeable just because the contaminant label is the same."
                     ),
                     "Retest after any treatment install and on the cadence that fits the verified PFAS concern and local testing path.",
+                    splits(
+                            split("Claim scope is vague or vendor-led", "Keep the page in evidence mode and verify what the treatment is actually certified or documented to reduce."),
+                            split("Drinking-water exposure only", "Bias the decision toward narrower protection scope before the page becomes a whole-house compare exercise."),
+                            split("State or local PFAS concern is active", "Raise confidence requirements and use stronger testing plus source guidance before shopping.")
+                    ),
+                    List.of(
+                            "Escalate if PFAS compare shopping starts before testing confidence and claim scope are clear.",
+                            "Escalate if the page is collapsing all PFAS questions into one product category answer.",
+                            "Escalate if a whole-house assumption is being made without clarifying the real exposure path."
+                    ),
                     faq(
                             item("Is carbon always enough for PFAS?", "The page should not assume that. Claim scope, test fit, and the specific treatment path still matter."),
                             item("Should I compare products from the start?", "No. PFAS pages should move through testing confidence and claim verification first."),
                             item("What is the strongest next step?", "Tighten the test interpretation and compare categories only after the exposure scope is clear.")
                     )
             )),
-            Map.entry("radon", doc(
+            Map.entry("radon", winnerDoc(
                     "Radon in well water is a state-and-scope issue first, not a generic nuisance problem.",
                     "This page gets stronger when regional context, household use, and related radionuclide testing are visible before treatment comparison begins.",
                     List.of(
@@ -405,13 +445,23 @@ public class PseoDecisionDocService {
                             "A compare page is weak if the page has not narrowed the actual use-case."
                     ),
                     "Retest according to local guidance, any treatment install, and the radionuclide context that shaped the original plan.",
+                    splits(
+                            split("State or geology context is strong", "Use that context to widen the testing plan before narrowing to treatment categories."),
+                            split("Home exposure assumptions are mixed together", "Separate drinking-water concern from broader home-air assumptions so the page does not oversimplify the decision."),
+                            split("Treatment comparison starts too early", "Move back into scope and radionuclide-context clarification before product logic.")
+                    ),
+                    List.of(
+                            "Escalate if the page is treating radon like a generic nuisance issue.",
+                            "Escalate if state or geology context suggests related radionuclide questions are being ignored.",
+                            "Escalate if a whole-house treatment path is assumed before the use-case is narrowed."
+                    ),
                     faq(
                             item("Should I compare treatment categories right away?", "Only after the page clarifies the local context and the scope of the concern."),
                             item("Why is state context important here?", "Because geology and local testing pathways can materially change what the next step should be."),
                             item("Is radon always a whole-house treatment question?", "Not automatically. Scope and household use still need to be defined.")
                     )
             )),
-            Map.entry("ph", doc(
+            Map.entry("ph", winnerDoc(
                     "Low pH is a corrosion workflow first. Do not treat it like a simple filter-shopping problem.",
                     "This page gets stronger when it separates source-water acidity, plumbing interaction, and follow-up metals testing before category comparison.",
                     List.of(
@@ -425,13 +475,23 @@ public class PseoDecisionDocService {
                             "Whole-house correction and point-of-use taste fixes are not the same decision."
                     ),
                     "Retest after pH correction, plumbing changes, or any intervention meant to stabilize corrosivity.",
+                    splits(
+                            split("Low pH plus corrosion clues", "Push the page toward metals follow-up and plumbing interaction before you treat it like neutralization-only shopping."),
+                            split("Low pH without exposure clues", "Keep the page focused on corrosion control and system protection rather than overselling health language."),
+                            split("Point-of-use taste fix is being considered", "Slow down and decide whether the actual problem is broader corrosivity rather than localized taste.")
+                    ),
+                    List.of(
+                            "Escalate if low pH is paired with lead, copper, or clear corrosion clues.",
+                            "Escalate if the page is turning into a filter comparison before corrosion follow-up is resolved.",
+                            "Escalate if household exposure questions are being masked as a simple nuisance problem."
+                    ),
                     faq(
                             item("Is low pH mainly a nuisance issue?", "Not always. It can become an exposure and plumbing issue when corrosion clues are present."),
                             item("Should I compare treatment categories first?", "No. The page should verify corrosion implications before it becomes a compare-page decision."),
                             item("What strengthens the decision here?", "Low pH, paired corrosion clues, and follow-up metals testing.")
                     )
             )),
-            Map.entry("blue-green-stains", doc(
+            Map.entry("blue-green-stains", winnerDoc(
                     "Blue-green stains should push the page toward corrosion logic before hardware shopping.",
                     "This page becomes more useful when it connects staining to low pH, plumbing interaction, and possible metals follow-up instead of treating it like a cosmetic issue only.",
                     List.of(
@@ -445,13 +505,23 @@ public class PseoDecisionDocService {
                             "The page gets weaker if it skips lead or copper follow-up where the pattern justifies it."
                     ),
                     "Retest after corrosion correction, plumbing work, or any treatment meant to reduce acidic water interaction.",
+                    splits(
+                            split("Stains plus metallic taste", "Bias the page toward corrosion and metals follow-up rather than a cosmetic-only reading."),
+                            split("One fixture or branch only", "Treat plumbing interaction as a stronger hypothesis before whole-house treatment enters the conversation."),
+                            split("Whole-house corrosion pattern", "Widen the scope to low pH, corrosivity, and broader plumbing impact before compare-page shopping.")
+                    ),
+                    List.of(
+                            "Escalate if blue-green stains are being dismissed as cosmetic only.",
+                            "Escalate if low pH or metallic taste is reinforcing a corrosion pattern.",
+                            "Escalate if vulnerable-household exposure concerns make copper or lead follow-up more urgent."
+                    ),
                     faq(
                             item("Are blue-green stains just cosmetic?", "Not necessarily. The page should treat them as a corrosion clue until proven otherwise."),
                             item("Should I buy treatment from the stain alone?", "No. The page should narrow the corrosion path first."),
                             item("What usually matters most?", "Low pH, metallic taste, and whether the pattern is local or whole-house.")
                     )
             )),
-            Map.entry("sulfur-smell-hot-water", doc(
+            Map.entry("sulfur-smell-hot-water", winnerDoc(
                     "Hot-water sulfur odor is usually a pattern-separation job before it becomes a whole-house treatment decision.",
                     "This page is strongest when it keeps the user from confusing a heater-linked odor with a source-wide sulfur diagnosis.",
                     List.of(
@@ -465,13 +535,23 @@ public class PseoDecisionDocService {
                             "A sulfur page gets weaker if it ignores heater maintenance and timing clues."
                     ),
                     "Re-evaluate after heater service, disinfection, or any change in whether the odor stays hot-water-only.",
+                    splits(
+                            split("Hot water only", "Keep the page focused on heater-linked diagnosis and maintenance before whole-house compare logic."),
+                            split("Hot and cold water smell", "Move back toward source-water nuisance diagnosis rather than a heater-only explanation."),
+                            split("Odor plus staining", "Widen the page to include iron, manganese, or overlapping nuisance clues before you choose a sulfur category.")
+                    ),
+                    List.of(
+                            "Escalate if a heater-only symptom suddenly becomes whole-house.",
+                            "Escalate if sulfur odor is paired with staining or a major event change.",
+                            "Escalate if the page is skipping heater service logic and going straight to whole-house equipment."
+                    ),
                     faq(
                             item("Does hot-water sulfur smell mean I need a whole-house filter?", "Not automatically. The page should first separate heater-specific behavior from source-water odor."),
                             item("What makes this page more useful?", "Knowing whether the smell is hot only, cold only, or both."),
                             item("Should I compare sulfur systems immediately?", "Only if the page already rules out a heater-specific pattern.")
                     )
             )),
-            Map.entry("after-heavy-rain", doc(
+            Map.entry("after-heavy-rain", winnerDoc(
                     "After heavy rain, the page should assume the timing changed the confidence of older assumptions.",
                     "This trigger page is strongest when it treats rainfall as a reset to sampling confidence, symptom interpretation, and retest order rather than a generic shopping event.",
                     List.of(
@@ -485,13 +565,23 @@ public class PseoDecisionDocService {
                             "The page loses value if it treats event timing like background noise."
                     ),
                     "Retest after the event settles and again if the same pattern keeps appearing after later rain events.",
+                    splits(
+                            split("Temporary change right after rain", "Treat the page as timing-sensitive and wait for the system to settle before compare-page shopping."),
+                            split("Persistent pattern after multiple storms", "Raise the chance that the event is exposing a structural source issue rather than a one-off disturbance."),
+                            split("Older lab results are being used anyway", "Lower trust in those older assumptions until the post-rain system is rechecked.")
+                    ),
+                    List.of(
+                            "Escalate if heavy rain repeatedly changes the same symptom pattern.",
+                            "Escalate if the page is assuming rain timing is irrelevant to current confidence.",
+                            "Escalate if shopping starts before the event-versus-structure question is answered."
+                    ),
                     faq(
                             item("Is heavy rain enough to change what I should trust?", "Often yes. The page should at least downgrade confidence in older assumptions until the system is rechecked."),
                             item("Should I compare filters after rain?", "Not first. Event timing and verification belong first."),
                             item("What strengthens this page?", "Clear timing, repeat patterns, and whether the issue persists once the event passes.")
                     )
             )),
-            Map.entry("new-baby-at-home", doc(
+            Map.entry("new-baby-at-home", winnerDoc(
                     "A new baby in the home should push the page toward safer-drinking-water logic before any treatment shopping.",
                     "This trigger page gets value from narrowing exposure and testing urgency, not from pretending the right product can be picked from household status alone.",
                     List.of(
@@ -505,13 +595,23 @@ public class PseoDecisionDocService {
                             "The page gets weaker if it turns vulnerability into instant product shopping."
                     ),
                     "Retest according to the drinking-water risks that matter most for infants and the current quality of the evidence on the page.",
+                    splits(
+                            split("Recent data is weak or stale", "Raise urgency and move toward safer temporary drinking-water logic until stronger evidence exists."),
+                            split("Known nitrate or microbial concern exists", "Treat the page as exposure-management first and treatment comparison second."),
+                            split("Shopping starts from household status alone", "Slow down and use vulnerability to tighten verification rather than to jump to hardware.")
+                    ),
+                    List.of(
+                            "Escalate if infant drinking-water decisions are still relying on weak or older evidence.",
+                            "Escalate if a known nitrate or microbial question is already in scope.",
+                            "Escalate if treatment browsing is replacing verification urgency."
+                    ),
                     faq(
                             item("Does having a new baby change the next step even without a new lab result?", "Yes. It can make a weak or older evidence set less acceptable for drinking-water decisions."),
                             item("Should I start by shopping for treatment?", "No. Vulnerable-household logic should raise verification urgency first."),
                             item("What does this page do best?", "It changes the urgency and caution level of the next action.")
                     )
             )),
-            Map.entry("pregnancy-in-home", doc(
+            Map.entry("pregnancy-in-home", winnerDoc(
                     "Pregnancy in the home should move the page toward narrower, more cautious drinking-water decisions first.",
                     "This trigger page earns trust when it raises verification discipline and exposure management before it raises shopping intent.",
                     List.of(
@@ -525,13 +625,23 @@ public class PseoDecisionDocService {
                             "The page gets weaker if it assumes one product path fits every contaminant concern."
                     ),
                     "Retest on the schedule that fits the strongest health question in scope and the current quality of the evidence.",
+                    splits(
+                            split("Evidence is weak or old", "Treat the page as a stronger verification problem before equipment enters the discussion."),
+                            split("Known contaminant concern already exists", "Keep the page in safer-drinking-water and certified-testing logic first."),
+                            split("One-size-fits-all product assumption appears", "Break the page back into exposure question, evidence quality, and only then compare logic.")
+                    ),
+                    List.of(
+                            "Escalate if pregnancy is changing the acceptable evidence threshold and the page has not caught up.",
+                            "Escalate if treatment browsing is happening before the drinking-water path is clearly supported by data.",
+                            "Escalate if the page is treating all contaminant questions as if they need the same product answer."
+                    ),
                     faq(
                             item("Why does pregnancy change the page logic?", "Because the page should become less tolerant of weak evidence and slower shopping."),
                             item("Is this page mainly about products?", "No. It is mainly about verification posture and safer drinking-water decisions."),
                             item("What should happen next?", "Use the stronger testing or result path before settling on equipment.")
                     )
             )),
-            Map.entry("test-kit-vs-certified-lab", doc(
+            Map.entry("test-kit-vs-certified-lab", winnerDoc(
                     "Test kit versus certified lab is a method and confidence decision first, not a convenience decision only.",
                     "This compare page works when it shows which questions can tolerate weaker evidence and which ones need certified sampling and lab pathways.",
                     List.of(
@@ -545,13 +655,23 @@ public class PseoDecisionDocService {
                             "The page loses value if it treats health and nuisance questions like they need the same test confidence."
                     ),
                     "Repeat or escalate testing when the kit result still leaves the actual household decision unresolved.",
+                    splits(
+                            split("Quick screen question only", "A kit may stay in scope, but the page should still protect against overconfident treatment decisions."),
+                            split("Health, sale, or verification decision", "Bias the page strongly toward certified lab evidence and away from convenience-first logic."),
+                            split("User is comparing speed and price only", "Pull the page back to confidence quality before cost and turnaround.")
+                    ),
+                    List.of(
+                            "Escalate if a kit result is being used as if it were decision-grade evidence.",
+                            "Escalate if sale, health, or treatment-verification stakes are present.",
+                            "Escalate if convenience language is outrunning method-fit language on the page."
+                    ),
                     faq(
                             item("Is a home kit enough for a treatment decision?", "Not always. The page should separate quick screening from certified decision-grade evidence."),
                             item("When does a certified lab matter most?", "When the page is shaping health, sale, escalation, or treatment-verification decisions."),
                             item("What is the main mistake here?", "Confusing a faster answer with a strong enough answer.")
                     )
             )),
-            Map.entry("mail-in-lab-vs-local-certified-lab", doc(
+            Map.entry("mail-in-lab-vs-local-certified-lab", winnerDoc(
                     "Mail-in versus local certified lab is a sampling-discipline and turnaround question, not just a convenience question.",
                     "This compare page is strongest when it explains where method fit, shipping, chain-of-custody, and local context change the confidence of the result.",
                     List.of(
@@ -565,13 +685,23 @@ public class PseoDecisionDocService {
                             "The page weakens if it ignores state or local process requirements."
                     ),
                     "Repeat or escalate testing if the chosen path introduced timing, sampling, or custody doubts that affect the household decision.",
+                    splits(
+                            split("Strict timing or chain-of-custody matters", "Bias the page toward the lab path that better protects sample integrity and decision confidence."),
+                            split("Local rules or sale process apply", "Raise the value of local certified pathways before convenience becomes the main argument."),
+                            split("Shipping and handling risk is high", "Treat sample integrity as the decision bottleneck instead of price or turnaround.")
+                    ),
+                    List.of(
+                            "Escalate if convenience is being treated as more important than evidence fit.",
+                            "Escalate if state or local requirements may invalidate the easier path.",
+                            "Escalate if shipping, handling, or custody doubts would weaken the result's usefulness."
+                    ),
                     faq(
                             item("Is local certified always better than mail-in?", "Not automatically, but the page should compare confidence fit, timing, and process risk instead of convenience alone."),
                             item("Why does sampling discipline matter here?", "Because the best lab path still fails if the sample handling does not fit the question."),
                             item("What should happen before shopping from the result?", "Make sure the lab path actually produced decision-grade evidence.")
                     )
             )),
-            Map.entry("private-well-sampling-mistakes-that-break-results", doc(
+            Map.entry("private-well-sampling-mistakes-that-break-results", winnerDoc(
                     "Sampling mistakes can quietly break the value of an otherwise good page, test, or treatment decision.",
                     "This authority page matters because a bad sample can make every later step look precise while still being wrong for the household.",
                     List.of(
@@ -585,6 +715,16 @@ public class PseoDecisionDocService {
                             "This page loses value if it stays abstract instead of feeding the user back into a stronger test path."
                     ),
                     "Retest whenever the sample process itself makes the result hard to trust, compare, or act on.",
+                    splits(
+                            split("Timing was poor", "Treat the page as a sampling-confidence problem before you blame treatment or source behavior."),
+                            split("Handled or labeled sample is uncertain", "Lower trust in the result and return to certified retesting rather than interpreting noise as truth."),
+                            split("Treated versus raw sample is mixed up", "Reframe the page around method fit because the wrong sampling point can break the whole decision.")
+                    ),
+                    List.of(
+                            "Escalate if a printed result is being treated like ground truth without sample review.",
+                            "Escalate if the page is blaming treatment failure before checking method quality.",
+                            "Escalate if sample timing, handling, or source selection makes the result hard to trust."
+                    ),
                     faq(
                             item("Can a sampling mistake really change the treatment decision?", "Yes. It can turn a confident-looking result into weak guidance."),
                             item("When should I stop and retest?", "When sample timing, handling, or source selection makes the result difficult to trust."),

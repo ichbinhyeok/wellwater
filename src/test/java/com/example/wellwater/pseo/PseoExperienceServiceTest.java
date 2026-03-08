@@ -139,14 +139,28 @@ class PseoExperienceServiceTest {
         List<String> slugs = List.of(
                 "rotten-egg-smell",
                 "orange-stains",
+                "black-stains",
                 "cloudy-water",
                 "metallic-taste",
                 "after-flood",
+                "after-repair",
                 "home-purchase-test",
+                "retest-after-treatment",
                 "nitrate",
                 "coliform",
                 "arsenic",
-                "lead"
+                "lead",
+                "pfas",
+                "radon",
+                "ph",
+                "blue-green-stains",
+                "sulfur-smell-hot-water",
+                "after-heavy-rain",
+                "new-baby-at-home",
+                "pregnancy-in-home",
+                "test-kit-vs-certified-lab",
+                "mail-in-lab-vs-local-certified-lab",
+                "private-well-sampling-mistakes-that-break-results"
         );
 
         for (String slug : slugs) {
