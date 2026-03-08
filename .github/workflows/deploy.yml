@@ -77,37 +77,37 @@ jobs:
           OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
         run: |
           ssh -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST}" <<EOF
-            set -eu
-            mkdir -p "${DEPLOY_PATH}/data"
-            cd "${DEPLOY_PATH}"
+          set -eu
+          mkdir -p "${DEPLOY_PATH}/data"
+          cd "${DEPLOY_PATH}"
 
-            cat > .env <<'ENVEOF'
-SPRING_PROFILES_ACTIVE=prod
-APP_SITE_BASE_URL=https://waterverdict.com
-APP_ADMIN_USERNAME=admin
-APP_ADMIN_PASSWORD=shinhyeok
-ENVEOF
+          cat > .env <<'ENVEOF'
+          SPRING_PROFILES_ACTIVE=prod
+          APP_SITE_BASE_URL=https://waterverdict.com
+          APP_ADMIN_USERNAME=admin
+          APP_ADMIN_PASSWORD=shinhyeok
+          ENVEOF
 
-            cat > docker-compose.yml <<COMPOSEEOF
-services:
-  app:
-    image: ${DOCKERHUB_IMAGE}:latest
-    container_name: ${APP_NAME}
-    restart: unless-stopped
-    ports:
-      - "${HOST_PORT}:${CONTAINER_PORT}"
-    environment:
-      SPRING_PROFILES_ACTIVE: \${SPRING_PROFILES_ACTIVE}
-      APP_SITE_BASE_URL: \${APP_SITE_BASE_URL}
-      APP_ADMIN_USERNAME: \${APP_ADMIN_USERNAME}
-      APP_ADMIN_PASSWORD: \${APP_ADMIN_PASSWORD}
-    volumes:
-      - ./data:/app/data
-    mem_limit: 512m
-COMPOSEEOF
+          cat > docker-compose.yml <<COMPOSEEOF
+          services:
+            app:
+              image: ${DOCKERHUB_IMAGE}:latest
+              container_name: ${APP_NAME}
+              restart: unless-stopped
+              ports:
+                - "${HOST_PORT}:${CONTAINER_PORT}"
+              environment:
+                SPRING_PROFILES_ACTIVE: \${SPRING_PROFILES_ACTIVE}
+                APP_SITE_BASE_URL: \${APP_SITE_BASE_URL}
+                APP_ADMIN_USERNAME: \${APP_ADMIN_USERNAME}
+                APP_ADMIN_PASSWORD: \${APP_ADMIN_PASSWORD}
+              volumes:
+                - ./data:/app/data
+              mem_limit: 512m
+          COMPOSEEOF
 
-            echo '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' --password-stdin
-            docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+          echo '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' --password-stdin
+          docker compose pull
+          docker compose up -d --remove-orphans
+          docker image prune -f
           EOF
