@@ -1,9 +1,11 @@
 package com.example.wellwater.web.page;
 
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
 import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
+import com.example.wellwater.pseo.RegionalContextRegistryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 
@@ -16,7 +18,9 @@ class SeoMetadataServiceTest {
     private final PseoExperienceService experienceService = new PseoExperienceService(
             catalogService,
             new PseoCitationRegistryService("./data/pseo/page_sources.csv"),
-            new PseoDecisionDocService()
+            new PseoDecisionDocService(),
+            new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
+            new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
     );
     private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://wellwater.example", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();

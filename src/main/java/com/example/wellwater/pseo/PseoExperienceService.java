@@ -669,6 +669,12 @@ public class PseoExperienceService {
         if (!"regional".equals(page.family())) {
             return Optional.empty();
         }
+        Optional<String> fromRegistry = regionalContextRegistryService.findBySlug(page.slug())
+                .map(RegionalContextRegistryService.RegionalContextRow::stateCode)
+                .filter(code -> !code.isBlank());
+        if (fromRegistry.isPresent()) {
+            return fromRegistry;
+        }
         return switch (page.slug()) {
             case "new-hampshire-arsenic-well-water" -> Optional.of("NH");
             case "new-jersey-pwta-private-well-testing" -> Optional.of("NJ");

@@ -14,6 +14,7 @@ public record PseoDetailView(
         PseoEntryHint entryHint,
         List<PseoQuickAnswer> quickAnswers,
         PseoDecisionDoc decisionDoc,
+        PseoRegionalContext regionalContext,
         List<PseoRelatedSection> relatedSections,
         List<PseoCitation> citations
 ) {

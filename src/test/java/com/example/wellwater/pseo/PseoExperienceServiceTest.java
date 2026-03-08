@@ -1,5 +1,6 @@
 package com.example.wellwater.pseo;
 
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,7 +14,13 @@ class PseoExperienceServiceTest {
     private final PseoCatalogService catalogService = new PseoCatalogService("./data/pseo/pages.csv");
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
     private final PseoDecisionDocService decisionDocService = new PseoDecisionDocService();
-    private final PseoExperienceService experienceService = new PseoExperienceService(catalogService, citationRegistryService, decisionDocService);
+    private final PseoExperienceService experienceService = new PseoExperienceService(
+            catalogService,
+            citationRegistryService,
+            decisionDocService,
+            new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
+            new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
+    );
 
     @Test
     void detailViewAddsDerivedMetadataAndRelatedSections() {
@@ -47,6 +54,9 @@ class PseoExperienceServiceTest {
 
         assertEquals("Regional guide", detailView.archetypeLabel());
         assertTrue(detailView.entryHint().href().contains("state=NH"));
+        assertTrue(detailView.regionalContext() != null);
+        assertEquals("New Hampshire", detailView.regionalContext().stateName());
+        assertTrue(detailView.regionalContext().guidanceUrl().contains("des.nh.gov"));
         assertEquals("Well water testing and decision articles", familyView.heroTitle());
     }
 
@@ -73,6 +83,14 @@ class PseoExperienceServiceTest {
         assertTrue(newJersey.relatedSections().stream()
                 .flatMap(section -> section.pages().stream())
                 .anyMatch(page -> page.slug().equals("new-jersey-pwta-vs-full-household-panel")));
+    }
+
+    @Test
+    void regionalPagesExposeStateGuidanceAndLabCitations() {
+        PseoDetailView detailView = experienceService.detailView("texas-private-well-sampling-testing").orElseThrow();
+
+        assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX testing guidance")));
+        assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX certified lab path")));
     }
 
     @Test
@@ -139,6 +157,11 @@ class PseoExperienceServiceTest {
     @Test
     void authorityAndRegionalOrganicPagesNowExposeDecisionDocs() {
         List<String> slugs = List.of(
+                "new-hampshire-arsenic-well-water",
+                "florida-rotten-egg-smell-well-water",
+                "iowa-nitrate-baby-well-water",
+                "connecticut-low-ph-blue-green-stains",
+                "pennsylvania-private-well-radon",
                 "new-jersey-pwta-private-well-testing",
                 "how-to-read-a-well-water-lab-report",
                 "private-well-home-sale-testing-by-state"

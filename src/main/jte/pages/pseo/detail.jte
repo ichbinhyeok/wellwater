@@ -52,6 +52,36 @@
             </div>
         </section>
 
+        @if(pageView.regionalContext() != null)
+            <section class="panel">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Regional delta</p>
+                        <h2>Why ${pageView.regionalContext().stateName()} changes the answer</h2>
+                    </div>
+                    <p class="section-copy">This page earns its place only when the state context changes the testing path, evidence threshold, or the order of next steps.</p>
+                </div>
+                <div class="grid">
+                    <article class="card-link card-link-accent">
+                        <span class="card-kicker">Local difference</span>
+                        <p class="card-meta">${pageView.regionalContext().localDelta()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Use state guidance first</span>
+                        <p class="card-meta">${pageView.regionalContext().decisionTrigger()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Lab path</span>
+                        <p class="card-meta">${pageView.regionalContext().labNote()}</p>
+                    </article>
+                </div>
+                <div class="cta-row" style="margin-top: 18px;">
+                    <a class="button-link" href="${pageView.regionalContext().guidanceUrl()}">Open ${pageView.regionalContext().stateCode()} guidance</a>
+                    <a class="button-link-secondary" href="${pageView.regionalContext().certifiedLabUrl()}">Find ${pageView.regionalContext().stateCode()} certified lab</a>
+                </div>
+            </section>
+        @endif
+
         @if(pageView.decisionDoc() != null)
             <section class="panel">
                 <div class="section-header">
@@ -280,7 +310,21 @@
                     <div class="section-header">
                         <div>
                             <p class="brand-kicker">Source trail</p>
-                            <h2>Traceability</h2>
+                            <h2>Review and traceability</h2>
+                        </div>
+                    </div>
+                    <div class="meta-list" style="margin-bottom: 16px;">
+                        <div class="meta-item">
+                            <span class="meta-label">Reviewed by</span>
+                            <div class="meta-value">Private Well Editorial Desk</div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Last source refresh</span>
+                            <div class="meta-value">${pageView.page().fetchedAt()}</div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">Primary official sources</span>
+                            <div class="meta-value">${pageView.citations().size()} linked sources on this page</div>
                         </div>
                     </div>
                     <div class="stack" style="gap: 12px;">
@@ -296,6 +340,10 @@
                         <div class="meta-item">
                             <span class="meta-label">Source dates</span>
                             <div class="meta-value">searched at ${pageView.page().searchPerformedAt()} / fetched at ${pageView.page().fetchedAt()}</div>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">What this page does not do</span>
+                            <div class="meta-value">It does not replace emergency, medical, or state-certified instructions when the household risk is still unresolved.</div>
                         </div>
                     </div>
                 </section>

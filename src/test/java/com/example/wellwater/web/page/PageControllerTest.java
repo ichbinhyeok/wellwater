@@ -1,10 +1,12 @@
 package com.example.wellwater.web.page;
 
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
 import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import com.example.wellwater.pseo.PseoFamilyView;
+import com.example.wellwater.pseo.RegionalContextRegistryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.ui.ExtendedModelMap;
@@ -24,7 +26,13 @@ class PageControllerTest {
     private final TrustPageService trustPageService = new TrustPageService();
     private final PageController controller = new PageController(
             catalogService,
-            new PseoExperienceService(catalogService, citationRegistryService, new PseoDecisionDocService()),
+            new PseoExperienceService(
+                    catalogService,
+                    citationRegistryService,
+                    new PseoDecisionDocService(),
+                    new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
+                    new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
+            ),
             seoMetadataService,
             trustPageService
     );

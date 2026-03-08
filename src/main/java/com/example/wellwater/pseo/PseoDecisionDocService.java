@@ -671,6 +671,156 @@ public class PseoDecisionDocService {
                             item("What should happen next?", "Use the stronger testing or result path before settling on equipment.")
                     )
             )),
+            Map.entry("new-hampshire-arsenic-well-water", winnerDoc(
+                    "New Hampshire arsenic pages should act like bedrock-risk pages first, not generic arsenic shopping pages.",
+                    "This regional page is strongest when it treats New Hampshire arsenic as a local-scope problem: certified follow-up, bedrock context, and related radionuclide questions should enter before product certainty does.",
+                    List.of(
+                            "Use the New Hampshire arsenic guidance and lab path before comparing treatment categories.",
+                            "Check whether bedrock context widens the next panel beyond arsenic alone.",
+                            "Keep drinking-water exposure and verification ahead of whole-house shopping assumptions."
+                    ),
+                    List.of(
+                            "People often treat a New Hampshire arsenic page like a generic national arsenic page.",
+                            "A bedrock-shaped state page weakens when it assumes one analyte answers the whole risk picture.",
+                            "The page gets weaker if it jumps to treatment before the state testing path is clear."
+                    ),
+                    "Retest on the state-aware cadence that fits the household risk, the sample age, and any wider bedrock panel still being scoped.",
+                    splits(
+                            split("Result exists but bedrock scope is unclear", "Use the page to widen the testing plan before you narrow the treatment plan."),
+                            split("Household wants to shop from one arsenic number", "Slow the decision down and re-anchor it to New Hampshire arsenic guidance plus lab follow-up."),
+                            split("Related bedrock risks may still be open", "Treat the page like a broader testing-order decision instead of a one-category purchase page.")
+                    ),
+                    List.of(
+                            "Escalate if the page is treating New Hampshire context like a generic national arsenic page.",
+                            "Escalate if bedrock scope questions are still open but shopping has already started.",
+                            "Escalate if a stale or weak sample is being used like settled truth."
+                    ),
+                    faq(
+                            item("Why is New Hampshire different for arsenic in private wells?", "Because the page should stay tied to New Hampshire arsenic guidance, local lab pathways, and bedrock-shaped scope decisions before shopping."),
+                            item("Should I only test arsenic in New Hampshire?", "Not always. Bedrock context can widen what belongs in the next panel."),
+                            item("What should I do before comparing arsenic treatment?", "Use the New Hampshire guidance and a certified lab path first.")
+                    )
+            )),
+            Map.entry("florida-rotten-egg-smell-well-water", winnerDoc(
+                    "Florida sulfur-smell pages should separate hot-water-only odor from whole-house nuisance patterns before they behave like filter pages.",
+                    "This regional page works when it uses Florida odor and staining guidance to map the pattern first, then moves into testing and compare logic only after the smell behaves like a system-wide issue.",
+                    List.of(
+                            "Map whether the smell is hot-water-only, cold-water-only, or whole-house before you shop.",
+                            "Use Florida odor and staining guidance when sulfur smell overlaps with stains or broader nuisance clues.",
+                            "Compare sulfur treatment paths only after the cause pattern is tighter."
+                    ),
+                    List.of(
+                            "People often buy sulfur equipment before they separate heater-only odor from whole-house odor.",
+                            "A Florida odor page gets weaker if it ignores staining and overlap clues.",
+                            "The page should not treat a smell report like a settled whole-house diagnosis."
+                    ),
+                    "Re-evaluate after heater service, disinfection, or any change in whether the odor is isolated or system-wide.",
+                    splits(
+                            split("Hot-water-only odor", "Keep the page focused on heater behavior before whole-house equipment enters the frame."),
+                            split("Odor plus staining", "Use the Florida nuisance pattern to widen the testing and compare path before shopping."),
+                            split("Whole-house odor after a recent change", "Treat the page as a stronger verification problem before equipment assumptions harden.")
+                    ),
+                    List.of(
+                            "Escalate if odor changed after storm, repair, or long inactivity.",
+                            "Escalate if staining or other nuisance clues overlap with the smell.",
+                            "Escalate if whole-house treatment shopping starts before the odor map is clear."
+                    ),
+                    faq(
+                            item("Why does rotten egg smell in Florida well water need a different page?", "Because Florida odor and staining context can change the likely cause pattern and the order of testing."),
+                            item("Does hot-water-only sulfur smell mean I need whole-house treatment?", "No. Hot-water-only odor should usually slow the decision down and keep heater behavior in scope first."),
+                            item("What should I test before comparing sulfur equipment?", "Test the nuisance pattern after you map where the odor shows up.")
+                    )
+            )),
+            Map.entry("iowa-nitrate-baby-well-water", winnerDoc(
+                    "Iowa nitrate plus baby-risk pages should behave like safer-drinking-water pages first, not general treatment pages.",
+                    "This regional page is strongest when it treats Iowa nitrate risk, infant feeding, and repeat testing as the main decision rather than broad equipment browsing.",
+                    List.of(
+                            "Move to safer drinking water faster when infant or pregnancy context is active.",
+                            "Use the Iowa nitrate guidance and certified lab path before you compare treatment categories.",
+                            "Keep the page centered on drinking-water exposure and repeat screening cadence."
+                    ),
+                    List.of(
+                            "People often underreact because nitrate has no smell or visible clue.",
+                            "An Iowa nitrate page weakens when it talks like a generic nuisance page.",
+                            "The page should not skip from vulnerable-household risk to whole-house shopping."
+                    ),
+                    "Retest on the cadence that fits the household vulnerability and the local nitrate screening pattern before you assume the risk is settled.",
+                    splits(
+                            split("Infant feeding is active", "Treat the page as a safer-water and certified-testing page before a product page."),
+                            split("Result exists but timing is unclear", "Repeat the screening before you harden the treatment decision."),
+                            split("Whole-house shopping starts early", "Pull the page back to drinking-water exposure and household risk first.")
+                    ),
+                    List.of(
+                            "Escalate if infant feeding or pregnancy is active right now.",
+                            "Escalate if the page is behaving like nitrate is a cosmetic issue.",
+                            "Escalate if one result is being treated like a permanent all-clear or permanent verdict."
+                    ),
+                    faq(
+                            item("Why is Iowa nitrate plus baby context a separate page?", "Because infant-risk logic should change urgency, testing cadence, and the order of next actions."),
+                            item("Should I compare treatment immediately for Iowa nitrate?", "Not before safer drinking water and certified follow-up are in place."),
+                            item("What matters most on this page?", "Exposure management and repeat screening discipline.")
+                    )
+            )),
+            Map.entry("connecticut-low-ph-blue-green-stains", winnerDoc(
+                    "Connecticut low-pH pages should treat corrosion clues like a sequence problem first, not a neutralizer recommendation first.",
+                    "This regional page gets stronger when it keeps low pH, blue-green staining, and metal follow-up tied together instead of collapsing into one hardware answer.",
+                    List.of(
+                            "Use Connecticut private well testing guidance before you shop from blue-green stains alone.",
+                            "Keep low pH, corrosion clues, and metal follow-up in the same page logic.",
+                            "Compare neutralizer paths only after the corrosion sequence is clearer."
+                    ),
+                    List.of(
+                            "People often jump to neutralizer shopping from staining alone.",
+                            "A Connecticut corrosion page gets weaker if it ignores copper or lead follow-up.",
+                            "The page should not assume source water and plumbing interaction are already separated."
+                    ),
+                    "Retest after pH correction, plumbing changes, or any intervention that should change corrosion behavior.",
+                    splits(
+                            split("Blue-green stains plus metallic clues", "Keep the page in corrosion and metals follow-up before shopping."),
+                            split("Low pH result exists but sample context is weak", "Raise method discipline before treatment confidence."),
+                            split("User wants one neutralizer answer", "Pull the page back to corrosion sequence, plumbing interaction, and lab follow-up.")
+                    ),
+                    List.of(
+                            "Escalate if corrosion clues are being treated like nuisance-only symptoms.",
+                            "Escalate if low pH shopping starts before metals follow-up is scoped.",
+                            "Escalate if the page is hiding plumbing interaction behind one product answer."
+                    ),
+                    faq(
+                            item("Why is Connecticut low pH with blue-green stains a separate page?", "Because corrosion sequence and testing order matter more than a one-step neutralizer answer."),
+                            item("Should I buy a neutralizer immediately?", "Not before the page separates corrosion clues, plumbing interaction, and metals follow-up."),
+                            item("What changes the answer fastest here?", "Whether staining, low pH, and metal clues point toward a broader corrosion path.")
+                    )
+            )),
+            Map.entry("pennsylvania-private-well-radon", winnerDoc(
+                    "Pennsylvania radon pages should act like scope and verification pages before they act like category pages.",
+                    "This regional page works when it explains how radon testing, related radionuclide questions, and certified lab paths shape the next action before compare logic takes over.",
+                    List.of(
+                            "Use Pennsylvania private well testing guidance before comparing aeration and GAC.",
+                            "Check whether the page still needs broader radionuclide follow-up before treatment narrowing starts.",
+                            "Treat radon like a scope question first and a category question second."
+                    ),
+                    List.of(
+                            "People often jump to aeration versus GAC before the testing path is settled.",
+                            "A Pennsylvania radon page weakens when it acts like radon scope is already clear.",
+                            "The page should not treat one test context like the whole radionuclide picture."
+                    ),
+                    "Retest or widen the panel when the radon question still overlaps with broader radionuclide uncertainty or weak sample context.",
+                    splits(
+                            split("Radon result exists but broader scope is open", "Keep the page on testing and scope discipline before equipment narrowing."),
+                            split("User wants to compare categories immediately", "Pull the page back to Pennsylvania testing guidance and certified lab fit."),
+                            split("Home-sale or property-transfer context overlaps", "Use the page to separate transaction timing from long-term household planning.")
+                    ),
+                    List.of(
+                            "Escalate if the page is narrowing to equipment before the testing path is clear.",
+                            "Escalate if broader radionuclide uncertainty still exists.",
+                            "Escalate if a transfer-related test is being treated like the whole household answer."
+                    ),
+                    faq(
+                            item("Why is Pennsylvania private well radon a separate page?", "Because the state testing path and radionuclide scope can change what should happen before compare logic."),
+                            item("Should I compare radon treatment categories right away?", "Not before the page is clear about testing scope and certified lab follow-up."),
+                            item("What should I do first?", "Use Pennsylvania testing guidance and tighten the scope before narrowing to treatment categories.")
+                    )
+            )),
             Map.entry("new-jersey-pwta-private-well-testing", winnerDoc(
                     "New Jersey PWTA is a transfer-test floor, not a full household-safety verdict.",
                     "This regional page works best when it separates what the PWTA requires for a sale from what a buyer or household may still need to test after looking at geology, family risk, and old evidence quality.",
