@@ -7,6 +7,7 @@ public record PseoRegionalContext(
         String decisionTrigger,
         String labNote,
         String guidanceUrl,
-        String certifiedLabUrl
+        String certifiedLabUrl,
+        String sourceUrl
 ) {
 }

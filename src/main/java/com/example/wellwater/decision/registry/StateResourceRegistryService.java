@@ -44,6 +44,15 @@ public class StateResourceRegistryService {
                 .findFirst();
     }
 
+    public int supportedStateCount() {
+        return (int) load().stream()
+                .map(StateResource::stateCode)
+                .filter(code -> code != null && !code.isBlank())
+                .filter(code -> !"US".equalsIgnoreCase(code))
+                .distinct()
+                .count();
+    }
+
     public Set<String> allowedOutboundHosts() {
         LinkedHashSet<String> hosts = new LinkedHashSet<>();
         for (StateResource row : load()) {

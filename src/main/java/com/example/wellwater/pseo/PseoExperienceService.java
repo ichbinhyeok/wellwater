@@ -91,7 +91,14 @@ public class PseoExperienceService {
             Map.entry("florida-sulfur-smell-staining-testing-order", Set.of("florida-rotten-egg-smell-well-water", "rotten-egg-smell", "orange-stains", "air-injection-vs-oxidizing-filter", "sulfur-smell-hot-water-vs-whole-house")),
             Map.entry("california-after-wildfire-private-well-checklist", Set.of("california-private-well-owner-guide", "after-wildfire", "after-heavy-rain", "wildfire-drought-private-well-risk-reset")),
             Map.entry("texas-private-well-sampling-chain-of-custody", Set.of("texas-private-well-sampling-testing", "test-kit-vs-certified-lab", "mail-in-lab-vs-local-certified-lab", "private-well-sampling-mistakes-that-break-results")),
-            Map.entry("new-york-pfas-private-well-testing-order", Set.of("new-york-pfas-private-wells", "pfas", "point-of-entry-vs-point-of-use", "pfas-private-well-filter-claim-checklist"))
+            Map.entry("new-york-pfas-private-well-testing-order", Set.of("new-york-pfas-private-wells", "pfas", "point-of-entry-vs-point-of-use", "pfas-private-well-filter-claim-checklist")),
+            Map.entry("north-carolina-private-well-water-faqs", Set.of("after-heavy-rain", "home-purchase-test", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household", "how-to-read-a-well-water-lab-report")),
+            Map.entry("virginia-private-well-testing-program", Set.of("home-purchase-test", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household", "how-to-read-a-well-water-lab-report", "home-sale-private-well-testing-checklist")),
+            Map.entry("indiana-well-water-quality-testing", Set.of("nitrate", "coliform", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household", "how-to-read-a-well-water-lab-report")),
+            Map.entry("georgia-private-well-water-guidance", Set.of("after-heavy-rain", "coliform", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household", "how-to-read-a-well-water-lab-report")),
+            Map.entry("south-carolina-well-water-quality-testing", Set.of("after-heavy-rain", "home-purchase-test", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household", "how-to-read-a-well-water-lab-report")),
+            Map.entry("oregon-private-well-testing-recommendations", Set.of("after-heavy-rain", "nitrate", "coliform", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household")),
+            Map.entry("washington-private-well-water-testing", Set.of("after-heavy-rain", "nitrate", "coliform", "test-kit-vs-certified-lab", "private-well-testing-schedule-by-household"))
     );
 
     private final PseoCatalogService catalogService;
@@ -197,7 +204,8 @@ public class PseoExperienceService {
                     family,
                     "State-specific private well guides",
                     "These pages cover places where state rules, geology, bedrock, or local testing pathways change the right answer.",
-                    size + " pages built for local search intent where the next step genuinely changes by state or region.",
+                    size + " pages built for local search intent, with official guidance and lab routing now mapped across "
+                            + stateResourceRegistryService.supportedStateCount() + " states.",
                     "Start With Your State Context",
                     "/tool/result-first",
                     starterPages,
@@ -231,20 +239,21 @@ public class PseoExperienceService {
 
     public PseoDetailView toDetailView(PseoPage page, List<PseoPage> allPages) {
         String riskLens = riskLens(page);
-        PseoEntryHint entryHint = entryHint(page);
+        PseoRegionalContext regionalContext = regionalContext(page);
+        PseoEntryHint entryHint = entryHint(page, regionalContext);
         return new PseoDetailView(
                 page,
                 archetypeLabel(page),
                 intentLabel(page),
                 riskLens,
-                riskSummary(page, riskLens),
+                riskSummary(page, riskLens, regionalContext),
                 householdLabel(page, riskLens),
-                householdSummary(page, riskLens),
-                doNotBuyYet(page, riskLens),
+                householdSummary(page, riskLens, regionalContext),
+                doNotBuyYet(page, riskLens, regionalContext),
                 entryHint,
-                quickAnswers(page, riskLens, entryHint),
+                quickAnswers(page, riskLens, entryHint, regionalContext),
                 decisionDocService.findBySlug(page.slug()).orElse(null),
-                regionalContext(page),
+                regionalContext,
                 relatedSections(page, allPages, riskLens),
                 citations(page)
         );
@@ -302,14 +311,17 @@ public class PseoExperienceService {
         return "Mixed / verify first";
     }
 
-    private String riskSummary(PseoPage page, String riskLens) {
+    private String riskSummary(PseoPage page, String riskLens, PseoRegionalContext regionalContext) {
         return switch (riskLens) {
             case "Health / microbial" -> "Treat this as exposure control plus confirmatory testing, not a shopping problem.";
             case "Health / chemical" -> "Use this page to reduce uncertainty first, especially before choosing equipment scope.";
             case "Corrosion / plumbing" -> "Separate source-water risk from plumbing interaction before locking into treatment.";
             case "Nuisance / operational" -> "Focus on symptom pattern, scope, and maintenance burden before comparing products.";
             case "Event-driven" -> "Recent events change retest timing and can invalidate older assumptions about the system.";
-            case "Regional / state-specific" -> "Use this page when local geology, regulation, or state lab pathways change the right next step.";
+            case "Regional / state-specific" -> regionalContext == null
+                    ? "Use this page when local geology, regulation, or state lab pathways change the right next step."
+                    : "Use this page when " + regionalContext.stateName()
+                    + " guidance, geology, or certified lab routing changes the right next step.";
             case "Authority / methodology" -> "Use this page to tighten your method and avoid sloppy interpretations before shopping.";
             default -> "Use this page for orientation, then hand off to a more specific tool flow.";
         };
@@ -330,7 +342,7 @@ public class PseoExperienceService {
         };
     }
 
-    private String householdSummary(PseoPage page, String riskLens) {
+    private String householdSummary(PseoPage page, String riskLens, PseoRegionalContext regionalContext) {
         if (VULNERABLE_HOUSEHOLD_SLUGS.contains(page.slug())) {
             return "Infants, pregnancy, or other sensitivity flags should push you toward faster drinking-water verification.";
         }
@@ -340,13 +352,16 @@ public class PseoExperienceService {
             case "Corrosion / plumbing" -> "Best for households seeing metallic taste, blue-green signs, or low-pH hints that may involve plumbing interaction.";
             case "Nuisance / operational" -> "Best for households annoyed by taste, odor, stains, or maintenance pain but still trying to avoid over-buying.";
             case "Event-driven" -> "Best for households reacting to a discrete event where timing and sequence matter more than a product shortlist.";
-            case "Regional / state-specific" -> "Best for households where state guidance, geology, or home-sale rules change what you should test first.";
+            case "Regional / state-specific" -> regionalContext == null
+                    ? "Best for households where state guidance, geology, or home-sale rules change what you should test first."
+                    : "Best for households in " + regionalContext.stateName()
+                    + " where local guidance, geology, or sale rules change what you should test first.";
             case "Authority / methodology" -> "Best for households trying to make fewer mistakes with testing, interpretation, and product claims.";
             default -> "Best for households still narrowing the problem definition.";
         };
     }
 
-    private String doNotBuyYet(PseoPage page, String riskLens) {
+    private String doNotBuyYet(PseoPage page, String riskLens, PseoRegionalContext regionalContext) {
         if ("compares".equals(page.family())) {
             return "Do not treat the comparison page as a verdict. Lock down contaminant or symptom scope before spending.";
         }
@@ -356,13 +371,16 @@ public class PseoExperienceService {
             case "Corrosion / plumbing" -> "Do not assume a treatment tank solves what might be a plumbing and corrosion interaction problem.";
             case "Nuisance / operational" -> "Do not buy the biggest whole-house system before mapping where the symptom appears and what maintenance it adds.";
             case "Event-driven" -> "Do not treat an event page like a permanent equipment answer. First reset the evidence after the event.";
-            case "Regional / state-specific" -> "Do not assume a national answer fits local geology, rules, or lab pathways in your state.";
+            case "Regional / state-specific" -> regionalContext == null
+                    ? "Do not assume a national answer fits local geology, rules, or lab pathways in your state."
+                    : "Do not assume a national answer fits " + regionalContext.stateName()
+                    + ". Check state guidance and certified lab routing before buying treatment.";
             case "Authority / methodology" -> "Do not treat a method article like a product verdict. Clean up the evidence first.";
             default -> "Do not shop from uncertainty. Narrow the problem first.";
         };
     }
 
-    private PseoEntryHint entryHint(PseoPage page) {
+    private PseoEntryHint entryHint(PseoPage page, PseoRegionalContext regionalContext) {
         String stateQuery = stateHint(page).map(state -> "&state=" + state).orElse("");
         return switch (page.family()) {
             case "contaminants" -> new PseoEntryHint(
@@ -381,9 +399,12 @@ public class PseoExperienceService {
                     "Best when a recent event changed how you should interpret risk or retest timing."
             );
             case "regional" -> new PseoEntryHint(
-                    "Add your state context",
+                    regionalContext == null ? "Add your state context" : "Add " + regionalContext.stateCode() + " context",
                     "/tool/result-first?slug=" + page.slug() + stateQuery,
-                    "Best when the state context matters and you want the engine to combine that with your own result or symptom."
+                    regionalContext == null
+                            ? "Best when the state context matters and you want the engine to combine that with your own result or symptom."
+                            : "Best when " + regionalContext.stateName()
+                            + " guidance or geology changes the testing path and you want the engine to use that local context."
             );
             case "authority" -> new PseoEntryHint(
                     "Apply this article to your well",
@@ -398,13 +419,19 @@ public class PseoExperienceService {
         };
     }
 
-    private List<PseoQuickAnswer> quickAnswers(PseoPage page, String riskLens, PseoEntryHint entryHint) {
-        return List.of(
-                new PseoQuickAnswer("What this usually means", riskSummary(page, riskLens)),
-                new PseoQuickAnswer("Who should act faster", householdSummary(page, riskLens)),
-                new PseoQuickAnswer("What not to buy first", doNotBuyYet(page, riskLens)),
-                new PseoQuickAnswer(entryHint.label(), entryHint.reason())
-        );
+    private List<PseoQuickAnswer> quickAnswers(PseoPage page, String riskLens, PseoEntryHint entryHint, PseoRegionalContext regionalContext) {
+        List<PseoQuickAnswer> answers = new ArrayList<>();
+        answers.add(new PseoQuickAnswer("What this usually means", riskSummary(page, riskLens, regionalContext)));
+        if (regionalContext != null) {
+            answers.add(new PseoQuickAnswer(
+                    "What " + regionalContext.stateCode() + " changes",
+                    regionalContext.localDelta() + " " + regionalContext.decisionTrigger()
+            ));
+        }
+        answers.add(new PseoQuickAnswer("Who should act faster", householdSummary(page, riskLens, regionalContext)));
+        answers.add(new PseoQuickAnswer("What not to buy first", doNotBuyYet(page, riskLens, regionalContext)));
+        answers.add(new PseoQuickAnswer(entryHint.label(), entryHint.reason()));
+        return List.copyOf(answers);
     }
 
     private List<PseoPage> familyStarterPages(String family, List<PseoPage> pages) {
@@ -651,7 +678,8 @@ public class PseoExperienceService {
                 row.get().decisionTrigger(),
                 row.get().labNote(),
                 stateResource.map(com.example.wellwater.decision.registry.StateResource::localGuidanceUrl).orElse(""),
-                stateResource.map(com.example.wellwater.decision.registry.StateResource::certifiedLabUrl).orElse("")
+                stateResource.map(com.example.wellwater.decision.registry.StateResource::certifiedLabUrl).orElse(""),
+                stateResource.map(com.example.wellwater.decision.registry.StateResource::sourceUrl).orElse("")
         );
     }
 

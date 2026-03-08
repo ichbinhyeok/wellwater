@@ -2,7 +2,7 @@
 @param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
 @param com.example.wellwater.web.page.SeoMetadata seo
 
-@template.layout.main(title = page.title(), robots = "index,follow", description = page.metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), content = @`
+@template.layout.main(title = page.title(), robots = "index,follow", description = page.metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">

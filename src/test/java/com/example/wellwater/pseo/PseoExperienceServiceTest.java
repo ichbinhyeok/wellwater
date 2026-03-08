@@ -54,15 +54,27 @@ class PseoExperienceServiceTest {
 
         assertEquals("Regional guide", detailView.archetypeLabel());
         assertTrue(detailView.entryHint().href().contains("state=NH"));
+        assertTrue(detailView.entryHint().label().contains("NH"));
         assertTrue(detailView.regionalContext() != null);
         assertEquals("New Hampshire", detailView.regionalContext().stateName());
         assertTrue(detailView.regionalContext().guidanceUrl().contains("des.nh.gov"));
+        assertTrue(detailView.riskSummary().contains("New Hampshire"));
+        assertTrue(detailView.doNotBuyYet().contains("New Hampshire"));
+        assertTrue(detailView.quickAnswers().stream().anyMatch(answer -> answer.title().equals("What NH changes")));
         assertEquals("Well water testing and decision articles", familyView.heroTitle());
     }
 
     @Test
-    void catalogNowSupportsFifteenRegionalPagesAndExpandedAuthorityCoverage() {
-        assertEquals(15, catalogService.byFamily("regional").size());
+    void regionalFamilyViewHighlightsOfficialStateCoverage() {
+        PseoFamilyView familyView = experienceService.familyView("regional", catalogService.byFamily("regional"));
+
+        assertTrue(familyView.operatorNote().contains("official guidance"));
+        assertTrue(familyView.operatorNote().contains("states"));
+    }
+
+    @Test
+    void catalogNowSupportsExpandedRegionalPagesAndAuthorityCoverage() {
+        assertEquals(22, catalogService.byFamily("regional").size());
         assertEquals(19, catalogService.byFamily("authority").size());
         assertTrue(catalogService.findBySlug("ro-vs-adsorptive-media-for-arsenic").isPresent());
         assertTrue(catalogService.findBySlug("radon-aeration-vs-gac").isPresent());
@@ -70,6 +82,8 @@ class PseoExperienceServiceTest {
         assertTrue(catalogService.findBySlug("new-jersey-pwta-vs-full-household-panel").isPresent());
         assertTrue(catalogService.findBySlug("new-york-pfas-private-well-testing-order").isPresent());
         assertTrue(catalogService.findBySlug("iron-filter-vs-softener").isPresent());
+        assertTrue(catalogService.findBySlug("north-carolina-private-well-water-faqs").isPresent());
+        assertTrue(catalogService.findBySlug("oregon-private-well-testing-recommendations").isPresent());
     }
 
     @Test
@@ -93,6 +107,30 @@ class PseoExperienceServiceTest {
         assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX testing guidance")));
         assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX certified lab path")));
         assertFalse(detailView.citations().stream().anyMatch(citation -> citation.label().equals("Primary official source")));
+        assertTrue(detailView.regionalContext() != null);
+        assertTrue(detailView.regionalContext().sourceUrl().contains("twdb.texas.gov"));
+    }
+
+    @Test
+    void newStateRegionalPagesExposeDecisionDocsAndStateAwareCitations() {
+        List<String> slugs = List.of(
+                "north-carolina-private-well-water-faqs",
+                "virginia-private-well-testing-program",
+                "indiana-well-water-quality-testing",
+                "georgia-private-well-water-guidance",
+                "south-carolina-well-water-quality-testing",
+                "oregon-private-well-testing-recommendations",
+                "washington-private-well-water-testing"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.regionalContext() != null, slug);
+            assertTrue(detailView.entryHint().href().contains("state=" + detailView.regionalContext().stateCode()), slug);
+            assertTrue(detailView.citations().size() >= 2, slug);
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
+        }
     }
 
     @Test
@@ -165,14 +203,78 @@ class PseoExperienceServiceTest {
                 "connecticut-low-ph-blue-green-stains",
                 "pennsylvania-private-well-radon",
                 "new-jersey-pwta-private-well-testing",
+                "new-york-pfas-private-wells",
                 "how-to-read-a-well-water-lab-report",
-                "private-well-home-sale-testing-by-state"
+                "private-well-home-sale-testing-by-state",
+                "private-well-testing-schedule-by-household",
+                "sulfur-smell-hot-water-vs-whole-house"
         );
 
         for (String slug : slugs) {
             PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
             assertTrue(detailView.decisionDoc() != null, slug);
             assertFalse(detailView.decisionDoc().faqs().isEmpty(), slug);
+            assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
+        }
+    }
+
+    @Test
+    void allATierPagesNowCarryDecisionDocsAndMultipleOfficialCitations() {
+        for (PseoPage page : catalogService.allPages()) {
+            if (!"A".equals(page.normalizedTier())) {
+                continue;
+            }
+            PseoDetailView detailView = experienceService.detailView(page.slug()).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, page.slug());
+            assertTrue(detailView.citations().size() >= 2, page.slug());
+        }
+    }
+
+    @Test
+    void selectedBTierPagesNowCarryDecisionDocsAndMultipleOfficialCitations() {
+        List<String> slugs = List.of(
+                "hardness",
+                "uranium",
+                "nitrite",
+                "copper",
+                "softener-vs-iron-filter",
+                "whole-house-vs-under-sink-ro",
+                "carbon-vs-ro",
+                "uv-vs-chlorination",
+                "point-of-entry-vs-point-of-use",
+                "california-private-well-owner-guide",
+                "texas-private-well-sampling-testing",
+                "how-to-verify-water-treatment-claims"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertTrue(detailView.citations().size() >= 2, slug);
+        }
+    }
+
+    @Test
+    void secondWaveBTierPagesNowCarryWinnerDocsAndMultipleOfficialCitations() {
+        List<String> slugs = List.of(
+                "acid-neutralizer-vs-soda-ash",
+                "after-boil-water-advisory",
+                "air-injection-vs-oxidizing-filter",
+                "arsenic-bedrock-testing-checklist",
+                "home-sale-private-well-testing-checklist",
+                "low-ph-copper-corrosion-testing-order",
+                "nitrate-baby-pregnancy-well-water-checklist",
+                "pfas-private-well-filter-claim-checklist",
+                "ro-vs-adsorptive-media-for-arsenic",
+                "shock-vs-continuous-chlorination",
+                "uv-vs-ro",
+                "when-not-to-buy-treatment-yet"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertTrue(detailView.citations().size() >= 2, slug);
             assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
         }
     }

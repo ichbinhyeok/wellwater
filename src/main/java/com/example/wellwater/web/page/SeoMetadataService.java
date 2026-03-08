@@ -17,12 +17,18 @@ import java.util.Map;
 public class SeoMetadataService {
 
     private final String baseUrl;
+    private final String googleSiteVerification;
+    private final String googleAnalyticsId;
+    private final String socialImagePath;
 
     public SeoMetadataService(
             @Value("${app.site.base-url:}") String baseUrl,
             Environment environment
     ) {
         this.baseUrl = normalizeBaseUrl(baseUrl, isProduction(environment));
+        this.googleSiteVerification = environment.getProperty("app.site.google-verification", "");
+        this.googleAnalyticsId = environment.getProperty("app.site.google-analytics-id", "");
+        this.socialImagePath = environment.getProperty("app.site.social-image-path", "/og-card.svg");
     }
 
     public SeoMetadata home(String title, String description) {
@@ -30,7 +36,11 @@ public class SeoMetadataService {
         return new SeoMetadata(
                 canonicalUrl,
                 List.of(),
-                List.of(webSiteJson(canonicalUrl, title, description))
+                List.of(webSiteJson(canonicalUrl, title, description)),
+                "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
         );
     }
 
@@ -46,7 +56,11 @@ public class SeoMetadataService {
                 List.of(
                         collectionPageJson(canonicalUrl, familyView.heroTitle(), familyView.heroLead()),
                         breadcrumbJson(breadcrumbs)
-                )
+                ),
+                "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
         );
     }
 
@@ -62,7 +76,11 @@ public class SeoMetadataService {
                 List.of(
                         collectionPageJson(canonicalUrl, title, description),
                         breadcrumbJson(breadcrumbs)
-                )
+                ),
+                "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
         );
     }
 
@@ -79,7 +97,11 @@ public class SeoMetadataService {
                 List.of(
                         staticPageJson("AboutPage", canonicalUrl, page.h1(), page.metaDescription(), page.updatedAt()),
                         breadcrumbJson(breadcrumbs)
-                )
+                ),
+                "article",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
         );
     }
 
@@ -98,7 +120,19 @@ public class SeoMetadataService {
         }
         blocks.add(breadcrumbJson(breadcrumbs));
 
-        return new SeoMetadata(canonicalUrl, breadcrumbs, List.copyOf(blocks));
+        return new SeoMetadata(
+                canonicalUrl,
+                breadcrumbs,
+                List.copyOf(blocks),
+                pageView.page().family().equals("authority") || pageView.page().family().equals("regional") ? "article" : "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
+        );
+    }
+
+    private String socialImageUrl() {
+        return absolute(socialImagePath);
     }
 
     public String absolute(String path) {

@@ -1,6 +1,6 @@
 @param String path
 
-@template.layout.main(title = "Not Found", robots = "noindex,nofollow", description = "Requested page was not found.", canonicalUrl = "", breadcrumbs = java.util.List.of(), structuredDataBlocks = java.util.List.of(), content = @`
+@template.layout.main(title = "Not Found", robots = "noindex,nofollow", description = "Requested page was not found.", canonicalUrl = "", breadcrumbs = java.util.List.of(), structuredDataBlocks = java.util.List.of(), openGraphType = "website", socialImageUrl = "/og-card.svg", googleSiteVerification = "", googleAnalyticsId = "", content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">

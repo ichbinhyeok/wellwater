@@ -55,7 +55,7 @@
             <div class="flex gap-3">
                 <div class="flex-1 group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
                     <label class="text-sm font-semibold text-zinc-900 mb-2 block">Value</label>
-                    <input name="resultValue" value="${request.getResultValue()}" placeholder="e.g. 12" class="w-full text-xl font-medium outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900">
+                    <input name="resultValue" value="${request.getResultValue()}" placeholder="e.g. 12" inputmode="decimal" class="w-full text-xl font-medium outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900">
                 </div>
                 <div class="w-1/3 group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
                     <label class="text-sm font-semibold text-zinc-900 mb-2 block">Unit</label>
@@ -95,7 +95,7 @@
                 <!-- Field 4: Qualifier Value -->
                 <div class="group relative bg-white border border-zinc-200 rounded-2xl p-4 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 transition-all">
                     <label class="text-xs font-semibold text-zinc-500 mb-1 block">Qualifier value</label>
-                    <input name="qualifierValue" value="${request.getQualifierValue()}" placeholder="e.g. 0.005" class="w-full text-sm outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900">
+                    <input name="qualifierValue" value="${request.getQualifierValue()}" placeholder="e.g. 0.005" inputmode="decimal" class="w-full text-sm outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900">
                 </div>
             </div>
 
@@ -144,7 +144,7 @@
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-zinc-500 mb-1 block">Household Size</label>
-                    <input name="householdSize" value="${request.getHouseholdSize()}" placeholder="e.g. 4" class="w-full text-sm outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900 border border-zinc-200 rounded-lg p-2 focus:border-zinc-900">
+                    <input name="householdSize" value="${request.getHouseholdSize()}" placeholder="e.g. 4" inputmode="numeric" class="w-full text-sm outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900 border border-zinc-200 rounded-lg p-2 focus:border-zinc-900">
                 </div>
             </div>
 
@@ -239,7 +239,7 @@
                                         <option value="${analyte}" selected="${analyte.equalsIgnoreCase(companionLine.getAnalyteName())}">${analyte}</option>
                                     @endfor
                                 </select>
-                                <input name="${fieldPrefix}.resultValue" value="${companionLine.getResultValue()}" placeholder="Value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                <input name="${fieldPrefix}.resultValue" value="${companionLine.getResultValue()}" placeholder="Value" inputmode="decimal" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                                 <select name="${fieldPrefix}.unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                                     <option value="">Unit</option>
                                     @for (var unitOption : unitOptions)
@@ -254,7 +254,7 @@
                                         @endif
                                     @endfor
                                 </select>
-                                <input name="${fieldPrefix}.qualifierValue" value="${companionLine.getQualifierValue()}" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                <input name="${fieldPrefix}.qualifierValue" value="${companionLine.getQualifierValue()}" placeholder="Qualifier value" inputmode="decimal" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                             </div>
                         </div>
                     @endfor
@@ -314,7 +314,7 @@
                             <option value="${analyte}">${analyte}</option>
                         @endfor
                     </select>
-                    <input name="companionLines[__INDEX__].resultValue" placeholder="Value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                    <input name="companionLines[__INDEX__].resultValue" placeholder="Value" inputmode="decimal" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                     <select name="companionLines[__INDEX__].unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                         <option value="">Unit</option>
                         @for (var unitOption : unitOptions)
@@ -329,7 +329,7 @@
                             @endif
                         @endfor
                     </select>
-                    <input name="companionLines[__INDEX__].qualifierValue" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                    <input name="companionLines[__INDEX__].qualifierValue" placeholder="Qualifier value" inputmode="decimal" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                 </div>
             </div>
         </template>

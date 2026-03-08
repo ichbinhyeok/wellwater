@@ -136,6 +136,37 @@ public class TrustPageService {
                     )
             ),
             page(
+                    "ymyl-and-legal-disclaimer",
+                    "YMYL And Legal Disclaimer",
+                    "Medical, Legal, and Emergency Limits of This Well-Water Guidance",
+                    "Read the explicit medical, legal, and emergency disclaimer for this private-well decision product before relying on any public page or saved result.",
+                    "YMYL disclaimer",
+                    "This page makes the legal and health boundary explicit so public guidance is not mistaken for emergency, medical, or jurisdiction-specific professional advice.",
+                    "A strong trust surface in this niche does not hide its limits. It names them before a visitor turns a public page into a household verdict.",
+                    "2026-03-08",
+                    section(
+                            "No medical or emergency substitute",
+                            "This product does not diagnose illness, confirm exposure, or replace emergency instructions.",
+                            "If someone may already be sick, exposed, or drinking unsafe water, medical care, local public-health guidance, and safer temporary water come first.",
+                            "Microbial positives, infant nitrate risk, flooding, wildfire damage, and other emergency contexts should not be downgraded into routine shopping behavior.",
+                            "A public page can help frame the next test or escalation step, but it is not bedside or emergency advice."
+                    ),
+                    section(
+                            "No legal, disclosure, or compliance guarantee",
+                            "This product does not provide legal advice and should not be treated as a substitute for state sale rules, disclosure duties, lease obligations, or local compliance requirements.",
+                            "Home sale, landlord, or contractor disputes should use the applicable state or local rule set, not only a public guide on this site.",
+                            "A state-aware page may summarize local guidance, but it does not guarantee that the latest jurisdiction-specific requirement is fully captured.",
+                            "Where legal or compliance stakes are high, certified labs and local agencies outrank generalized content."
+                    ),
+                    section(
+                            "How to use the site safely",
+                            "Use this site to narrow the next safe question: what to test, what to verify, what not to buy yet, and when to escalate.",
+                            "Do not treat a symptom page, compare page, or saved result as proof that one product solves the whole problem.",
+                            "When the evidence stack is weak, this product should push the user toward stronger testing and narrower claims rather than more confidence.",
+                            "If a conflict exists between this site and a current official instruction from a state, county, or federal health authority, the official instruction wins."
+                    )
+            ),
+            page(
                     "reviewers-and-expertise",
                     "Reviewers And Expertise",
                     "Who Reviews This Well-Water Guidance",
@@ -179,7 +210,7 @@ public class TrustPageService {
                             "What is stored today",
                             "The current product stores a limited set of operational data so results can be reopened and follow-up requests can be reviewed.",
                             "Saved results are stored as private snapshot files with a time limit instead of being published as indexable pages.",
-                            "Analytics events record route behavior such as tool entry, result views, and CTA clicks.",
+                            "Analytics events record route behavior such as public-page views, tool entry, result views, and CTA clicks.",
                             "Lead requests store the contact details and page context the visitor explicitly submitted."
                     ),
                     section(
@@ -194,6 +225,7 @@ public class TrustPageService {
                             "The current repo uses a lightweight storage model, so this page is intentionally explicit about its limits.",
                             "Private result snapshots expire instead of staying available forever.",
                             "Admin access should stay credential-protected and noindex.",
+                            "If Google Analytics or Search Console verification is configured, it should stay on public pages and avoid sending saved-result content or follow-up notes into shared analytics surfaces.",
                             "This product should avoid collecting more personal detail than is required for the follow-up or saved-result flow."
                     )
             ),

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#0c444e"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+  <!-- Water droplet -->
+  <path d="M16 6 C16 6 10 13.5 10 18.5 C10 22 12.5 25 16 25 C19.5 25 22 22 22 18.5 C22 13.5 16 6 16 6Z" 
+        fill="none" stroke="#f7faf8" stroke-width="1.8" stroke-linejoin="round"/>
+  <!-- Checkmark inside droplet -->
+  <polyline points="12.8,18.2 15,20.8 19.2,15.8" 
+            fill="none" stroke="#9ce5d4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

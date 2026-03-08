@@ -3,7 +3,7 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 
-@template.layout.main(title = pageView.page().title(), robots = "index,follow", description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), content = @`
+@template.layout.main(title = pageView.page().title(), robots = "index,follow", description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
@@ -74,10 +74,19 @@
                         <span class="card-kicker">Lab path</span>
                         <p class="card-meta">${pageView.regionalContext().labNote()}</p>
                     </article>
+                    @if(pageView.regionalContext().sourceUrl() != null && !pageView.regionalContext().sourceUrl().isBlank())
+                        <article class="card-link">
+                            <span class="card-kicker">Official program hub</span>
+                            <p class="card-meta">Use the statewide program page when you need the broad guidance layer before choosing a lab or narrowing scope.</p>
+                        </article>
+                    @endif
                 </div>
                 <div class="cta-row" style="margin-top: 18px;">
                     <a class="button-link" href="${pageView.regionalContext().guidanceUrl()}">Open ${pageView.regionalContext().stateCode()} guidance</a>
                     <a class="button-link-secondary" href="${pageView.regionalContext().certifiedLabUrl()}">Find ${pageView.regionalContext().stateCode()} certified lab</a>
+                    @if(pageView.regionalContext().sourceUrl() != null && !pageView.regionalContext().sourceUrl().isBlank())
+                        <a class="button-link-secondary" href="${pageView.regionalContext().sourceUrl()}">Open ${pageView.regionalContext().stateCode()} program hub</a>
+                    @endif
                 </div>
             </section>
         @endif

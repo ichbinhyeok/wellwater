@@ -5,7 +5,7 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 
-@template.layout.main(title = familyView.heroTitle(), robots = "index,follow", description = familyView.heroLead(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), content = @`
+@template.layout.main(title = familyView.heroTitle(), robots = "index,follow", description = familyView.heroLead(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">

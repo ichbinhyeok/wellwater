@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Private Well Water Guide</title>
+  <desc id="desc">Decision support for private well water testing, symptoms, and next steps.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" x2="100%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#ecf4ea"/>
+      <stop offset="100%" stop-color="#d8e8df"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0%" x2="100%" y1="0%" y2="0%">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1030" cy="130" r="150" fill="#0f766e" fill-opacity="0.10"/>
+  <circle cx="180" cy="560" r="210" fill="#c66a2b" fill-opacity="0.10"/>
+  <rect x="72" y="72" width="1056" height="486" rx="42" fill="#ffffff" fill-opacity="0.86"/>
+  <rect x="110" y="112" width="210" height="210" rx="34" fill="url(#panel)"/>
+  <path d="M174 212c0-52 42-94 94-94 18 0 35 5 50 14-23 7-39 29-39 54 0 32 26 58 58 58 7 0 14-1 21-4-17 38-55 64-99 64-47 0-85-38-85-85 0-3 0-5 0-7z" fill="#f4fbf9"/>
+  <path d="M210 242c25 14 57 20 97 18-25 21-52 31-81 31-16 0-30-3-43-8 11-17 19-31 27-41z" fill="#d8f1ec"/>
+  <text x="360" y="198" fill="#0f172a" font-family="Manrope, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="5">PRIVATE WELL</text>
+  <text x="360" y="266" fill="#0f172a" font-family="Sora, Arial, sans-serif" font-size="78" font-weight="700">Water Guide</text>
+  <text x="360" y="338" fill="#475569" font-family="Manrope, Arial, sans-serif" font-size="32">Testing logic, symptom interpretation, and next steps</text>
+  <text x="360" y="392" fill="#475569" font-family="Manrope, Arial, sans-serif" font-size="32">for private well households.</text>
+  <rect x="360" y="438" width="308" height="64" rx="32" fill="#0f766e" fill-opacity="0.12"/>
+  <text x="394" y="480" fill="#0f4b57" font-family="Manrope, Arial, sans-serif" font-size="28" font-weight="700">Results • Symptoms • Triggers</text>
+</svg>
