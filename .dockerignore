@@ -1,0 +1,10 @@
+.git
+.github
+.gradle
+.vscode
+build
+jte-classes
+output
+*.log
+data/analytics
+data/leads

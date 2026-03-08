@@ -1,0 +1,113 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-waterverdict
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  APP_NAME: waterverdict
+  DOMAIN: waterverdict.com
+  DEPLOY_PATH: ~/deploy/waterverdict
+  DOCKERHUB_IMAGE: shinhyeok22/waterverdict
+  HOST_PORT: "8809"
+  CONTAINER_PORT: "8080"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Run tests
+        run: ./gradlew --no-daemon test
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: |
+            ${{ env.DOCKERHUB_IMAGE }}:latest
+            ${{ env.DOCKERHUB_IMAGE }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Configure SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          cat > ~/.ssh/oci_key <<'KEY'
+          ${{ secrets.OCI_KEY }}
+          KEY
+          chmod 600 ~/.ssh/oci_key
+          ssh-keyscan -H "${{ secrets.OCI_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy to OCI
+        shell: bash
+        env:
+          OCI_HOST: ${{ secrets.OCI_HOST }}
+          OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
+        run: |
+          ssh -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST}" <<EOF
+            set -eu
+            mkdir -p "${DEPLOY_PATH}/data"
+            cd "${DEPLOY_PATH}"
+
+            cat > .env <<'ENVEOF'
+SPRING_PROFILES_ACTIVE=prod
+APP_SITE_BASE_URL=https://waterverdict.com
+APP_ADMIN_USERNAME=admin
+APP_ADMIN_PASSWORD=shinhyeok
+ENVEOF
+
+            cat > docker-compose.yml <<COMPOSEEOF
+services:
+  app:
+    image: ${DOCKERHUB_IMAGE}:latest
+    container_name: ${APP_NAME}
+    restart: unless-stopped
+    ports:
+      - "${HOST_PORT}:${CONTAINER_PORT}"
+    environment:
+      SPRING_PROFILES_ACTIVE: \${SPRING_PROFILES_ACTIVE}
+      APP_SITE_BASE_URL: \${APP_SITE_BASE_URL}
+      APP_ADMIN_USERNAME: \${APP_ADMIN_USERNAME}
+      APP_ADMIN_PASSWORD: \${APP_ADMIN_PASSWORD}
+    volumes:
+      - ./data:/app/data
+    mem_limit: 512m
+COMPOSEEOF
+
+            echo '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' --password-stdin
+            docker compose pull
+            docker compose up -d --remove-orphans
+            docker image prune -f
+          EOF

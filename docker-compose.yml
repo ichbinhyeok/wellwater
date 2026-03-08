@@ -1,0 +1,15 @@
+services:
+  app:
+    image: shinhyeok22/waterverdict:latest
+    container_name: waterverdict
+    restart: unless-stopped
+    ports:
+      - "8809:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+      APP_SITE_BASE_URL: ${APP_SITE_BASE_URL:-https://waterverdict.com}
+      APP_ADMIN_USERNAME: ${APP_ADMIN_USERNAME:-admin}
+      APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD:-shinhyeok}
+    volumes:
+      - ./data:/app/data
+    mem_limit: 512m
