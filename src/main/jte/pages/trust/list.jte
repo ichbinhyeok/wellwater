@@ -6,9 +6,9 @@
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Trust surface</span>
-                    <h1>Public trust pages for a decision-first private-well site.</h1>
-                    <p class="hero-lead">These pages explain how evidence is weighed, how sources are selected, what gets reviewed, and where the product deliberately stops pretending it knows too much.</p>
+                    <span class="eyebrow">Trust pages</span>
+                    <h1>How this site reviews well water advice, sources, and safety limits.</h1>
+                    <p class="hero-lead">These pages explain how evidence is weighed, how sources are selected, what gets reviewed, and where testing should stay ahead of product advice.</p>
                     <div class="hero-actions">
                         <a class="button-link" href="/tool/result-first">Open Tool</a>
                         <a class="button-link-secondary" href="/well-water/family/authority">Read Authority Articles</a>
@@ -16,7 +16,7 @@
                 </div>
                 <aside class="hero-note">
                     <strong>Why this exists</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">A private-well site should not ask for trust through tone alone. It should show how decisions, limits, sources, and corrections work in public.</p>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">A private well site should not ask for trust through tone alone. It should show how decisions, limits, sources, and corrections work in public.</p>
                     <div class="chip-row">
                         <span class="chip">Methodology</span>
                         <span class="chip">Review policy</span>

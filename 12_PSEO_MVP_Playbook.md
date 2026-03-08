@@ -13,7 +13,7 @@ What changed is that the public surface is now much more mature than the origina
 Public surface now includes:
 - home page
 - family hubs
-- 98 pSEO pages
+- 97 pSEO pages
 - trust hub and trust detail pages
 - structured metadata
 - regional and authority clusters

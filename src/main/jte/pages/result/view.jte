@@ -1,6 +1,12 @@
 @param com.example.wellwater.decision.model.DecisionResult result
 @param String sessionId
-@param java.util.List<com.example.wellwater.web.tool.ToolController.RenderableCta> ctaLinks
+@param java.util.List<com.example.wellwater.web.result.RenderableCta> ctaLinks
+@param String savedResultUrl
+@param String shareUrl
+@param String pdfUrl
+@param String savedAtLabel
+@param String expiresLabel
+@param boolean sharedView
 
 @template.layout.engine(
     title = "Decision Result",
@@ -215,22 +221,33 @@
                         <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m8 2a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3.586a1 1 0 01.707.293l1.414 1.414A1 1 0 0012.414 7H18a2 2 0 012 2v8z"></path></svg>
                         Save & Share Surface
                     </h4>
-                    <p class="text-sm text-zinc-600 mb-4">These actions are intentionally surfaced now, but the actual snapshot, PDF, and share plumbing is not live yet.</p>
+                    <p class="text-sm text-zinc-600 mb-4">This result is stored as a private noindex snapshot so you can reopen it, download it, or share it without turning it into a public landing page.</p>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Save Result</p>
-                            <p class="text-sm text-zinc-700">Keep this decision state for later review and retest follow-up.</p>
-                            <p class="text-xs text-zinc-500 mt-3">Coming soon</p>
+                            <p class="text-sm text-zinc-700">Saved ${savedAtLabel}.</p>
+                            @if(expiresLabel != null && !expiresLabel.isBlank())
+                                <p class="text-xs text-zinc-500 mt-1">Available through ${expiresLabel}.</p>
+                            @endif
+                            <a href="${savedResultUrl}" class="mt-3 inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:border-zinc-400 hover:bg-zinc-100 transition-colors">
+                                ${sharedView ? "Open saved view" : "Review saved view"}
+                            </a>
                         </div>
                         <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Download PDF</p>
-                            <p class="text-sm text-zinc-700">Export the verdict, timing, and disclosure block for offline review.</p>
-                            <p class="text-xs text-zinc-500 mt-3">Coming soon</p>
+                            <p class="text-sm text-zinc-700">Export the verdict, timeline, links, and disclosure block for offline review.</p>
+                            <a href="${pdfUrl}" class="mt-3 inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:border-zinc-400 hover:bg-zinc-100 transition-colors" target="_blank" rel="nofollow">
+                                Download PDF
+                            </a>
                         </div>
                         <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
                             <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Share Link</p>
-                            <p class="text-sm text-zinc-700">Send a short-lived view to a family member or installer without exposing public index pages.</p>
-                            <p class="text-xs text-zinc-500 mt-3">Coming soon</p>
+                            <p class="text-sm text-zinc-700 mb-3">Copy a private link for a family member, installer, or follow-up reviewer.</p>
+                            <label class="sr-only" for="share-link-input">Share link</label>
+                            <input id="share-link-input" type="text" readonly value="${shareUrl}" class="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-xs text-zinc-600 mb-3">
+                            <button id="share-link-button" type="button" onclick="copyShareLink()" class="inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:border-zinc-400 hover:bg-zinc-100 transition-colors">
+                                Copy link
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -294,6 +311,27 @@
         </div>
 
         <script>
+            async function copyShareLink() {
+                const input = document.getElementById('share-link-input');
+                const button = document.getElementById('share-link-button');
+                if (!input || !button) {
+                    return;
+                }
+                const raw = input.value || '';
+                const absolute = raw.startsWith('http://') || raw.startsWith('https://') ? raw : window.location.origin + raw;
+                try {
+                    await navigator.clipboard.writeText(absolute);
+                    input.value = absolute;
+                    button.textContent = 'Copied';
+                    setTimeout(() => {
+                        button.textContent = 'Copy link';
+                    }, 1800);
+                } catch (error) {
+                    input.focus();
+                    input.select();
+                }
+            }
+
             // Auto expand bottom sheet on mobile when viewing result
             document.addEventListener('DOMContentLoaded', () => {
                 if (window.innerWidth <= 1023) {

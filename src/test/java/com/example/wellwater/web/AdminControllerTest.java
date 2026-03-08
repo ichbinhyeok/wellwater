@@ -33,7 +33,7 @@ class AdminControllerTest {
     @Test
     void adminDashboardRendersWhenAuthorized() throws Exception {
         mockMvc.perform(get("/admin")
-                        .header("Authorization", basicAuth("admin", "shinhyeok")))
+                        .header("Authorization", basicAuth("test-admin", "test-secret")))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Operations Dashboard")))
                 .andExpect(content().string(containsString("Search Visibility Gaps")));

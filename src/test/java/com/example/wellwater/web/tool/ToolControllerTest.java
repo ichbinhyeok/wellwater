@@ -6,6 +6,8 @@ import com.example.wellwater.decision.normalize.DecisionInputNormalizationServic
 import com.example.wellwater.decision.registry.CostRegistryService;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
+import com.example.wellwater.web.result.ResultCtaService;
+import com.example.wellwater.web.result.ResultSnapshotService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.ui.ExtendedModelMap;
@@ -41,6 +43,13 @@ class ToolControllerTest {
         return new StateResourceRegistryService("./data/registry/state_resource_registry.csv");
     }
 
+    private ResultSnapshotService newSnapshotService() {
+        return new ResultSnapshotService(
+                tempDir.resolve("snapshots").toString(),
+                30
+        );
+    }
+
     @Test
     void resultFirstViewLoads() {
         DecisionRegistryService registryService = new DecisionRegistryService(
@@ -52,7 +61,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
         Model model = new ExtendedModelMap();
 
@@ -77,7 +88,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
         Model model = new ExtendedModelMap();
         ToolRequest request = new ToolRequest();
@@ -100,6 +113,8 @@ class ToolControllerTest {
         assertNotNull(model.getAttribute("result"));
         assertNotNull(model.getAttribute("sessionId"));
         assertNotNull(model.getAttribute("ctaLinks"));
+        assertTrue(((String) model.getAttribute("savedResultUrl")).startsWith("/result/saved/"));
+        assertTrue(((String) model.getAttribute("pdfUrl")).endsWith(".pdf"));
     }
 
     @Test
@@ -113,7 +128,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
 
         RedirectView view = controller.outbound(
@@ -140,7 +157,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
 
         RedirectView view = controller.outbound(
@@ -167,7 +186,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
 
         RedirectView view = controller.outbound(
@@ -194,7 +215,9 @@ class ToolControllerTest {
                 newDecisionEngine(),
                 new AnalyticsEventService(tempDir.resolve("events.csv").toString()),
                 registryService,
-                newStateResourceRegistry()
+                newStateResourceRegistry(),
+                new ResultCtaService(),
+                newSnapshotService()
         );
         String target = "https://www.pa.gov/agencies/dep/residents/my-water/private-wells/water-testing";
 

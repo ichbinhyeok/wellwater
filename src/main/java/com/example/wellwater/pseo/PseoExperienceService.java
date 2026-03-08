@@ -35,29 +35,34 @@ public class PseoExperienceService {
     );
     private static final List<String> HOME_PRIORITY_SLUGS = List.of(
             "rotten-egg-smell",
-            "orange-stains",
-            "cloudy-water",
-            "after-flood",
-            "home-purchase-test",
             "nitrate",
-            "arsenic",
             "coliform",
-            "ph",
+            "cloudy-water",
+            "home-purchase-test",
+            "arsenic",
+            "after-flood",
+            "metallic-taste",
+            "orange-stains",
             "pfas",
-            "test-kit-vs-certified-lab",
+            "sulfur-smell-hot-water",
+            "blue-green-stains",
+            "ph",
+            "e-coli",
+            "after-heavy-rain",
+            "radon",
+            "how-to-read-a-well-water-lab-report",
+            "new-baby-at-home",
+            "private-well-home-sale-testing-by-state",
             "new-jersey-pwta-private-well-testing",
-            "connecticut-low-ph-blue-green-stains",
-            "new-york-pfas-private-wells",
-            "private-well-sampling-mistakes-that-break-results",
-            "how-to-read-a-well-water-lab-report"
+            "test-kit-vs-certified-lab"
     );
     private static final Map<String, List<String>> FAMILY_STARTER_SLUGS = Map.of(
-            "contaminants", List.of("nitrate", "arsenic", "coliform"),
-            "symptoms", List.of("rotten-egg-smell", "orange-stains", "cloudy-water"),
-            "compares", List.of("test-kit-vs-certified-lab", "uv-vs-chlorination", "whole-house-vs-under-sink-ro"),
-            "triggers", List.of("after-flood", "home-purchase-test", "retest-after-treatment"),
-            "regional", List.of("new-hampshire-arsenic-well-water", "new-jersey-pwta-private-well-testing", "florida-rotten-egg-smell-well-water"),
-            "authority", List.of("how-to-read-a-well-water-lab-report", "when-not-to-buy-treatment-yet", "private-well-sampling-mistakes-that-break-results")
+            "contaminants", List.of("nitrate", "coliform", "arsenic"),
+            "symptoms", List.of("rotten-egg-smell", "cloudy-water", "orange-stains"),
+            "compares", List.of("test-kit-vs-certified-lab", "whole-house-vs-under-sink-ro", "uv-vs-chlorination"),
+            "triggers", List.of("after-flood", "home-purchase-test", "after-heavy-rain"),
+            "regional", List.of("new-jersey-pwta-private-well-testing", "florida-rotten-egg-smell-well-water", "new-york-pfas-private-wells"),
+            "authority", List.of("how-to-read-a-well-water-lab-report", "private-well-home-sale-testing-by-state", "private-well-testing-schedule-by-household")
     );
     private static final Map<String, Set<String>> CLUSTER_COMPANIONS = Map.ofEntries(
             Map.entry("new-hampshire-arsenic-well-water", Set.of("arsenic", "radon", "uranium", "test-kit-vs-certified-lab", "mail-in-lab-vs-local-certified-lab", "ro-vs-adsorptive-media-for-arsenic", "arsenic-bedrock-testing-checklist", "private-well-home-sale-testing-by-state", "home-sale-private-well-testing-checklist")),
@@ -116,11 +121,15 @@ public class PseoExperienceService {
         addBySlugOrder(ordered, bySlug, HOME_PRIORITY_SLUGS, limit);
         if (ordered.size() < limit) {
             addUnique(ordered, allPages.stream()
+                    .filter(page -> "A".equals(page.normalizedTier()))
                     .filter(page -> decisionDocService.findBySlug(page.slug()).isPresent())
+                    .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
                     .toList(), limit);
         }
         if (ordered.size() < limit) {
-            addUnique(ordered, catalogService.featured(limit * 2), limit);
+            addUnique(ordered, allPages.stream()
+                    .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
+                    .toList(), limit);
         }
         return List.copyOf(ordered);
     }
@@ -133,9 +142,9 @@ public class PseoExperienceService {
         return switch (family) {
             case "contaminants" -> new PseoFamilyView(
                     family,
-                    "Contaminant response guides",
-                    "Named-analyte pages for health, corrosion, and nuisance interpretation before the tool takes over.",
-                    size + " pages aimed at result interpretation, confirmatory testing, and scope decisions.",
+                    "Well water test result guides",
+                    "Start here when your report names nitrate, arsenic, coliform, PFAS, radon, or another contaminant and you need the next safe step.",
+                    size + " pages for interpreting results, deciding what to retest, and avoiding premature treatment purchases.",
                     "Start From Lab Results",
                     "/tool/result-first",
                     starterPages,
@@ -144,9 +153,9 @@ public class PseoExperienceService {
             );
             case "symptoms" -> new PseoFamilyView(
                     family,
-                    "Symptom-first troubleshooting guides",
-                    "Pages for odor, stains, taste, residue, and other visible clues when clean lab data is missing.",
-                    size + " pages aimed at diagnostic thinking before anyone buys the wrong category.",
+                    "Well water smell, stain, and taste guides",
+                    "Use these pages when you notice rotten egg odor, orange stains, metallic taste, cloudy water, or another clue before you have lab results.",
+                    size + " pages focused on likely causes, what to test next, and when a symptom is not enough to justify treatment.",
                     "Start From Symptoms",
                     "/tool/symptom-first",
                     starterPages,
@@ -155,9 +164,9 @@ public class PseoExperienceService {
             );
             case "compares" -> new PseoFamilyView(
                     family,
-                    "Treatment comparison guides",
-                    "Category-vs-category pages built to slow premature buying and force better scope and claim checks.",
-                    size + " pages comparing product paths without pretending every problem has the same fix.",
+                    "Well water treatment comparison guides",
+                    "These pages compare treatment categories only after the problem is narrow enough to talk about scope, certification, and fit.",
+                    size + " pages comparing treatment paths without pretending every well problem has the same fix.",
                     "Start From Lab Results",
                     "/tool/result-first",
                     starterPages,
@@ -166,9 +175,9 @@ public class PseoExperienceService {
             );
             case "triggers" -> new PseoFamilyView(
                     family,
-                    "Recent trigger response guides",
-                    "Event-driven pages for flood, repair, vacancy, wildfire, and other moments when retest timing matters.",
-                    size + " pages aimed at response order, retest timing, and escalation logic.",
+                    "Well water change and event guides",
+                    "Use these pages after flooding, repairs, wildfire, a home purchase, or another change that resets what your old data means.",
+                    size + " pages for response order, retest timing, and when to escalate before shopping.",
                     "Start From Recent Trigger",
                     "/tool/trigger-first",
                     starterPages,
@@ -177,9 +186,9 @@ public class PseoExperienceService {
             );
             case "regional" -> new PseoFamilyView(
                     family,
-                    "Regional well-water guides",
-                    "State-specific pages that connect geology, regulation, and local testing pathways to a practical next step.",
-                    size + " pages aimed at location-shaped search intent rather than generic national answers.",
+                    "State-specific private well guides",
+                    "These pages cover places where state rules, geology, bedrock, or local testing pathways change the right answer.",
+                    size + " pages built for local search intent where the next step genuinely changes by state or region.",
                     "Start With Your State Context",
                     "/tool/result-first",
                     starterPages,
@@ -188,9 +197,9 @@ public class PseoExperienceService {
             );
             case "authority" -> new PseoFamilyView(
                     family,
-                    "Authority and methodology articles",
-                    "Support articles that explain how to read reports, verify claims, and avoid bad testing and buying assumptions.",
-                    size + " pages aimed at trust, method clarity, and stronger internal support for money pages.",
+                    "Well water testing and decision articles",
+                    "Support articles for reading reports, planning test scope, checking claims, and avoiding expensive mistakes before you buy.",
+                    size + " articles that strengthen trust, method, and the pages people visit before a treatment decision.",
                     "Open Decision Tool",
                     "/tool/result-first",
                     starterPages,
@@ -347,32 +356,32 @@ public class PseoExperienceService {
         String stateQuery = stateHint(page).map(state -> "&state=" + state).orElse("");
         return switch (page.family()) {
             case "contaminants" -> new PseoEntryHint(
-                    "Result-first handoff",
+                    "Start with your lab result",
                     "/tool/result-first?analyte=" + page.slug() + "&slug=" + page.slug(),
                     "Best when you already have one named analyte from a lab report."
             );
             case "symptoms" -> new PseoEntryHint(
-                    "Symptom-first handoff",
+                    "Start with this symptom",
                     "/tool/symptom-first?symptom=" + page.slug() + "&slug=" + page.slug(),
                     "Best when the visible problem is stronger than the data you have."
             );
             case "triggers" -> new PseoEntryHint(
-                    "Trigger-first handoff",
+                    "Start with this recent change",
                     "/tool/trigger-first?trigger=" + page.slug() + "&slug=" + page.slug(),
                     "Best when a recent event changed how you should interpret risk or retest timing."
             );
             case "regional" -> new PseoEntryHint(
-                    "State-aware handoff",
+                    "Add your state context",
                     "/tool/result-first?slug=" + page.slug() + stateQuery,
                     "Best when the state context matters and you want the engine to combine that with your own result or symptom."
             );
             case "authority" -> new PseoEntryHint(
-                    "Method-first handoff",
+                    "Apply this article to your well",
                     "/tool/result-first?slug=" + page.slug(),
                     "Best when you want to apply the method article to your own result instead of reading in the abstract."
             );
             default -> new PseoEntryHint(
-                    "Result-first handoff",
+                    "Start with your lab result",
                     "/tool/result-first?slug=" + page.slug(),
                     "Best when you want the engine to narrow the problem before shopping."
             );
@@ -381,9 +390,9 @@ public class PseoExperienceService {
 
     private List<PseoQuickAnswer> quickAnswers(PseoPage page, String riskLens, PseoEntryHint entryHint) {
         return List.of(
-                new PseoQuickAnswer("Risk lens", riskSummary(page, riskLens)),
-                new PseoQuickAnswer("Best-fit household", householdSummary(page, riskLens)),
-                new PseoQuickAnswer("Do not buy yet", doNotBuyYet(page, riskLens)),
+                new PseoQuickAnswer("What this usually means", riskSummary(page, riskLens)),
+                new PseoQuickAnswer("Who should act faster", householdSummary(page, riskLens)),
+                new PseoQuickAnswer("What not to buy first", doNotBuyYet(page, riskLens)),
                 new PseoQuickAnswer(entryHint.label(), entryHint.reason())
         );
     }
@@ -397,7 +406,9 @@ public class PseoExperienceService {
         List<PseoPage> starters = new ArrayList<>();
         addBySlugOrder(starters, bySlug, FAMILY_STARTER_SLUGS.getOrDefault(family, List.of()), 3);
         if (starters.size() < 3) {
-            addUnique(starters, pages, 3);
+            addUnique(starters, pages.stream()
+                    .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
+                    .toList(), 3);
         }
         return List.copyOf(starters);
     }
@@ -467,7 +478,7 @@ public class PseoExperienceService {
             case "regional" -> List.of(
                     "Confirm the state or geology context actually changes the next action.",
                     "Check whether the page points to state labs, rules, or risk patterns.",
-                    "Use the state-aware tool handoff once you know your local context."
+                    "Use the tool with your state context once you know what local factor matters."
             );
             case "authority" -> List.of(
                     "Use these pages to tighten method, not to replace the tool.",
@@ -489,6 +500,7 @@ public class PseoExperienceService {
                     .filter(candidate -> !candidate.slug().equals(page.slug()))
                     .filter(candidate -> candidate.family().equals(family))
                     .sorted(Comparator.comparingInt((PseoPage candidate) -> relatedScore(page, candidate, riskLens)).reversed()
+                            .thenComparingInt(PseoPage::tierRank)
                             .thenComparing(PseoPage::slug))
                     .limit(2)
                     .toList();
@@ -569,7 +581,7 @@ public class PseoExperienceService {
             }
         }
         if (NUISANCE_SLUGS.contains(source.slug()) || "symptoms".equals(source.family())) {
-            if (Set.of("softener-vs-iron-filter", "iron-filter-vs-softener", "spin-down-vs-cartridge-sediment-filter", "point-of-entry-vs-point-of-use").contains(candidate.slug())) {
+            if (Set.of("softener-vs-iron-filter", "spin-down-vs-cartridge-sediment-filter", "point-of-entry-vs-point-of-use").contains(candidate.slug())) {
                 score += 6;
             }
         }

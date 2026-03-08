@@ -33,7 +33,7 @@ class PseoExperienceServiceTest {
     void familyViewUsesHumanReadableHeroCopy() {
         PseoFamilyView familyView = experienceService.familyView("symptoms", catalogService.byFamily("symptoms"));
 
-        assertEquals("Symptom-first troubleshooting guides", familyView.heroTitle());
+        assertEquals("Well water smell, stain, and taste guides", familyView.heroTitle());
         assertEquals("/tool/symptom-first", familyView.primaryToolHref());
         assertEquals(3, familyView.starterPages().size());
         assertEquals(3, familyView.commonMistakes().size());
@@ -47,7 +47,7 @@ class PseoExperienceServiceTest {
 
         assertEquals("Regional guide", detailView.archetypeLabel());
         assertTrue(detailView.entryHint().href().contains("state=NH"));
-        assertEquals("Authority and methodology articles", familyView.heroTitle());
+        assertEquals("Well water testing and decision articles", familyView.heroTitle());
     }
 
     @Test
@@ -59,6 +59,7 @@ class PseoExperienceServiceTest {
         assertTrue(catalogService.findBySlug("private-well-sampling-mistakes-that-break-results").isPresent());
         assertTrue(catalogService.findBySlug("new-jersey-pwta-vs-full-household-panel").isPresent());
         assertTrue(catalogService.findBySlug("new-york-pfas-private-well-testing-order").isPresent());
+        assertTrue(catalogService.findBySlug("iron-filter-vs-softener").isPresent());
     }
 
     @Test
@@ -88,6 +89,7 @@ class PseoExperienceServiceTest {
                 "retest-after-treatment",
                 "nitrate",
                 "coliform",
+                "e-coli",
                 "arsenic"
         );
 
@@ -105,8 +107,8 @@ class PseoExperienceServiceTest {
 
         assertEquals(6, priorityPages.size());
         assertEquals("rotten-egg-smell", priorityPages.get(0).slug());
-        assertEquals("orange-stains", priorityPages.get(1).slug());
-        assertEquals("cloudy-water", priorityPages.get(2).slug());
+        assertEquals("nitrate", priorityPages.get(1).slug());
+        assertEquals("coliform", priorityPages.get(2).slug());
     }
 
     @Test
@@ -135,6 +137,22 @@ class PseoExperienceServiceTest {
     }
 
     @Test
+    void authorityAndRegionalOrganicPagesNowExposeDecisionDocs() {
+        List<String> slugs = List.of(
+                "new-jersey-pwta-private-well-testing",
+                "how-to-read-a-well-water-lab-report",
+                "private-well-home-sale-testing-by-state"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertFalse(detailView.decisionDoc().faqs().isEmpty(), slug);
+            assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
+        }
+    }
+
+    @Test
     void winnerDecisionDocsExposeDecisionSplitsAndEscalationSignals() {
         List<String> slugs = List.of(
                 "rotten-egg-smell",
@@ -148,6 +166,7 @@ class PseoExperienceServiceTest {
                 "retest-after-treatment",
                 "nitrate",
                 "coliform",
+                "e-coli",
                 "arsenic",
                 "lead",
                 "pfas",
@@ -158,6 +177,9 @@ class PseoExperienceServiceTest {
                 "after-heavy-rain",
                 "new-baby-at-home",
                 "pregnancy-in-home",
+                "new-jersey-pwta-private-well-testing",
+                "how-to-read-a-well-water-lab-report",
+                "private-well-home-sale-testing-by-state",
                 "test-kit-vs-certified-lab",
                 "mail-in-lab-vs-local-certified-lab",
                 "private-well-sampling-mistakes-that-break-results"

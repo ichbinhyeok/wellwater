@@ -687,7 +687,7 @@
             <a href="/" class="brand-mark" aria-label="Private Well Water Guide">WW</a>
             <div class="brand-copy">
                 <p class="brand-kicker">Private Well Guide</p>
-                <p class="brand-title">Decision-first well water research</p>
+                <p class="brand-title">Well water test, symptom, and next-step guides</p>
             </div>
         </div>
         <nav class="site-nav" aria-label="Primary">
@@ -720,7 +720,7 @@
     ${content}
 
     <footer class="site-footer">
-        <strong>Private Well Water Guide</strong> separates public research pages from personalized noindex decision results.
+        <strong>Private Well Water Guide</strong> helps you move from a water clue or lab result to the next test, comparison, or follow-up step.
         <nav class="footer-links" aria-label="Trust and policy">
             <a href="/trust">Trust hub</a>
             <a href="/trust/methodology">Methodology</a>

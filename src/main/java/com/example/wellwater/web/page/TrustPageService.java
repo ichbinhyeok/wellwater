@@ -15,7 +15,7 @@ public class TrustPageService {
                     "methodology",
                     "Private Well Decision Methodology",
                     "How This Site Turns Well-Water Clues Into Next Steps",
-                    "Read the public methodology behind the decision-first well-water workflow, including how evidence, urgency, and buying gates are handled.",
+                    "Read the public methodology behind this well-water workflow, including how evidence, urgency, and buying gates are handled.",
                     "Methodology",
                     "This page explains how public pages, tool inputs, and noindex result pages fit together before any commercial recommendation appears.",
                     "The goal is not to predict everything from one clue. The goal is to narrow the next safe step with less fear, less guesswork, and fewer bad purchases.",

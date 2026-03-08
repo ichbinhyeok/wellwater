@@ -24,6 +24,9 @@ public class PseoCatalogService {
 
     public static final List<String> FAMILY_ORDER = List.of("contaminants", "symptoms", "compares", "triggers", "regional", "authority");
     private static final Set<String> ALLOWED_FAMILIES = Set.copyOf(FAMILY_ORDER);
+    private static final Map<String, String> CANONICAL_SLUGS = Map.of(
+            "iron-filter-vs-softener", "softener-vs-iron-filter"
+    );
     private final Path csvPath;
 
     public PseoCatalogService(@Value("${app.pseo.csv.path:./data/pseo/pages.csv}") String csvPath) {
@@ -58,8 +61,9 @@ public class PseoCatalogService {
     }
 
     public Optional<PseoPage> findBySlug(String slug) {
+        String normalizedSlug = canonicalSlug(slug);
         return allPages().stream()
-                .filter(page -> page.slug().equals(slug))
+                .filter(page -> page.slug().equals(normalizedSlug))
                 .findFirst();
     }
 
@@ -69,8 +73,19 @@ public class PseoCatalogService {
         }
         return allPages().stream()
                 .filter(page -> page.family().equals(family))
-                .sorted(Comparator.comparing(PseoPage::slug))
+                .sorted(pageOrdering())
                 .toList();
+    }
+
+    public String canonicalSlug(String slug) {
+        if (slug == null || slug.isBlank()) {
+            return "";
+        }
+        return CANONICAL_SLUGS.getOrDefault(slug, slug);
+    }
+
+    public boolean isCanonicalSlug(String slug) {
+        return canonicalSlug(slug).equals(slug);
     }
 
     public Map<String, Long> familyCounts() {
@@ -189,7 +204,8 @@ public class PseoCatalogService {
                 value(cols, idx, "source_url"),
                 value(cols, idx, "search_query"),
                 value(cols, idx, "search_performed_at"),
-                value(cols, idx, "fetched_at")
+                value(cols, idx, "fetched_at"),
+                value(cols, idx, "tier")
         );
     }
 
@@ -218,6 +234,7 @@ public class PseoCatalogService {
         requireNotBlank(page.searchQuery(), "search_query");
         requireNotBlank(page.searchPerformedAt(), "search_performed_at");
         requireNotBlank(page.fetchedAt(), "fetched_at");
+        requireAllowedTier(page);
         if (!ALLOWED_FAMILIES.contains(page.family())) {
             throw new IllegalStateException("Unsupported family: " + page.family());
         }
@@ -240,6 +257,17 @@ public class PseoCatalogService {
         if (value == null || value.isBlank()) {
             throw new IllegalStateException("Missing required field in pSEO CSV: " + field);
         }
+    }
+
+    private void requireAllowedTier(PseoPage page) {
+        if (!page.hasSupportedTier()) {
+            throw new IllegalStateException("Unsupported tier in pSEO CSV: " + page.tier());
+        }
+    }
+
+    private Comparator<PseoPage> pageOrdering() {
+        return Comparator.comparingInt(PseoPage::tierRank)
+                .thenComparing(PseoPage::slug);
     }
 
     private List<String> parseCsvLine(String line) {

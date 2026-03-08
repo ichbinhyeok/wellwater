@@ -88,12 +88,12 @@ Examples:
 Current pSEO inventory:
 - contaminants: 22
 - symptoms: 14
-- compares: 16
+- compares: 15
 - triggers: 12
 - regional: 15
 - authority: 19
 
-Total pSEO pages: 98
+Total pSEO pages: 97
 
 ## 5. Internal Link Logic
 

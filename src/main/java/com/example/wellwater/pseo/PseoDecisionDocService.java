@@ -36,9 +36,9 @@ public class PseoDecisionDocService {
                             "Escalate if odor is paired with broader staining or sediment changes instead of staying an isolated smell problem."
                     ),
                     faq(
-                            item("Is rotten egg smell always dangerous?", "Not automatically. It is often a nuisance and maintenance problem, but it still needs pattern-based diagnosis before treatment."),
-                            item("Should I buy a sulfur filter first?", "No. First determine whether the smell is hot-water-only, whole-house, or paired with staining because those patterns change the likely fix."),
-                            item("What data matters most?", "Location of the odor, timing, staining, and whether a recent maintenance event changed the pattern.")
+                            item("Why does my well water smell like rotten eggs?", "It is often tied to sulfur bacteria, heater-specific behavior, or a wider nuisance pattern, but the location and timing of the smell change the likely cause."),
+                            item("Why does only my hot water smell like sulfur?", "Hot-water-only odor often points toward the water heater or anode behavior before it points to a whole-house sulfur problem."),
+                            item("Do I need a sulfur filter for well water right away?", "No. First determine whether the smell is hot-water-only, whole-house, or paired with staining because those patterns change the likely fix.")
                     )
             )),
             Map.entry("orange-stains", winnerDoc(
@@ -66,9 +66,9 @@ public class PseoDecisionDocService {
                             "Escalate if the issue changed after treatment and the treatment claim now needs verification."
                     ),
                     faq(
-                            item("Are orange stains always an iron problem?", "Not always. They often suggest iron or related nuisance issues, but corrosion and plumbing interaction can change the answer."),
-                            item("Should I compare filters right away?", "Only after you know whether the problem is source-wide, corrosion-shaped, or tied to a specific fixture."),
-                            item("What is the most useful next signal?", "Whether the stains travel with taste, pH clues, or only show up in certain locations.")
+                            item("Why is my well water leaving orange stains?", "Orange stains often suggest iron or related nuisance minerals, but corrosion and plumbing interaction can change the answer."),
+                            item("Do orange stains mean I need an iron filter?", "Not automatically. First decide whether the problem is source-wide, corrosion-shaped, or tied to a specific fixture."),
+                            item("Could orange stains be from plumbing instead of the well?", "Yes. Taste changes, low pH clues, and where the stains appear can point toward corrosion rather than a simple iron problem.")
                     )
             )),
             Map.entry("black-stains", winnerDoc(
@@ -126,9 +126,9 @@ public class PseoDecisionDocService {
                             "Escalate if cloudy water is paired with odor, microbial concern, or a strong change in household use confidence."
                     ),
                     faq(
-                            item("Is cloudy water always dangerous?", "Not automatically, but persistent or trigger-linked cloudiness should slow down shopping and raise verification."),
-                            item("Should I buy a sediment filter right away?", "Not until you know whether the cloudiness is persistent, temporary, or tied to a recent event."),
-                            item("What matters most?", "Whether the cloudiness clears, when it started, and what changed around the well or plumbing system.")
+                            item("Why is my well water cloudy all of a sudden?", "Timing matters most. Cloudiness can follow storms, repairs, power events, or other disturbances that change how much you should trust older assumptions."),
+                            item("Is cloudy well water safe to drink?", "Not automatically. Persistent or trigger-linked cloudiness should slow down shopping and raise verification before normal use confidence returns."),
+                            item("Do I need a sediment filter for cloudy well water?", "Not until you know whether the cloudiness is persistent, temporary, or tied to a recent event.")
                     )
             )),
             Map.entry("metallic-taste", winnerDoc(
@@ -156,9 +156,9 @@ public class PseoDecisionDocService {
                             "Escalate if the taste began right after plumbing work and does not settle out quickly."
                     ),
                     faq(
-                            item("Does metallic taste mean the well itself is contaminated?", "Not always. Plumbing interaction and corrosion can be part of the picture."),
-                            item("Should I buy taste-improvement filtration first?", "No. First decide whether low pH and metal exposure need a broader test sequence."),
-                            item("What is the strongest next check?", "Low pH, copper or lead follow-up, and whether the symptom is system-wide or tied to certain fixtures.")
+                            item("Why does my well water taste metallic?", "A metallic taste can come from corrosion, plumbing interaction, or a broader source-water issue, so the pattern matters before treatment."),
+                            item("Does metallic taste mean metal contamination?", "Not always. Plumbing interaction and corrosion can be part of the picture, especially when low pH or blue-green stains show up too."),
+                            item("Should I test pH or metals first for metallic taste?", "Low pH, copper or lead follow-up, and whether the symptom is system-wide or tied to certain fixtures are usually the strongest next checks.")
                     )
             )),
             Map.entry("after-flood", winnerDoc(
@@ -186,9 +186,9 @@ public class PseoDecisionDocService {
                             "Escalate if the water looks normal but the flood materially changed the site conditions."
                     ),
                     faq(
-                            item("Should I rely on old test results after a flood?", "No. Flood context can make old assumptions and older results much less reliable."),
-                            item("Is this a time to compare filters?", "Usually not first. Verification, temporary safer water, and flood response steps come first."),
-                            item("What is the right posture after flooding?", "Verification-first, safety-first, and slower commerce.")
+                            item("Is well water safe to use after a flood?", "Not until flood response steps and follow-up testing restore confidence in the water."),
+                            item("Should I boil well water after a flood?", "Boiling is not the whole answer after a flood. Temporary safer water, local guidance, and the right testing path come first."),
+                            item("What should I test after a flood affects my well?", "Use flood-specific testing and disinfection guidance, and do not rely on old pre-flood results as if nothing changed.")
                     )
             )),
             Map.entry("after-repair", winnerDoc(
@@ -246,9 +246,9 @@ public class PseoDecisionDocService {
                             "Escalate if closing pressure is pushing you into treatment shopping before the test scope is clear."
                     ),
                     faq(
-                            item("Is a home-sale well test enough?", "Not always. It may satisfy transaction needs without covering every long-term health or geology question."),
-                            item("Should I buy treatment before closing?", "Only if the scope is genuinely clear. Otherwise, separate the sale panel from longer-term decision-making."),
-                            item("What improves this page's value?", "State context, certified labs, and a clear split between sale requirements and household safety planning.")
+                            item("What should I test when buying a house with a well?", "Start with the sale or lender panel, then check whether geology, household risk, or local context means more testing belongs in scope."),
+                            item("Is a seller well water test enough before closing?", "Not always. It may satisfy transaction needs without covering every long-term health or geology question."),
+                            item("Should I use a certified lab before closing on a house with a well?", "Yes when the decision needs stronger confidence. Certified labs and a clear split between sale requirements and household safety planning make this page more useful.")
                     )
             )),
             Map.entry("retest-after-treatment", winnerDoc(
@@ -306,9 +306,9 @@ public class PseoDecisionDocService {
                             "Escalate if a treatment purchase is being considered before drinking-water scope is clear."
                     ),
                     faq(
-                            item("Why is nitrate treated differently from nuisance issues?", "Because the main problem is household safety and exposure management, not appearance or maintenance."),
-                            item("Should I buy a filter right away?", "Not before household scope, certified confirmation, and safer temporary drinking-water decisions are clear."),
-                            item("What makes nitrate urgent?", "Infants, pregnancy, and uncertainty about the current drinking-water source.")
+                            item("Is nitrate in well water dangerous for babies?", "Yes, babies, formula use, and pregnancy are why nitrate gets treated as a household safety and exposure question first."),
+                            item("Can I boil nitrate out of well water?", "No. Use safer temporary drinking water and certified confirmation instead of assuming boiling fixes nitrate."),
+                            item("Do I need reverse osmosis for nitrate in well water?", "Maybe, but not before household scope, certified confirmation, and safer temporary drinking-water decisions are clear.")
                     )
             )),
             Map.entry("coliform", winnerDoc(
@@ -336,9 +336,39 @@ public class PseoDecisionDocService {
                             "Escalate if someone is jumping straight to UV or chlorination without a tighter retest path."
                     ),
                     faq(
-                            item("Does a total coliform positive mean I should buy UV immediately?", "Not automatically. Confirmation, event context, and the corrective pathway still matter."),
-                            item("Why does sample quality matter so much here?", "Because microbial decisions become weaker and more expensive when the sample itself is suspect."),
-                            item("What should happen before product comparison?", "Certified retesting, context review, and a clearer view of whether the issue is transient, structural, or confirmed.")
+                            item("Can I drink well water with a positive coliform result?", "Use caution first. Confirmation, event context, and the corrective pathway still matter before normal use confidence returns."),
+                            item("Should I shock chlorinate after a coliform positive?", "Sometimes, but do not skip confirmation, sampling review, and event context on the way to a corrective plan."),
+                            item("Do I need to retest after a positive coliform result?", "Yes. Certified retesting, context review, and a clearer view of whether the issue is transient, structural, or confirmed should come before product comparison.")
+                    )
+            )),
+            Map.entry("e-coli", winnerDoc(
+                    "E. coli is an immediate exposure-control page first, not a treatment-shopping page.",
+                    "This page should act more urgently than a general coliform page because the immediate question is whether anyone should still be drinking or preparing food with the water.",
+                    List.of(
+                            "Switch to safer water for drinking, cooking, brushing teeth, and infant formula right away.",
+                            "Use local guidance plus certified retesting before deciding whether shock treatment, disinfection, or broader correction belongs in scope.",
+                            "Treat sampling quality, flooding, repair work, and wellhead conditions as part of the interpretation."
+                    ),
+                    List.of(
+                            "People often treat E. coli like a nuisance issue because the water can still look normal.",
+                            "Boiling questions can distract from the bigger issue, which is safe temporary water and a tighter response sequence.",
+                            "A product comparison is weak if the page has not yet confirmed the source and corrected the pathway."
+                    ),
+                    "Retest on the microbial follow-up timeline recommended by local guidance, especially after any disinfection or corrective action.",
+                    splits(
+                            split("Positive result with flood, repair, or wellhead concern", "Treat the page like an urgent pathway problem and tighten the response sequence before comparing equipment."),
+                            split("Positive result with weak sampling confidence", "Recheck the sample process fast, but keep exposure-control logic in place until stronger evidence exists."),
+                            split("User jumps straight to product shopping", "Pull the page back toward safe temporary water, confirmation, and corrective-path clarity first.")
+                    ),
+                    List.of(
+                            "Escalate if anyone is still drinking or preparing infant formula with the water.",
+                            "Escalate if the page is treating E. coli like a simple one-step shopping problem.",
+                            "Escalate if flooding, repair work, or wellhead conditions may still be part of the cause."
+                    ),
+                    faq(
+                            item("Can I drink well water with E. coli?", "No. Use safer water for drinking, cooking, brushing teeth, and infant formula while you follow the corrective path."),
+                            item("Does boiling make E. coli well water safe?", "Boiling questions should not replace the larger response plan. Safe temporary water, local guidance, and the right retest sequence still matter."),
+                            item("What should I do after an E. coli positive in well water?", "Move into exposure control, local guidance, and certified retesting before any product comparison.")
                     )
             )),
             Map.entry("arsenic", winnerDoc(
@@ -366,9 +396,9 @@ public class PseoDecisionDocService {
                             "Escalate if treatment comparison is starting before the result confidence is strong enough."
                     ),
                     faq(
-                            item("Is arsenic a whole-house problem by default?", "Not automatically. The best scope depends on how the water is used and what the verified exposure question actually is."),
-                            item("Should I compare RO and adsorptive media immediately?", "Only after you have enough confidence in the result and in the use-case scope."),
-                            item("Why does regional context matter so much?", "Because geology can change what else belongs in the test plan and how the result should be interpreted.")
+                            item("Is arsenic in well water dangerous?", "Yes, it is a health-oriented page, which is why result confidence and drinking-water scope matter more than shopping speed."),
+                            item("Do I need whole-house treatment for arsenic?", "Not automatically. The best scope depends on how the water is used and what the verified exposure question actually is."),
+                            item("Should I choose RO or adsorptive media for arsenic first?", "Only after you have enough confidence in the result and in the use-case scope.")
                     )
             )),
             Map.entry("lead", winnerDoc(
@@ -426,9 +456,9 @@ public class PseoDecisionDocService {
                             "Escalate if a whole-house assumption is being made without clarifying the real exposure path."
                     ),
                     faq(
-                            item("Is carbon always enough for PFAS?", "The page should not assume that. Claim scope, test fit, and the specific treatment path still matter."),
-                            item("Should I compare products from the start?", "No. PFAS pages should move through testing confidence and claim verification first."),
-                            item("What is the strongest next step?", "Tighten the test interpretation and compare categories only after the exposure scope is clear.")
+                            item("Is PFAS in well water dangerous?", "PFAS pages should start from testing confidence and exposure scope because the risk question matters more than broad filter marketing."),
+                            item("Do carbon filters remove PFAS from well water?", "Sometimes, but the page should not assume that without checking claim scope, certification, and the specific treatment path."),
+                            item("Should I test PFAS before buying a filter?", "Yes. Tighten the test interpretation and compare categories only after the exposure scope is clear.")
                     )
             )),
             Map.entry("radon", winnerDoc(
@@ -456,9 +486,9 @@ public class PseoDecisionDocService {
                             "Escalate if a whole-house treatment path is assumed before the use-case is narrowed."
                     ),
                     faq(
-                            item("Should I compare treatment categories right away?", "Only after the page clarifies the local context and the scope of the concern."),
-                            item("Why is state context important here?", "Because geology and local testing pathways can materially change what the next step should be."),
-                            item("Is radon always a whole-house treatment question?", "Not automatically. Scope and household use still need to be defined.")
+                            item("Is radon in well water dangerous?", "It can be, but the page gets stronger when local context, household use, and related radionuclide testing are clear before treatment comparison begins."),
+                            item("Should I test indoor air too if I have radon in water?", "Sometimes yes. Separate drinking-water concern from broader home-air assumptions so the page does not oversimplify the decision."),
+                            item("Do I need an aeration system for radon in well water?", "Not automatically. Clarify the local context and the real scope of concern before comparing treatment categories.")
                     )
             )),
             Map.entry("ph", winnerDoc(
@@ -486,9 +516,9 @@ public class PseoDecisionDocService {
                             "Escalate if household exposure questions are being masked as a simple nuisance problem."
                     ),
                     faq(
-                            item("Is low pH mainly a nuisance issue?", "Not always. It can become an exposure and plumbing issue when corrosion clues are present."),
-                            item("Should I compare treatment categories first?", "No. The page should verify corrosion implications before it becomes a compare-page decision."),
-                            item("What strengthens the decision here?", "Low pH, paired corrosion clues, and follow-up metals testing.")
+                            item("Is low pH in well water dangerous?", "Not always, but it can become an exposure and plumbing issue when corrosion clues are present."),
+                            item("Does low pH cause copper or lead problems?", "It can. Low pH plus corrosion clues should push the page toward metals follow-up before shopping."),
+                            item("Do I need a neutralizer for low-pH well water?", "Maybe, but verify corrosion implications before turning this into a treatment-category decision.")
                     )
             )),
             Map.entry("blue-green-stains", winnerDoc(
@@ -497,7 +527,7 @@ public class PseoDecisionDocService {
                     List.of(
                             "Check whether metallic taste or low pH clues appear with the staining.",
                             "Decide whether the pattern is fixture-specific or system-wide before comparing treatment paths.",
-                            "Use a symptom-first or result-first handoff before shopping from the stain alone."
+                            "Use the symptom or lab-result tool before shopping from the stain alone."
                     ),
                     List.of(
                             "People often treat blue-green stains like simple discoloration instead of a corrosion clue.",
@@ -516,9 +546,9 @@ public class PseoDecisionDocService {
                             "Escalate if vulnerable-household exposure concerns make copper or lead follow-up more urgent."
                     ),
                     faq(
-                            item("Are blue-green stains just cosmetic?", "Not necessarily. The page should treat them as a corrosion clue until proven otherwise."),
-                            item("Should I buy treatment from the stain alone?", "No. The page should narrow the corrosion path first."),
-                            item("What usually matters most?", "Low pH, metallic taste, and whether the pattern is local or whole-house.")
+                            item("Why is my well water leaving blue-green stains?", "Blue-green stains often act more like a corrosion clue than a cosmetic-only problem."),
+                            item("Do blue-green stains mean copper in well water?", "They can point toward copper and corrosion follow-up, especially when low pH or metallic taste is also present."),
+                            item("Should I test pH if I see blue-green stains?", "Yes. Low pH, metallic taste, and whether the pattern is local or whole-house usually matter most.")
                     )
             )),
             Map.entry("sulfur-smell-hot-water", winnerDoc(
@@ -546,9 +576,9 @@ public class PseoDecisionDocService {
                             "Escalate if the page is skipping heater service logic and going straight to whole-house equipment."
                     ),
                     faq(
-                            item("Does hot-water sulfur smell mean I need a whole-house filter?", "Not automatically. The page should first separate heater-specific behavior from source-water odor."),
-                            item("What makes this page more useful?", "Knowing whether the smell is hot only, cold only, or both."),
-                            item("Should I compare sulfur systems immediately?", "Only if the page already rules out a heater-specific pattern.")
+                            item("Why does only my hot water smell like sulfur?", "Hot-water-only sulfur odor often points toward heater-specific behavior before it points to a whole-house sulfur problem."),
+                            item("Is the water heater causing the sulfur smell?", "It can be. Knowing whether the smell is hot only, cold only, or both is what makes this page more useful."),
+                            item("Do I need a whole-house sulfur filter if cold water smells fine?", "Not automatically. Only compare sulfur systems after the page rules out a heater-specific pattern.")
                     )
             )),
             Map.entry("after-heavy-rain", winnerDoc(
@@ -576,9 +606,9 @@ public class PseoDecisionDocService {
                             "Escalate if shopping starts before the event-versus-structure question is answered."
                     ),
                     faq(
-                            item("Is heavy rain enough to change what I should trust?", "Often yes. The page should at least downgrade confidence in older assumptions until the system is rechecked."),
-                            item("Should I compare filters after rain?", "Not first. Event timing and verification belong first."),
-                            item("What strengthens this page?", "Clear timing, repeat patterns, and whether the issue persists once the event passes.")
+                            item("Is well water safe after heavy rain?", "Often you should at least downgrade confidence in older assumptions until the system is rechecked."),
+                            item("Why did my well water change after heavy rain?", "Rainfall can reset sampling confidence and expose whether the issue is temporary or tied to a deeper structural problem."),
+                            item("What should I test after heavy rain affects my well?", "Event timing and verification come first. Clear timing, repeat patterns, and whether the issue persists once the event passes strengthen the page.")
                     )
             )),
             Map.entry("new-baby-at-home", winnerDoc(
@@ -606,9 +636,9 @@ public class PseoDecisionDocService {
                             "Escalate if treatment browsing is replacing verification urgency."
                     ),
                     faq(
-                            item("Does having a new baby change the next step even without a new lab result?", "Yes. It can make a weak or older evidence set less acceptable for drinking-water decisions."),
-                            item("Should I start by shopping for treatment?", "No. Vulnerable-household logic should raise verification urgency first."),
-                            item("What does this page do best?", "It changes the urgency and caution level of the next action.")
+                            item("Is my well water safe for baby formula?", "Do not assume so from weak or older evidence. A new baby makes the drinking-water decision more cautious right away."),
+                            item("What well water tests matter most for a new baby?", "Nitrate, microbial, and other drinking-water questions that change infant exposure should move to the front of the testing plan."),
+                            item("Should I switch water sources until I retest?", "Yes when recent evidence is weak or stale. Vulnerable-household logic should raise verification urgency before shopping.")
                     )
             )),
             Map.entry("pregnancy-in-home", winnerDoc(
@@ -639,6 +669,96 @@ public class PseoDecisionDocService {
                             item("Why does pregnancy change the page logic?", "Because the page should become less tolerant of weak evidence and slower shopping."),
                             item("Is this page mainly about products?", "No. It is mainly about verification posture and safer drinking-water decisions."),
                             item("What should happen next?", "Use the stronger testing or result path before settling on equipment.")
+                    )
+            )),
+            Map.entry("new-jersey-pwta-private-well-testing", winnerDoc(
+                    "New Jersey PWTA is a transfer-test floor, not a full household-safety verdict.",
+                    "This regional page works best when it separates what the PWTA requires for a sale from what a buyer or household may still need to test after looking at geology, family risk, and old evidence quality.",
+                    List.of(
+                            "Start with the PWTA requirement if a sale or transfer is driving the timeline.",
+                            "Use an NJDEP-certified lab and do not swap in a generic national checklist when the sale process is state-shaped.",
+                            "Check whether family risk, property history, or local geology means the required panel is still too narrow."
+                    ),
+                    List.of(
+                            "People often treat the PWTA panel like a full all-clear for long-term household safety.",
+                            "Buyers can confuse transaction requirements with living-in-the-house decisions.",
+                            "A New Jersey page gets weaker if it talks like a generic home-sale article and ignores the state process."
+                    ),
+                    "Retest after closing when the sale panel was narrow, old, or clearly weaker than what the household actually needs for daily use.",
+                    splits(
+                            split("Sale is active and timing is tight", "Keep the page anchored to the PWTA process first, then separate what still belongs in the household plan."),
+                            split("Household risk is higher than the transfer panel covers", "Widen the testing plan beyond the required panel before treating the sale process like the full answer."),
+                            split("User wants to shop from the sale panel alone", "Slow down and split transaction compliance from long-term drinking-water decisions.")
+                    ),
+                    List.of(
+                            "Escalate if the household includes infants, pregnancy, or other high-risk drinking-water use the PWTA panel does not fully answer.",
+                            "Escalate if the page is treating a required transfer panel like a lifetime all-clear.",
+                            "Escalate if treatment shopping starts before the sale panel and the household panel are clearly separated."
+                    ),
+                    faq(
+                            item("What does the New Jersey PWTA test for?", "It sets a required transfer-testing path, but that required panel should be treated like a floor rather than a full household-safety verdict."),
+                            item("Do I need a certified lab for New Jersey PWTA testing?", "Yes. Use an NJDEP-certified lab when the sale or transfer process puts PWTA testing on the clock."),
+                            item("Do I need extra testing beyond the PWTA panel?", "Sometimes yes. Family risk, property history, and local geology can make the required panel too narrow for real household decisions.")
+                    )
+            )),
+            Map.entry("how-to-read-a-well-water-lab-report", winnerDoc(
+                    "A well-water lab report is only useful if you read the unit, qualifier, sample point, and sample date before reacting to the number.",
+                    "This authority page should reduce false certainty. The real question is not just what the result says, but whether the sample and method are strong enough to support the decision you are about to make.",
+                    List.of(
+                            "Check the analyte name, unit, qualifier, sample date, and whether the sample came from raw water or treated water.",
+                            "Compare the number against the right benchmark before turning one printed result into a buying decision.",
+                            "Treat stale, mixed-up, or weakly collected samples as a reason to retest instead of forcing interpretation."
+                    ),
+                    List.of(
+                            "People often read the number and ignore the unit or qualifier.",
+                            "A report can look precise while still being too old, too weak, or sampled from the wrong place for the decision at hand.",
+                            "This page gets weaker if it explains chemistry but does not feed the user back into a better test or scope decision."
+                    ),
+                    "Retest when the report is stale, the sample point is unclear, the unit reading is ambiguous, or the result does not match the decision stakes.",
+                    splits(
+                            split("Result is recent and clearly sampled", "Move toward interpretation and next-step narrowing with more confidence."),
+                            split("Result is stale or sample context is weak", "Treat the page as a retest and evidence-quality problem before a treatment problem."),
+                            split("User wants to shop from a single number", "Pull the page back to units, qualifiers, benchmark fit, and sample quality first.")
+                    ),
+                    List.of(
+                            "Escalate if the report is old but is still being used like current truth.",
+                            "Escalate if unit confusion, qualifiers, or treated-versus-raw sampling are being ignored.",
+                            "Escalate if the page is skipping from one printed result to a treatment category too fast."
+                    ),
+                    faq(
+                            item("How do I read a well water lab report?", "Start with the analyte name, unit, qualifier, sample date, and whether the sample came from raw or treated water before you interpret the number."),
+                            item("What do ppb and ppm mean on a well water test?", "Units change the meaning of the number, which is why a report should not be interpreted until the unit is clear."),
+                            item("Does a passing well water test mean my water is safe?", "Not automatically. Sample age, sample quality, and whether the test scope matched the real household risk still matter.")
+                    )
+            )),
+            Map.entry("private-well-home-sale-testing-by-state", winnerDoc(
+                    "Home-sale well testing changes by state, but the sale panel is still not the same thing as a full long-term household plan.",
+                    "This authority page should help users separate state or lender requirements from the broader question of what a family needs to know before living on the well every day.",
+                    List.of(
+                            "Start with the state, lender, or transfer requirement that actually applies to the sale.",
+                            "Check whether geology, household vulnerability, or property history means the minimum sale panel is not enough.",
+                            "Use certified labs and a state-aware checklist before turning a transfer result into a treatment purchase."
+                    ),
+                    List.of(
+                            "People often assume every state handles private well sale testing the same way.",
+                            "A passing transfer panel can still leave major household questions unanswered.",
+                            "This page gets weaker if it reads like a generic checklist without separating legal minimums from practical household risk."
+                    ),
+                    "Retest after closing when the sale panel was limited, old, or clearly not matched to the household that will actually use the water.",
+                    splits(
+                            split("State or lender requirement is explicit", "Use that as the starting point, not the whole answer."),
+                            split("Household risk is broader than the transfer panel", "Expand beyond the minimum before treating the sale panel like final evidence."),
+                            split("Buyer wants to shop immediately after a passing panel", "Slow down and separate transaction success from long-term water confidence.")
+                    ),
+                    List.of(
+                            "Escalate if the user is assuming every state follows the same sale-testing rules.",
+                            "Escalate if the sale panel is being treated like a complete safety plan for the next owner.",
+                            "Escalate if treatment shopping starts before state requirements and household needs are split apart."
+                    ),
+                    faq(
+                            item("Is private well testing required when selling a house?", "It depends on the state, lender, and transfer context, which is why this page separates state requirements from generic advice."),
+                            item("What well water tests are required for a home sale?", "Start with the state or lender requirement, then check whether geology, family risk, or property history means more testing belongs in scope."),
+                            item("Is a passing transfer well test enough to buy the house?", "Not automatically. A transfer panel can satisfy the sale and still leave long-term household questions unanswered.")
                     )
             )),
             Map.entry("test-kit-vs-certified-lab", winnerDoc(

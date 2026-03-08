@@ -43,5 +43,6 @@ start_env.bat
 ### Generated Runtime Artifacts ###
 .gradle-local/
 data/analytics/
+data/results/
 jte-classes/
 output/

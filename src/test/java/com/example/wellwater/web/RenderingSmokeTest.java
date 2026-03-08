@@ -5,15 +5,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class RenderingSmokeTest {
+
+    private static final Pattern SAVED_RESULT_PATH = Pattern.compile("/result/saved/([A-Za-z0-9-]+)");
 
     @Autowired
     private MockMvc mockMvc;
@@ -23,7 +31,7 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Guide")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"http://localhost:8080/\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Priority pages")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Rotten Egg Smell in Well Water")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional Guides")))
@@ -57,7 +65,49 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Threshold Check")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Save Result")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Download PDF")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Share Link")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Share Link")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Review saved view")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Copy link")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/result/saved/")));
+    }
+
+    @Test
+    void savedResultViewAndPdfRender() throws Exception {
+        MvcResult result = mockMvc.perform(post("/tool/result")
+                        .param("entryMode", "result-first")
+                        .param("analyteName", "nitrate")
+                        .param("resultValue", "12")
+                        .param("unit", "mg/L")
+                        .param("qualifier", "none")
+                        .param("sampleDate", "2026-03-01")
+                        .param("sampleSource", "raw well")
+                        .param("labCertified", "yes")
+                        .param("state", "IA")
+                        .param("useScope", "drinking-only")
+                        .param("infantPresent", "true"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String html = result.getResponse().getContentAsString();
+        Matcher matcher = SAVED_RESULT_PATH.matcher(html);
+        org.junit.jupiter.api.Assertions.assertTrue(matcher.find(), "saved result link should be rendered");
+        String snapshotId = matcher.group(1);
+
+        mockMvc.perform(get("/result/saved/" + snapshotId))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision result")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Open saved view")));
+
+        MvcResult pdfResult = mockMvc.perform(get("/result/saved/" + snapshotId + ".pdf"))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", org.hamcrest.Matchers.containsString("application/pdf")))
+                .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
+                .andReturn();
+
+        org.junit.jupiter.api.Assertions.assertTrue(
+                new String(pdfResult.getResponse().getContentAsByteArray(), 0, 5, StandardCharsets.US_ASCII).equals("%PDF-"),
+                "pdf response should start with %PDF-"
+        );
     }
 
     @Test
@@ -65,7 +115,7 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/well-water/nitrate"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Nitrate in Well Water What To Do")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"http://localhost:8080/well-water/nitrate\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/well-water/nitrate\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Breadcrumb")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first?analyte=nitrate&amp;slug=nitrate")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Do not buy yet")))
@@ -99,6 +149,19 @@ class RenderingSmokeTest {
     }
 
     @Test
+    void strategicAuthorityAndRegionalPagesRenderFaqBlocks() throws Exception {
+        mockMvc.perform(get("/well-water/how-to-read-a-well-water-lab-report"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("How do I read a well water lab report?")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Questions that should be answered before a purchase")));
+
+        mockMvc.perform(get("/well-water/new-jersey-pwta-private-well-testing"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What does the New Jersey PWTA test for?")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What changes the decision fastest")));
+    }
+
+    @Test
     void clusterComparePageRenders() throws Exception {
         mockMvc.perform(get("/well-water/ro-vs-adsorptive-media-for-arsenic"))
                 .andExpect(status().isOk())
@@ -110,7 +173,7 @@ class RenderingSmokeTest {
     void authorityFamilyPageRendersLeadCaptureSurface() throws Exception {
         mockMvc.perform(get("/well-water/family/authority"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority and methodology articles")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Well water testing and decision articles")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Start with these pages in this family")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("What this hub should help you avoid")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")));
@@ -120,12 +183,12 @@ class RenderingSmokeTest {
     void trustPagesRenderAsPublicAssets() throws Exception {
         mockMvc.perform(get("/trust"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust surface")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust pages")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Methodology")));
 
         mockMvc.perform(get("/trust/methodology"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How This Site Turns Well-Water Clues Into Next Steps")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"http://localhost:8080/trust/methodology\"")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/trust/methodology\"")));
     }
 }

@@ -22,12 +22,12 @@
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>How to use this page</strong>
+                    <strong>What to figure out first</strong>
                     <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${pageView.riskSummary()}</p>
                     <div class="chip-row">
                         <span class="chip">${pageView.page().family()}</span>
-                        <span class="chip">Noindex result handoff</span>
-                        <span class="chip">Claim-based next step</span>
+                        <span class="chip">Test before treatment</span>
+                        <span class="chip">Compare after scope</span>
                     </div>
                 </aside>
             </div>
@@ -36,10 +36,10 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Quick answers</p>
-                    <h2>Fast orientation before the tool handoff</h2>
+                    <p class="brand-kicker">First questions</p>
+                    <h2>What it usually means, what to do today, and what to test next</h2>
                 </div>
-                <p class="section-copy">These are the questions different personas usually need answered before they trust the next step.</p>
+                <p class="section-copy">These are the answers most people want before they trust a treatment recommendation.</p>
             </div>
             <div class="grid">
                 @for (var answer : pageView.quickAnswers())
@@ -181,8 +181,8 @@
                 <section class="panel">
                     <div class="section-header">
                         <div>
-                            <p class="brand-kicker">Decision engine handoff</p>
-                            <h2>Run the matching tool flow</h2>
+                            <p class="brand-kicker">Need a personalized next step?</p>
+                            <h2>Use the matching tool</h2>
                         </div>
                         <p class="section-copy">Personalized results are rendered as noindex pages after the tool collects context.</p>
                     </div>
@@ -209,7 +209,7 @@
                 <section class="panel">
                     <div class="section-header">
                         <div>
-                            <p class="brand-kicker">Purchase caution</p>
+                            <p class="brand-kicker">Before you buy anything</p>
                             <h2>Do not buy yet</h2>
                         </div>
                     </div>
@@ -294,11 +294,7 @@
                     </div>
                     <div class="meta-list">
                         <div class="meta-item">
-                            <span class="meta-label">Search query</span>
-                            <div class="meta-value">${pageView.page().searchQuery()}</div>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Fetched</span>
+                            <span class="meta-label">Source dates</span>
                             <div class="meta-value">searched at ${pageView.page().searchPerformedAt()} / fetched at ${pageView.page().fetchedAt()}</div>
                         </div>
                     </div>

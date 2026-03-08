@@ -88,6 +88,9 @@ public class PageController {
             Model model,
             HttpServletResponse response
     ) {
+        if (!pseoCatalogService.isCanonicalSlug(slug)) {
+            return "redirect:/well-water/" + pseoCatalogService.canonicalSlug(slug);
+        }
         var maybePageView = pseoExperienceService.detailView(slug);
         if (maybePageView.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);

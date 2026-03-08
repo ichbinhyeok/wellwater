@@ -9,33 +9,33 @@
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Decision-first research surface</span>
-                    <h1>Private well answers built around the next safe step.</h1>
-                    <p class="hero-lead">Start with a lab result, a water symptom, or a recent change. The public pages help you orient fast. The tool turns that context into a noindex decision result.</p>
+                    <span class="eyebrow">Private well help</span>
+                    <h1>Figure out what changed in your well water and what to test next.</h1>
+                    <p class="hero-lead">Start with a lab result, a smell or stain, or a recent event like flooding or repairs. These guides help you act faster without jumping straight to treatment.</p>
                     <div class="hero-actions">
                         <a class="button-link" href="/tool/result-first">Start From Lab Results</a>
-                        <a class="button-link-secondary" href="/well-water/family/contaminants">Browse Guides</a>
+                        <a class="button-link-secondary" href="/well-water/family/symptoms">Start From Symptoms</a>
                     </div>
                 </div>
                 <aside class="hero-note">
                     <strong>Three ways in</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Use the same engine from three real-world starting points instead of forcing every visit through one generic form.</p>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Most visits start with one of three real questions: what a lab result means, why the water changed, or what to do after an event.</p>
                     <div class="hero-metrics">
                         <div class="metric">
-                            <strong>3</strong>
-                            <span>entry modes</span>
+                            <strong>Lab</strong>
+                            <span>result questions</span>
+                        </div>
+                        <div class="metric">
+                            <strong>Smell</strong>
+                            <span>stain and taste clues</span>
+                        </div>
+                        <div class="metric">
+                            <strong>Event</strong>
+                            <span>flood, repair, or purchase</span>
                         </div>
                         <div class="metric">
                             <strong>${totalPageCount}</strong>
-                            <span>public guide pages</span>
-                        </div>
-                        <div class="metric">
-                            <strong>Noindex</strong>
-                            <span>personalized results</span>
-                        </div>
-                        <div class="metric">
-                            <strong>Claim-based</strong>
-                            <span>after verdict</span>
+                            <span>guide pages</span>
                         </div>
                     </div>
                 </aside>
@@ -73,9 +73,9 @@
             <div class="section-header">
                 <div>
                     <p class="brand-kicker">Public research</p>
-                    <h2>Browse high-intent guide families</h2>
+                    <h2>Browse the main kinds of well water questions</h2>
                 </div>
-                <p class="section-copy">These pages are meant to be indexable acquisition surfaces. They orient the problem before the personalized tool takes over.</p>
+                <p class="section-copy">Use these hubs when you already know whether you are dealing with a test result, a symptom, a recent event, a state-specific issue, or a treatment comparison.</p>
             </div>
             <div class="grid grid-compact">
                 <a class="card-link" href="/well-water/family/contaminants">
@@ -115,9 +115,9 @@
             <div class="section-header">
                 <div>
                     <p class="brand-kicker">Priority pages</p>
-                    <h2>Start with the pages most likely to earn organic trust</h2>
+                    <h2>Start with the most common well water searches</h2>
                 </div>
-                <p class="section-copy">These are the pages the site should push hardest because they match strong search intent and lead naturally into the tool or compare flow.</p>
+                <p class="section-copy">These pages match the questions people are most likely to search first and should lead naturally into testing, comparison, or the matching tool flow.</p>
             </div>
             <div class="grid">
                 @for (var page : priorityPages)
@@ -136,7 +136,7 @@
                     <p class="brand-kicker">Trust surface</p>
                     <h2>Method, review, sources, and safety limits</h2>
                 </div>
-                <p class="section-copy">These pages explain how the public surface is supposed to behave when confidence is low, risk is high, or commerce needs to stay downstream.</p>
+                <p class="section-copy">These pages explain how advice is reviewed, where the source trail comes from, and when testing should stay ahead of product research.</p>
             </div>
             <div class="grid">
                 @for (var page : trustPages)

@@ -10,7 +10,7 @@
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Guide family</span>
+                    <span class="eyebrow">Well water topic</span>
                     <h1>${familyView.heroTitle()}</h1>
                     <p class="hero-lead">${familyView.heroLead()}</p>
                     <div class="hero-actions">
@@ -22,9 +22,9 @@
                     <strong>${pages.size()} pages in this family</strong>
                     <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${familyView.operatorNote()}</p>
                     <div class="chip-row">
-                        <span class="chip">Public surface</span>
-                        <span class="chip">Searchable</span>
-                        <span class="chip">Tool handoff</span>
+                        <span class="chip">Common searches</span>
+                        <span class="chip">Testing path</span>
+                        <span class="chip">Next-step guidance</span>
                     </div>
                 </aside>
             </div>
@@ -36,7 +36,7 @@
                     <p class="brand-kicker">Priority reads</p>
                     <h2>Start with these pages in this family</h2>
                 </div>
-                <p class="section-copy">This keeps the family hub from behaving like a flat index. The goal is to move visitors into the strongest entry points first.</p>
+                <p class="section-copy">This keeps the hub from behaving like a flat index and moves visitors toward the pages most likely to answer their first question.</p>
             </div>
             <div class="grid">
                 @for (var starter : familyView.starterPages())
@@ -55,7 +55,7 @@
                     <p class="brand-kicker">Family guidance</p>
                     <h2>What this hub should help you avoid</h2>
                 </div>
-                <p class="section-copy">Good hub pages do more than list URLs. They explain the common mistake pattern and what to check before the tool takes over.</p>
+                <p class="section-copy">Good hub pages do more than list URLs. They explain the common mistake pattern and what to check before you open the tool.</p>
             </div>
             <div class="grid">
                 <article class="card-link card-link-accent">

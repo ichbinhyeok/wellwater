@@ -6,6 +6,7 @@ import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import com.example.wellwater.pseo.PseoFamilyView;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -19,7 +20,7 @@ class PageControllerTest {
 
     private final PseoCatalogService catalogService = new PseoCatalogService("./data/pseo/pages.csv");
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
-    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://example.com");
+    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://example.com", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
     private final PageController controller = new PageController(
             catalogService,
@@ -91,6 +92,16 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("page"));
         assertNotNull(model.getAttribute("pageView"));
         assertNotNull(model.getAttribute("leadContext"));
+    }
+
+    @Test
+    void detailRedirectsLegacyAliasSlugToCanonicalPage() {
+        Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        String viewName = controller.detail("iron-filter-vs-softener", null, model, response);
+
+        assertEquals("redirect:/well-water/softener-vs-iron-filter", viewName);
     }
 
     @Test

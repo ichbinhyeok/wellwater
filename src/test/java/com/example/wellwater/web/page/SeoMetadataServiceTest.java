@@ -5,6 +5,7 @@ import com.example.wellwater.pseo.PseoCitationRegistryService;
 import com.example.wellwater.pseo.PseoDecisionDocService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.env.MockEnvironment;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -17,7 +18,7 @@ class SeoMetadataServiceTest {
             new PseoCitationRegistryService("./data/pseo/page_sources.csv"),
             new PseoDecisionDocService()
     );
-    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://wellwater.example");
+    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://wellwater.example", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
 
     @Test

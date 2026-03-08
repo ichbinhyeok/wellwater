@@ -16,11 +16,11 @@ public class AdminBasicAuthInterceptor implements HandlerInterceptor {
     private final String password;
 
     public AdminBasicAuthInterceptor(
-            @Value("${app.admin.username:admin}") String username,
-            @Value("${app.admin.password:shinhyeok}") String password
+            @Value("${app.admin.username:}") String username,
+            @Value("${app.admin.password:}") String password
     ) {
-        this.username = username;
-        this.password = password;
+        this.username = username == null ? "" : username.trim();
+        this.password = password == null ? "" : password.trim();
     }
 
     @Override
@@ -29,6 +29,11 @@ public class AdminBasicAuthInterceptor implements HandlerInterceptor {
         response.setHeader("Cache-Control", "no-store, max-age=0");
         response.setHeader("Pragma", "no-cache");
 
+        if (!credentialsConfigured()) {
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+            return false;
+        }
+
         if (isAuthorized(request.getHeader("Authorization"))) {
             return true;
         }
@@ -36,6 +41,10 @@ public class AdminBasicAuthInterceptor implements HandlerInterceptor {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setHeader("WWW-Authenticate", "Basic realm=\"wellwater-admin\"");
         return false;
+    }
+
+    private boolean credentialsConfigured() {
+        return !username.isBlank() && !password.isBlank();
     }
 
     private boolean isAuthorized(String authorizationHeader) {

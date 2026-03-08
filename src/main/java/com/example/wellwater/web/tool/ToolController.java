@@ -2,11 +2,14 @@ package com.example.wellwater.web.tool;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.decision.DecisionEngineService;
-import com.example.wellwater.decision.model.CtaLink;
 import com.example.wellwater.decision.model.DecisionInput;
 import com.example.wellwater.decision.model.DecisionResult;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
+import com.example.wellwater.web.result.RenderableCta;
+import com.example.wellwater.web.result.ResultCtaService;
+import com.example.wellwater.web.result.ResultSnapshot;
+import com.example.wellwater.web.result.ResultSnapshotService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.LinkedHashSet;
@@ -38,17 +40,23 @@ public class ToolController {
     private final DecisionEngineService decisionEngineService;
     private final AnalyticsEventService analyticsEventService;
     private final DecisionRegistryService decisionRegistryService;
+    private final ResultCtaService resultCtaService;
+    private final ResultSnapshotService resultSnapshotService;
     private final Set<String> allowedOutboundHosts;
 
     public ToolController(
             DecisionEngineService decisionEngineService,
             AnalyticsEventService analyticsEventService,
             DecisionRegistryService decisionRegistryService,
-            StateResourceRegistryService stateResourceRegistryService
+            StateResourceRegistryService stateResourceRegistryService,
+            ResultCtaService resultCtaService,
+            ResultSnapshotService resultSnapshotService
     ) {
         this.decisionEngineService = decisionEngineService;
         this.analyticsEventService = analyticsEventService;
         this.decisionRegistryService = decisionRegistryService;
+        this.resultCtaService = resultCtaService;
+        this.resultSnapshotService = resultSnapshotService;
         LinkedHashSet<String> hosts = new LinkedHashSet<>(STATIC_ALLOWED_OUTBOUND_HOSTS);
         hosts.addAll(stateResourceRegistryService.allowedOutboundHosts());
         this.allowedOutboundHosts = Set.copyOf(hosts);
@@ -115,14 +123,19 @@ public class ToolController {
         DecisionInput input = request.toDecisionInput();
         DecisionResult result = decisionEngineService.decide(input);
         String sessionId = UUID.randomUUID().toString();
+        ResultSnapshot snapshot = resultSnapshotService.create(sessionId, input.slugHint(), result);
 
-        List<RenderableCta> ctas = result.ctas().stream()
-                .map(cta -> toRenderableCta(cta, result, sessionId, input.slugHint()))
-                .toList();
+        List<RenderableCta> ctas = resultCtaService.renderableCtas(result, sessionId, input.slugHint());
 
         model.addAttribute("result", result);
         model.addAttribute("sessionId", sessionId);
         model.addAttribute("ctaLinks", ctas);
+        model.addAttribute("savedResultUrl", "/result/saved/" + snapshot.id());
+        model.addAttribute("shareUrl", "/result/saved/" + snapshot.id());
+        model.addAttribute("pdfUrl", "/result/saved/" + snapshot.id() + ".pdf");
+        model.addAttribute("savedAtLabel", "just now");
+        model.addAttribute("expiresLabel", snapshot.expiresAt().substring(0, 10));
+        model.addAttribute("sharedView", false);
 
         analyticsEventService.logEvent(
                 "test_completed",
@@ -145,6 +158,17 @@ public class ToolController {
                 null,
                 null,
                 "rendered"
+        );
+        analyticsEventService.logEvent(
+                "result_snapshot_created",
+                result.entryMode().wireValue(),
+                sessionId,
+                input.slugHint(),
+                result.tier().label(),
+                result.branch().label(),
+                null,
+                "/result/saved/" + snapshot.id(),
+                "auto-save"
         );
         return "pages/result/view";
     }
@@ -174,20 +198,6 @@ public class ToolController {
         RedirectView view = new RedirectView(safeTarget);
         view.setExposeModelAttributes(false);
         return view;
-    }
-
-    private RenderableCta toRenderableCta(CtaLink cta, DecisionResult result, String sessionId, String slug) {
-        String outboundUrl = UriComponentsBuilder.fromPath("/tool/out")
-                .queryParam("target", cta.targetUrl())
-                .queryParam("ctaType", cta.type())
-                .queryParam("entryMode", result.entryMode().wireValue())
-                .queryParam("sessionId", sessionId)
-                .queryParam("tier", result.tier().label())
-                .queryParam("branch", result.branch().label())
-                .queryParam("slug", slug == null ? "" : slug)
-                .build()
-                .toUriString();
-        return new RenderableCta(cta.type(), cta.label(), outboundUrl);
     }
 
     private String preferredSlug(String slug, String fallback) {
@@ -243,12 +253,5 @@ public class ToolController {
         model.addAttribute("tasteTypes", List.of("metallic", "salty", "bitter"));
         model.addAttribute("locationScopes", List.of("one-fixture", "hot-only", "cold-only", "whole-house", "unknown"));
         model.addAttribute("changeTimings", List.of("after-rain", "after-repair", "gradual", "sudden", "unknown"));
-    }
-
-    public record RenderableCta(
-            String type,
-            String label,
-            String outboundUrl
-    ) {
     }
 }

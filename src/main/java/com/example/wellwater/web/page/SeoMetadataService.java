@@ -4,6 +4,7 @@ import com.example.wellwater.pseo.PseoDetailView;
 import com.example.wellwater.pseo.PseoFaqItem;
 import com.example.wellwater.pseo.PseoFamilyView;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,8 +18,11 @@ public class SeoMetadataService {
 
     private final String baseUrl;
 
-    public SeoMetadataService(@Value("${app.site.base-url:http://localhost:8080}") String baseUrl) {
-        this.baseUrl = normalizeBaseUrl(baseUrl);
+    public SeoMetadataService(
+            @Value("${app.site.base-url:}") String baseUrl,
+            Environment environment
+    ) {
+        this.baseUrl = normalizeBaseUrl(baseUrl, isProduction(environment));
     }
 
     public SeoMetadata home(String title, String description) {
@@ -293,8 +297,11 @@ public class SeoMetadataService {
         return escaped.toString();
     }
 
-    private String normalizeBaseUrl(String baseUrl) {
+    private String normalizeBaseUrl(String baseUrl, boolean production) {
         if (baseUrl == null || baseUrl.isBlank()) {
+            if (production) {
+                throw new IllegalStateException("app.site.base-url must be set outside localhost in production.");
+            }
             return "http://localhost:8080";
         }
         String normalized = baseUrl.trim();
@@ -302,5 +309,14 @@ public class SeoMetadataService {
             return normalized.substring(0, normalized.length() - 1);
         }
         return normalized;
+    }
+
+    private boolean isProduction(Environment environment) {
+        for (String profile : environment.getActiveProfiles()) {
+            if ("prod".equalsIgnoreCase(profile)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

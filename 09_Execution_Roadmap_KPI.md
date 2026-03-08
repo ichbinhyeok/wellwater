@@ -8,7 +8,7 @@ Implemented:
 - 3 entry flows
 - decision engine with tier, urgency, scope, and branch outputs
 - noindex result page
-- pSEO public surface with 98 pages
+- pSEO public surface with 97 pages
 - trust hub and trust pages
 - regional and authority families
 - lead capture and admin read side
