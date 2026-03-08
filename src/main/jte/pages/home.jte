@@ -9,33 +9,33 @@
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Private well help</span>
+                    <span class="eyebrow">Private well decision engine</span>
                     <h1>Figure out what changed in your well water and what to test next.</h1>
-                    <p class="hero-lead">Start with a lab result, a smell or stain, or a recent event like flooding or repairs. These guides help you act faster without jumping straight to treatment.</p>
+                    <p class="hero-lead">Start with a lab result, a smell or stain, or a recent event like flooding or repairs. The engine turns that clue into a test plan, interpretation path, compare gate, and trust trail.</p>
                     <div class="hero-actions">
                         <a class="button-link" href="/tool/result-first">Start From Lab Results</a>
-                        <a class="button-link-secondary" href="/well-water/family/symptoms">Start From Symptoms</a>
+                        <a class="button-link-secondary" href="/tool/trigger-first">Start From Recent Changes</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>Three ways in</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Most visits start with one of three real questions: what a lab result means, why the water changed, or what to do after an event.</p>
+                    <strong>What this product gives you</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">The goal is not generic water content. It is to help a well owner decide what to verify, what to test, and when not to buy yet.</p>
                     <div class="hero-metrics">
                         <div class="metric">
-                            <strong>Lab</strong>
-                            <span>result questions</span>
+                            <strong>Test</strong>
+                            <span>recommendation</span>
                         </div>
                         <div class="metric">
-                            <strong>Smell</strong>
-                            <span>stain and taste clues</span>
+                            <strong>Result</strong>
+                            <span>interpretation</span>
                         </div>
                         <div class="metric">
-                            <strong>Event</strong>
-                            <span>flood, repair, or purchase</span>
+                            <strong>Compare</strong>
+                            <span>gate before shopping</span>
                         </div>
                         <div class="metric">
-                            <strong>${totalPageCount}</strong>
-                            <span>guide pages</span>
+                            <strong>Trust</strong>
+                            <span>review, privacy, disclosure</span>
                         </div>
                     </div>
                 </aside>
@@ -69,39 +69,71 @@
             </div>
         </section>
 
-        <section class="panel mobile-only">
+        <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Quick picks</p>
-                    <h2>Start from the highest-signal paths</h2>
+                    <p class="brand-kicker">Decision workflow</p>
+                    <h2>How the engine moves you toward a safer next step</h2>
                 </div>
-                <p class="section-copy">On smaller screens, jump straight to the pages and hubs that most often become a real decision.</p>
+                <p class="section-copy">The product is most useful when it helps you avoid shopping too early and keeps the reasoning visible.</p>
             </div>
             <div class="grid grid-compact">
-                @for (int i = 0; i < priorityPages.size() && i < 4; i++)
+                <article class="card-link card-link-accent">
+                    <span class="card-kicker">Interpret</span>
+                    <h3>Read the clue in context</h3>
+                    <p class="card-meta">A single analyte, smell, or event should not behave like a full household verdict until timing, sample point, and support signals are clear.</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Test</span>
+                    <h3>Choose the next verified test</h3>
+                    <p class="card-meta">The engine should route toward certified testing, baseline confirmation, or state guidance before equipment research gets ahead of the evidence.</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Compare</span>
+                    <h3>Open only the right category</h3>
+                    <p class="card-meta">Compare pages are useful only after the problem class is stable. Health paths stay verification-first. Nuisance paths can open equipment classes earlier.</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Trust</span>
+                    <h3>Keep the paper trail visible</h3>
+                    <p class="card-meta">Methodology, reviewers, disclosure, and data handling should stay close to the decision surface so a user can see why the routing works.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">High-signal starting points</p>
+                    <h2>Start from the questions most likely to become a real decision</h2>
+                </div>
+                <p class="section-copy">These pages are the strongest organic entry points because they usually lead into testing, interpretation, or a constrained compare path.</p>
+            </div>
+            <div class="grid">
+                @for (int i = 0; i < priorityPages.size(); i++)
                     !{var page = priorityPages.get(i);}
-                    <a class="card-link" href="/well-water/${page.slug()}">
+                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="/well-water/${page.slug()}">
                         <span class="card-kicker">${page.family()}</span>
                         <h3>${page.h1()}</h3>
                         <p class="card-meta">${page.metaDescription()}</p>
                     </a>
                 @endfor
             </div>
-            <div class="chip-row" style="margin-top: 18px;">
+            <div class="chip-row mobile-only" style="margin-top: 18px;">
                 <a class="chip" href="/well-water/family/contaminants">Contaminants</a>
                 <a class="chip" href="/well-water/family/symptoms">Symptoms</a>
                 <a class="chip" href="/well-water/family/triggers">Triggers</a>
-                <a class="chip" href="/trust">Trust</a>
+                <a class="chip" href="/well-water/family/compares">Comparisons</a>
             </div>
         </section>
 
         <section class="panel desktop-only">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Public research</p>
-                    <h2>Browse the main kinds of well water questions</h2>
+                    <p class="brand-kicker">Research surface</p>
+                    <h2>Browse by question type when you need a wider map</h2>
                 </div>
-                <p class="section-copy">Use these hubs when you already know whether you are dealing with a test result, a symptom, a recent event, a state-specific issue, or a treatment comparison.</p>
+                <p class="section-copy">Use the hub layer when you are still scoping the problem or want to move sideways into state nuance, compare pages, or authority content.</p>
             </div>
             <div class="grid grid-compact">
                 <a class="card-link" href="/well-water/family/contaminants">
@@ -114,15 +146,15 @@
                     <h3>Water Symptoms</h3>
                     <p class="card-meta">${familyCounts.get("symptoms")} pages for signs like stains, odor, taste, and visible changes.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/compares">
-                    <span class="card-kicker">Family</span>
-                    <h3>Treatment Comparisons</h3>
-                    <p class="card-meta">${familyCounts.get("compares")} pages comparing categories without forcing a premature product choice.</p>
-                </a>
                 <a class="card-link" href="/well-water/family/triggers">
                     <span class="card-kicker">Family</span>
                     <h3>Recent Triggers</h3>
                     <p class="card-meta">${familyCounts.get("triggers")} pages for event-driven changes such as flooding or post-install retesting.</p>
+                </a>
+                <a class="card-link" href="/well-water/family/compares">
+                    <span class="card-kicker">Family</span>
+                    <h3>Treatment Comparisons</h3>
+                    <p class="card-meta">${familyCounts.get("compares")} pages comparing categories without forcing a premature product choice.</p>
                 </a>
                 <a class="card-link" href="/well-water/family/regional">
                     <span class="card-kicker">Family</span>
@@ -134,26 +166,6 @@
                     <h3>Authority Articles</h3>
                     <p class="card-meta">${familyCounts.get("authority")} pages that strengthen trust, method, and internal support for money pages.</p>
                 </a>
-            </div>
-        </section>
-
-        <section class="panel desktop-only">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">Priority pages</p>
-                    <h2>Start with the most common well water searches</h2>
-                </div>
-                <p class="section-copy">These pages match the questions people are most likely to search first and should lead naturally into testing, comparison, or the matching tool flow.</p>
-            </div>
-            <div class="grid">
-                @for (int i = 0; i < priorityPages.size(); i++)
-                    !{var page = priorityPages.get(i);}
-                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="/well-water/${page.slug()}">
-                        <span class="card-kicker">${page.family()}</span>
-                        <h3>${page.h1()}</h3>
-                        <p class="card-meta">${page.metaDescription()}</p>
-                    </a>
-                @endfor
             </div>
         </section>
 

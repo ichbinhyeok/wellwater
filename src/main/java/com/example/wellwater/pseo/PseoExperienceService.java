@@ -1,5 +1,6 @@
 package com.example.wellwater.pseo;
 
+import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,7 +40,11 @@ public class PseoExperienceService {
             "coliform",
             "cloudy-water",
             "home-purchase-test",
+            "new-jersey-pwta-private-well-testing",
             "arsenic",
+            "new-hampshire-arsenic-well-water",
+            "florida-rotten-egg-smell-well-water",
+            "private-well-home-sale-testing-by-state",
             "after-flood",
             "metallic-taste",
             "orange-stains",
@@ -52,8 +57,6 @@ public class PseoExperienceService {
             "radon",
             "how-to-read-a-well-water-lab-report",
             "new-baby-at-home",
-            "private-well-home-sale-testing-by-state",
-            "new-jersey-pwta-private-well-testing",
             "test-kit-vs-certified-lab"
     );
     private static final Map<String, List<String>> FAMILY_STARTER_SLUGS = Map.of(
@@ -61,7 +64,7 @@ public class PseoExperienceService {
             "symptoms", List.of("rotten-egg-smell", "cloudy-water", "orange-stains"),
             "compares", List.of("test-kit-vs-certified-lab", "whole-house-vs-under-sink-ro", "uv-vs-chlorination"),
             "triggers", List.of("after-flood", "home-purchase-test", "after-heavy-rain"),
-            "regional", List.of("new-jersey-pwta-private-well-testing", "florida-rotten-egg-smell-well-water", "new-york-pfas-private-wells"),
+            "regional", List.of("new-jersey-pwta-private-well-testing", "new-hampshire-arsenic-well-water", "florida-rotten-egg-smell-well-water"),
             "authority", List.of("how-to-read-a-well-water-lab-report", "private-well-home-sale-testing-by-state", "private-well-testing-schedule-by-household")
     );
     private static final Map<String, Set<String>> CLUSTER_COMPANIONS = Map.ofEntries(
@@ -94,15 +97,21 @@ public class PseoExperienceService {
     private final PseoCatalogService catalogService;
     private final PseoCitationRegistryService citationRegistryService;
     private final PseoDecisionDocService decisionDocService;
+    private final RegionalContextRegistryService regionalContextRegistryService;
+    private final StateResourceRegistryService stateResourceRegistryService;
 
     public PseoExperienceService(
             PseoCatalogService catalogService,
             PseoCitationRegistryService citationRegistryService,
-            PseoDecisionDocService decisionDocService
+            PseoDecisionDocService decisionDocService,
+            RegionalContextRegistryService regionalContextRegistryService,
+            StateResourceRegistryService stateResourceRegistryService
     ) {
         this.catalogService = catalogService;
         this.citationRegistryService = citationRegistryService;
         this.decisionDocService = decisionDocService;
+        this.regionalContextRegistryService = regionalContextRegistryService;
+        this.stateResourceRegistryService = stateResourceRegistryService;
     }
 
     public Optional<PseoDetailView> detailView(String slug) {
@@ -235,6 +244,7 @@ public class PseoExperienceService {
                 entryHint,
                 quickAnswers(page, riskLens, entryHint),
                 decisionDocService.findBySlug(page.slug()).orElse(null),
+                regionalContext(page),
                 relatedSections(page, allPages, riskLens),
                 citations(page)
         );
@@ -612,17 +622,47 @@ public class PseoExperienceService {
     private List<PseoCitation> citations(PseoPage page) {
         LinkedHashMap<String, PseoCitation> deduped = new LinkedHashMap<>();
         addCitation(deduped, new PseoCitation("Primary official source", page.sourceUrl()));
+        stateHint(page)
+                .flatMap(stateResourceRegistryService::findByState)
+                .ifPresent(resource -> {
+                    addCitation(deduped, new PseoCitation(resource.stateCode() + " testing guidance", resource.localGuidanceUrl()));
+                    addCitation(deduped, new PseoCitation(resource.stateCode() + " certified lab path", resource.certifiedLabUrl()));
+                });
         for (PseoCitation citation : citationRegistryService.findBySlug(page.slug())) {
             addCitation(deduped, citation);
         }
         return List.copyOf(deduped.values());
     }
 
+    private PseoRegionalContext regionalContext(PseoPage page) {
+        if (!"regional".equals(page.family())) {
+            return null;
+        }
+        Optional<RegionalContextRegistryService.RegionalContextRow> row = regionalContextRegistryService.findBySlug(page.slug());
+        if (row.isEmpty()) {
+            return null;
+        }
+
+        Optional<com.example.wellwater.decision.registry.StateResource> stateResource = stateResourceRegistryService.findByState(row.get().stateCode());
+        return new PseoRegionalContext(
+                row.get().stateCode(),
+                row.get().stateName(),
+                row.get().localDelta(),
+                row.get().decisionTrigger(),
+                row.get().labNote(),
+                stateResource.map(com.example.wellwater.decision.registry.StateResource::localGuidanceUrl).orElse(""),
+                stateResource.map(com.example.wellwater.decision.registry.StateResource::certifiedLabUrl).orElse("")
+        );
+    }
+
     private void addCitation(Map<String, PseoCitation> citations, PseoCitation citation) {
         if (citation == null || citation.url() == null || citation.url().isBlank()) {
             return;
         }
-        citations.putIfAbsent(citation.url(), citation);
+        String key = (citation.label() == null ? "" : citation.label().trim().toLowerCase(Locale.ROOT))
+                + "::"
+                + citation.url().trim();
+        citations.putIfAbsent(key, citation);
     }
 
     private Optional<String> stateHint(PseoPage page) {

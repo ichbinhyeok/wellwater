@@ -32,7 +32,9 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Guide")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Priority pages")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision workflow")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a safer next step")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Rotten Egg Smell in Well Water")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional Guides")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority Articles")))
@@ -236,7 +238,11 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/well-water/new-hampshire-arsenic-well-water"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional guide")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first?slug=new-hampshire-arsenic-well-water&amp;state=NH")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first?slug=new-hampshire-arsenic-well-water&amp;state=NH")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Why New Hampshire changes the answer")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Open NH guidance")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Find NH certified lab")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What changes the decision fastest")));
     }
 
     @Test
