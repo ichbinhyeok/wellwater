@@ -175,7 +175,7 @@ public record DecisionResult(
     }
 
     public String browserTitle() {
-        return primaryVerdictLabel + " | " + primaryTopicLabel() + " | Well Water Verdict";
+        return primaryVerdictLabel + " | " + primaryTopicLabel() + " | Water Verdict";
     }
 
     public String primaryTopicLabel() {

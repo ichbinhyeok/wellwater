@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WellwaterApplication {
+public class WaterVerdictApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WellwaterApplication.class, args);
+		SpringApplication.run(WaterVerdictApplication.class, args);
 	}
 
 }

@@ -39,7 +39,7 @@ public class AdminBasicAuthInterceptor implements HandlerInterceptor {
         }
 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.setHeader("WWW-Authenticate", "Basic realm=\"wellwater-admin\"");
+        response.setHeader("WWW-Authenticate", "Basic realm=\"waterverdict-admin\"");
         return false;
     }
 

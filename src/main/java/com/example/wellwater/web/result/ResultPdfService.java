@@ -176,7 +176,7 @@ public class ResultPdfService {
         float textX = PAGE_MARGIN + 22f;
         float textWidth = CONTENT_WIDTH - 44f;
         writeParagraph(cursor, "Private snapshot | noindex result", BOLD_FONT, 9f, 12f, textX, textWidth, ACCENT);
-        writeParagraph(cursor, "Private Well Water Decision Result", BOLD_FONT, 21f, 25f, textX, textWidth, INK);
+        writeParagraph(cursor, "Water Verdict Saved Result", BOLD_FONT, 21f, 25f, textX, textWidth, INK);
         writeParagraph(cursor, result.primaryVerdictLabel(), BOLD_FONT, 14f, 18f, textX, textWidth, branchColor(result));
         writeParagraph(cursor, result.primaryVerdictSentence(), BODY_FONT, 10f, 14f, textX, textWidth, INK);
         writeParagraph(
@@ -417,7 +417,7 @@ public class ResultPdfService {
                 stream.setFont(BODY_FONT, 9f);
                 stream.setNonStrokingColor(MUTED);
                 stream.newLineAtOffset(PAGE_MARGIN, FOOTER_BASELINE);
-                stream.showText("Private Well Water Guide | Saved result " + snapshotId.substring(0, Math.min(snapshotId.length(), 8)));
+                stream.showText("Water Verdict | Saved result " + snapshotId.substring(0, Math.min(snapshotId.length(), 8)));
                 stream.endText();
 
                 String pageLabel = "Page " + (i + 1) + " of " + totalPages;

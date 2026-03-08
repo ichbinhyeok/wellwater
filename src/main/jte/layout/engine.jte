@@ -29,7 +29,7 @@
                     colors: {
                         zinc: {
                             50: '#f6f7f3', 100: '#edf0e7', 200: '#d9e0d0', 300: '#b8c4b0',
-                            400: '#879488', 500: '#5f6f63', 600: '#405144', 700: '#2d3b31',
+                            400: '#748174', 500: '#516053', 600: '#3d4c40', 700: '#2d3b31',
                             800: '#1d271f', 900: '#121914'
                         },
                         safe: '#1f9d73',
@@ -78,8 +78,8 @@
                 linear-gradient(180deg, rgba(244, 247, 241, 0.88), rgba(250, 250, 247, 0.78));
         }
         .engine-nav {
-            background: rgba(18, 25, 20, 0.04);
-            border: 1px solid rgba(18, 25, 20, 0.06);
+            background: rgba(18, 25, 20, 0.06);
+            border: 1px solid rgba(18, 25, 20, 0.1);
         }
         .engine-kicker {
             letter-spacing: 0.14em;
@@ -139,20 +139,20 @@
                 <header class="mb-8 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4 min-w-0">
                         <a href="/" class="engine-brand w-11 h-11 rounded-2xl flex items-center justify-center font-display font-semibold tracking-tight overflow-hidden shadow-sm">
-                            <img src="/favicon.svg" alt="Well Water Verdict Logo" class="w-full h-full object-cover">
+                            <img src="/favicon.svg" alt="Water Verdict logo" class="w-full h-full object-cover">
                         </a>
                         <div class="min-w-0">
-                            <p class="engine-kicker text-[11px] font-bold text-zinc-500 mb-1">Decision Engine</p>
-                            <h1 class="font-display text-xl font-semibold tracking-tight text-zinc-900">Well Water Verdict</h1>
+                            <p class="engine-kicker text-[11px] font-bold text-zinc-600 mb-1">Private Well Decision Engine</p>
+                            <h1 class="font-display text-xl font-semibold tracking-tight text-zinc-900">Water Verdict</h1>
                         </div>
                     </div>
-                    <a href="/tool/${activeEntryMode}" class="text-sm font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">Reset</a>
+                    <a href="/tool/${activeEntryMode}" class="text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors">Reset</a>
                 </header>
 
                 <div class="engine-nav p-1 rounded-2xl flex mb-8">
-                    <a href="/tool/result-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"result-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Lab Results</a>
-                    <a href="/tool/symptom-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"symptom-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Symptoms</a>
-                    <a href="/tool/trigger-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"trigger-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-500 hover:text-zinc-800"} transition-all">Recent Triggers</a>
+                    <a href="/tool/result-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"result-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-600 hover:text-zinc-900"} transition-all">Lab Results</a>
+                    <a href="/tool/symptom-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"symptom-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-600 hover:text-zinc-900"} transition-all">Symptoms</a>
+                    <a href="/tool/trigger-first" class="flex-1 py-2.5 text-center text-sm font-semibold ${"trigger-first".equals(activeEntryMode) ? "text-zinc-900 bg-white rounded-2xl shadow-sm" : "text-zinc-600 hover:text-zinc-900"} transition-all">Recent Triggers</a>
                 </div>
 
                 <div class="flex-1 pb-32 lg:pb-12">

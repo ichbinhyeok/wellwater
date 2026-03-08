@@ -50,7 +50,7 @@ public class PageController {
         model.addAttribute("featuredRegionalPages", pseoExperienceService.featuredRegionalPages());
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("seo", seoMetadataService.home(
-                "Private Well Water Guide | Results, Symptoms, and Next Steps",
+                "Water Verdict | Results, Symptoms, and Next Steps",
                 "Use test results, water symptoms, or recent changes to decide what to verify next for a private well."
         ));
         return "pages/home";
@@ -143,7 +143,7 @@ public class PageController {
         trackPublicPageView("trust-hub", "trust", "", "/trust", "indexable");
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("seo", seoMetadataService.trustHub(
-                "Trust And Method | Private Well Water Guide",
+                "Trust And Method | Water Verdict",
                 "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface."
         ));
         return "pages/trust/list";

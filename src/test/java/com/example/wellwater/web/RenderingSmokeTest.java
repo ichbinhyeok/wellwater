@@ -34,8 +34,8 @@ class RenderingSmokeTest {
     void homePageRendersRealContent() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Guide")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision workflow")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a safer next step")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
@@ -216,7 +216,7 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/well-water/nitrate"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Nitrate in Well Water What To Do")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/well-water/nitrate\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/well-water/nitrate\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Breadcrumb")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first?analyte=nitrate&amp;slug=nitrate")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Do not buy yet")))
@@ -303,6 +303,6 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/trust/methodology"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How This Site Turns Well-Water Clues Into Next Steps")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://wellwater.test/trust/methodology\"")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/trust/methodology\"")));
     }
 }

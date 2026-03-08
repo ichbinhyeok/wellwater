@@ -1,4 +1,4 @@
-﻿# Well Water Verdict
+# Water Verdict
 
 Private well water decision engine for problem-first search traffic.
 

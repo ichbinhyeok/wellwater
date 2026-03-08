@@ -1,7 +1,7 @@
 @param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
 @param com.example.wellwater.web.page.SeoMetadata seo
 
-@template.layout.main(title = "Trust And Method | Private Well Water Guide", robots = "index,follow", description = "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
+@template.layout.main(title = "Trust And Method | Water Verdict", robots = "index,follow", description = "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">

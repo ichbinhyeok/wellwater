@@ -26,7 +26,7 @@ class AdminControllerTest {
     void adminRequiresBasicAuth() throws Exception {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isUnauthorized())
-                .andExpect(header().string("WWW-Authenticate", containsString("Basic realm=\"wellwater-admin\"")))
+                .andExpect(header().string("WWW-Authenticate", containsString("Basic realm=\"waterverdict-admin\"")))
                 .andExpect(header().string("X-Robots-Tag", containsString("noindex")));
     }
 

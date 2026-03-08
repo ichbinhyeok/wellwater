@@ -17,7 +17,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="${robots}">
     <meta name="description" content="${description}">
-    <meta property="og:site_name" content="Private Well Water Guide">
+    <meta property="og:site_name" content="Water Verdict">
     <meta property="og:type" content="${openGraphType}">
     <meta property="og:title" content="${title}">
     <meta property="og:description" content="${description}">
@@ -62,13 +62,19 @@
             --surface-strong: #ffffff;
             --surface-tint: rgba(231, 238, 224, 0.72);
             --text: #142218;
-            --muted: #5d6d61;
+            --muted: #4a594d;
+            --muted-strong: #354337;
             --border: rgba(20, 34, 24, 0.12);
             --border-strong: rgba(20, 34, 24, 0.18);
             --accent: #0f766e;
             --accent-soft: rgba(15, 118, 110, 0.12);
             --accent-strong: #0f4b57;
             --warm: #c66a2b;
+            --hero-muted: rgba(246, 251, 249, 0.9);
+            --hero-chip-bg: rgba(255, 255, 255, 0.14);
+            --hero-chip-border: rgba(255, 255, 255, 0.2);
+            --hero-chip-text: #f4fbf9;
+            --hero-chip-dot: #9ce5d4;
             --shadow-soft: 0 18px 46px rgba(35, 52, 39, 0.08);
             --shadow-card: 0 20px 60px rgba(35, 52, 39, 0.12);
             --radius-xl: 30px;
@@ -182,7 +188,7 @@
             font-size: 0.72rem;
             letter-spacing: 0.16em;
             text-transform: uppercase;
-            color: var(--muted);
+            color: var(--muted-strong);
         }
 
         .brand-title {
@@ -203,7 +209,7 @@
         .nav-link {
             padding: 10px 14px;
             border-radius: 999px;
-            color: var(--muted);
+            color: var(--muted-strong);
             font-size: 0.92rem;
             font-weight: 700;
             transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
@@ -226,13 +232,13 @@
             border: 1px solid rgba(255, 255, 255, 0.85);
             border-radius: 999px;
             box-shadow: 0 10px 28px rgba(25, 41, 28, 0.05);
-            color: var(--muted);
+            color: var(--muted-strong);
             font-size: 0.9rem;
             font-weight: 700;
         }
 
         .breadcrumb-sep {
-            color: rgba(20, 34, 24, 0.28);
+            color: rgba(20, 34, 24, 0.42);
         }
 
         .breadcrumb-current {
@@ -369,7 +375,7 @@
         .hero-lead {
             margin-top: 18px;
             font-size: 1.08rem;
-            color: rgba(246, 251, 249, 0.8);
+            color: var(--hero-muted);
             max-width: 58ch;
         }
 
@@ -414,7 +420,7 @@
 
         .metric span {
             font-size: 0.84rem;
-            color: rgba(246, 251, 249, 0.72);
+            color: rgba(246, 251, 249, 0.84);
         }
 
         .panel {
@@ -553,6 +559,20 @@
             height: 7px;
             border-radius: 999px;
             background: var(--accent);
+        }
+
+        .hero .chip {
+            background: var(--hero-chip-bg);
+            border-color: var(--hero-chip-border);
+            color: var(--hero-chip-text);
+        }
+
+        .hero .chip::before {
+            background: var(--hero-chip-dot);
+        }
+
+        .hero .muted {
+            color: var(--hero-muted) !important;
         }
 
         .mobile-only {
@@ -791,12 +811,12 @@
 <div class="shell">
     <header class="site-header">
         <div class="brand">
-            <a href="/" class="brand-mark" aria-label="Private Well Water Guide">
-                <img src="/favicon.svg" alt="Well Water Verdict Logo" class="w-full h-full object-cover">
+            <a href="/" class="brand-mark" aria-label="Water Verdict">
+                <img src="/favicon.svg" alt="Water Verdict logo" class="w-full h-full object-cover">
             </a>
             <div class="brand-copy">
-                <p class="brand-kicker">Private Well Guide</p>
-                <p class="brand-title">Well water test, symptom, and next-step guides</p>
+                <p class="brand-kicker">Private Well Decision Engine</p>
+                <p class="brand-title">Water Verdict</p>
             </div>
         </div>
         <nav class="site-nav" aria-label="Primary">
@@ -829,7 +849,7 @@
     ${content}
 
     <footer class="site-footer">
-        <strong>Private Well Water Guide</strong> helps you move from a water clue or lab result to the next test, comparison, or follow-up step.
+        <strong>Water Verdict</strong> helps you move from a water clue or lab result to the next test, comparison, or follow-up step.
         <nav class="footer-links" aria-label="Trust and policy">
             <a href="/trust">Trust hub</a>
             <a href="/trust/methodology">Methodology</a>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Well Water Verdict - Decision Engine</title>
+    <title>Water Verdict - Decision Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -86,58 +86,58 @@
                 <div class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center">
                     <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                 </div>
-                <h1 class="text-xl font-semibold tracking-tight text-zinc-900">Well Water Verdict</h1>
+                <h1 class="text-xl font-semibold tracking-tight text-zinc-900">Water Verdict</h1>
             </div>
             <button class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Reset</button>
         </header>
 
         <!-- Segmented Control for Entry Points -->
         <div class="bg-zinc-100 p-1 rounded-xl flex mb-10">
-            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-900 bg-white rounded-lg shadow-sm ring-1 ring-zinc-900/5 transition-all">진단서 입력</button>
-            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-700 transition-all">증상 선택</button>
-            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-700 transition-all">사건 발생</button>
+            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-900 bg-white rounded-lg shadow-sm ring-1 ring-zinc-900/5 transition-all">吏꾨떒???낅젰</button>
+            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-700 transition-all">利앹긽 ?좏깮</button>
+            <button class="flex-1 py-2.5 text-sm font-medium text-zinc-500 hover:text-zinc-700 transition-all">?ш굔 諛쒖깮</button>
         </div>
 
         <!-- Input Form Area -->
         <div class="flex-1 pb-32 lg:pb-12">
-            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">물 성분 분석표 입력</h2>
-            <p class="text-zinc-500 text-sm mb-8 leading-relaxed">연구소에서 받은 수질 검사 결과의 주요 수치를 입력해주세요. 엔진이 실시간으로 안전 여부를 판정합니다.</p>
+            <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">臾??깅텇 遺꾩꽍???낅젰</h2>
+            <p class="text-zinc-500 text-sm mb-8 leading-relaxed">?곌뎄?뚯뿉??諛쏆? ?섏쭏 寃??寃곌낵??二쇱슂 ?섏튂瑜??낅젰?댁＜?몄슂. ?붿쭊???ㅼ떆媛꾩쑝濡??덉쟾 ?щ?瑜??먯젙?⑸땲??</p>
             
             <div class="space-y-5">
                 <!-- Input 1: Nitrate -->
                 <div class="group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-sm font-semibold text-zinc-900">Nitrate (질산염)</label>
+                        <label class="text-sm font-semibold text-zinc-900">Nitrate (吏덉궛??</label>
                         <span class="text-xs font-medium px-2 py-0.5 bg-zinc-100 text-zinc-600 rounded-md">mg/L</span>
                     </div>
-                    <p class="text-xs text-zinc-500 mb-3">EPA 기준치: 10 mg/L 이하</p>
+                    <p class="text-xs text-zinc-500 mb-3">EPA 湲곗?移? 10 mg/L ?댄븯</p>
                     <input type="number" placeholder="0.0" class="w-full text-2xl font-medium outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900" value="12.5" />
                     
                     <div class="absolute right-5 top-1/2 mt-2 flex items-center gap-1.5 text-danger bg-danger/5 px-2 py-1 rounded-md">
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                        <span class="text-xs font-semibold tracking-wide">초과</span>
+                        <span class="text-xs font-semibold tracking-wide">珥덇낵</span>
                     </div>
                 </div>
 
                 <!-- Input 2: Coliform -->
                 <div class="group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-sm font-semibold text-zinc-900">Coliform Bacteria (대장균군)</label>
+                        <label class="text-sm font-semibold text-zinc-900">Coliform Bacteria (??κ퇏援?</label>
                         <span class="text-xs font-medium px-2 py-0.5 bg-zinc-100 text-zinc-600 rounded-md">Presence</span>
                     </div>
-                    <p class="text-xs text-zinc-500 mb-4">EPA 기준치: 불검출 (Absent)</p>
+                    <p class="text-xs text-zinc-500 mb-4">EPA 湲곗?移? 遺덇?異?(Absent)</p>
                     
                     <div class="grid grid-cols-2 gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" name="bacteria" class="peer sr-only">
                             <div class="text-center py-3 rounded-xl border border-zinc-200 text-sm font-medium text-zinc-500 peer-checked:bg-zinc-900 peer-checked:text-white peer-checked:border-zinc-900 hover:bg-zinc-50 transition-all">
-                                Absent (안전)
+                                Absent (?덉쟾)
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="bacteria" class="peer sr-only" checked>
                             <div class="text-center py-3 rounded-xl border border-danger/30 text-sm font-medium text-danger bg-danger/5 peer-checked:bg-danger peer-checked:text-white peer-checked:border-danger hover:bg-danger/10 transition-all shadow-[0_0_15px_rgba(239,68,68,0.1)]">
-                                Present (검출)
+                                Present (寃異?
                             </div>
                         </label>
                     </div>
@@ -146,17 +146,17 @@
                 <!-- Input 3: Arsenic -->
                 <div class="group relative bg-white border border-zinc-200 rounded-2xl p-5 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 focus-within:ring-zinc-900 transition-all opacity-70">
                     <div class="flex justify-between items-center mb-1">
-                        <label class="text-sm font-semibold text-zinc-900">Arsenic (비소)</label>
+                        <label class="text-sm font-semibold text-zinc-900">Arsenic (鍮꾩냼)</label>
                         <span class="text-xs font-medium px-2 py-0.5 bg-zinc-100 text-zinc-600 rounded-md">ppb</span>
                     </div>
-                    <p class="text-xs text-zinc-500 mb-3">EPA 기준치: 10 ppb 이하</p>
-                    <input type="number" placeholder="수치 입력 (선택)" class="w-full text-xl font-medium outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900" />
+                    <p class="text-xs text-zinc-500 mb-3">EPA 湲곗?移? 10 ppb ?댄븯</p>
+                    <input type="number" placeholder="?섏튂 ?낅젰 (?좏깮)" class="w-full text-xl font-medium outline-none placeholder:text-zinc-300 bg-transparent text-zinc-900" />
                 </div>
             </div>
 
             <button class="mt-6 flex items-center justify-center w-full py-3.5 border border-dashed border-zinc-300 rounded-xl text-sm font-medium text-zinc-500 hover:text-zinc-900 hover:border-zinc-400 hover:bg-zinc-50 transition-colors">
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                추가 성분 입력하기
+                異붽? ?깅텇 ?낅젰?섍린
             </button>
         </div>
     </section>
@@ -173,9 +173,9 @@
         <div id="mobile-summary" class="lg:hidden px-6 pb-4 bg-white/95 backdrop-blur-md flex items-center justify-between border-b border-zinc-100 transition-opacity duration-300 relative z-20 cursor-pointer" onclick="toggleBottomSheet()">
             <div>
                 <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold bg-danger/10 text-danger mb-1 tracking-wide uppercase">
-                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span> 위험 상태
+                    <span class="w-1.5 h-1.5 rounded-full bg-danger"></span> ?꾪뿕 ?곹깭
                 </span>
-                <p class="text-sm font-semibold text-zinc-900">식수 사용을 즉시 중단하세요</p>
+                <p class="text-sm font-semibold text-zinc-900">?앹닔 ?ъ슜??利됱떆 以묐떒?섏꽭??/p>
             </div>
             <button class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm border border-zinc-200">
                 <svg class="w-4 h-4 transform rotate-180 transition-transform duration-300" id="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
@@ -187,7 +187,7 @@
             <div class="pt-6 lg:pt-0 pb-6 flex items-end justify-between border-b border-zinc-200/60 mb-8 hidden lg:flex">
                 <div>
                     <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-[0.15em] mb-1">Analysis Report</h2>
-                    <p class="text-xl font-bold text-zinc-900 tracking-tight">판정 결과</p>
+                    <p class="text-xl font-bold text-zinc-900 tracking-tight">?먯젙 寃곌낵</p>
                 </div>
                 <div class="text-right">
                     <div class="flex items-center gap-2 text-sm text-zinc-500">
@@ -195,7 +195,7 @@
                           <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                           <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                         </span>
-                        실시간 분석 완료
+                        ?ㅼ떆媛?遺꾩꽍 ?꾨즺
                     </div>
                 </div>
             </div>
@@ -209,13 +209,13 @@
                     <div class="flex items-center gap-3 mb-5">
                         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-danger/10 text-danger uppercase tracking-wider">
                             <span class="w-2 h-2 rounded-full bg-danger animate-pulse"></span>
-                            안전 점검 시급
+                            ?덉쟾 ?먭? ?쒓툒
                         </span>
                     </div>
                     
-                    <h3 class="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 mb-3">식수 사용을 즉시 중단해야 합니다.</h3>
+                    <h3 class="text-2xl lg:text-3xl font-bold tracking-tight text-zinc-900 mb-3">?앹닔 ?ъ슜??利됱떆 以묐떒?댁빞 ?⑸땲??</h3>
                     <p class="text-zinc-600 leading-relaxed text-sm lg:text-base">
-                        입력하신 수치에 따르면 <strong class="text-zinc-900">질산염(12.5 mg/L)</strong>이 기준치를 초과했으며, <strong class="text-zinc-900">대장균</strong>이 검출되었습니다. 이는 특히 6개월 미만의 영유아에게 치명적인 청색증(Blue Baby Syndrome)을 유발할 수 있으며 위장 질환의 원인이 됩니다.
+                        ?낅젰?섏떊 ?섏튂???곕Ⅴ硫?<strong class="text-zinc-900">吏덉궛??12.5 mg/L)</strong>??湲곗?移섎? 珥덇낵?덉쑝硫? <strong class="text-zinc-900">??κ퇏</strong>??寃異쒕릺?덉뒿?덈떎. ?대뒗 ?뱁엳 6媛쒖썡 誘몃쭔???곸쑀?꾩뿉寃?移섎챸?곸씤 泥?깋利?Blue Baby Syndrome)???좊컻?????덉쑝硫??꾩옣 吏덊솚???먯씤???⑸땲??
                     </p>
                 </div>
 
@@ -229,21 +229,21 @@
                     <div class="relative border-l-2 border-zinc-100 ml-3 space-y-7">
                         <div class="relative pl-6">
                             <div class="absolute w-3 h-3 bg-white border-[3px] border-danger rounded-full -left-[7.5px] top-1"></div>
-                            <div class="text-[10px] font-bold text-danger uppercase tracking-widest mb-1.5">Today (즉시)</div>
-                            <div class="text-sm font-semibold text-zinc-900 mb-1">생수 또는 끓인 물 사용</div>
-                            <div class="text-sm text-zinc-500 leading-relaxed">질산염은 끓여도 사라지지 않으므로 영유아 분유 조제 시 반드시 생수를 사용하세요. 식기 세척시엔 물을 끓여서 사용하십시오.</div>
+                            <div class="text-[10px] font-bold text-danger uppercase tracking-widest mb-1.5">Today (利됱떆)</div>
+                            <div class="text-sm font-semibold text-zinc-900 mb-1">?앹닔 ?먮뒗 ?볦씤 臾??ъ슜</div>
+                            <div class="text-sm text-zinc-500 leading-relaxed">吏덉궛?쇱? ?볦뿬???щ씪吏吏 ?딆쑝誘濡??곸쑀??遺꾩쑀 議곗젣 ??諛섎뱶???앹닔瑜??ъ슜?섏꽭?? ?앷린 ?몄쿃?쒖뿏 臾쇱쓣 ?볦뿬???ъ슜?섏떗?쒖삤.</div>
                         </div>
                         <div class="relative pl-6">
                             <div class="absolute w-3 h-3 bg-white border-[3px] border-warn rounded-full -left-[7.5px] top-1"></div>
                             <div class="text-[10px] font-bold text-warn uppercase tracking-widest mb-1.5">This Week</div>
-                            <div class="text-sm font-semibold text-zinc-900 mb-1">지하수 우물 충격 소독 (Shock Chlorination)</div>
-                            <div class="text-sm text-zinc-500 leading-relaxed">대장균 제거를 위해 전문가를 통한 물리적/화학적 소독을 빠른 시일 내에 진행해야 합니다.</div>
+                            <div class="text-sm font-semibold text-zinc-900 mb-1">吏?섏닔 ?곕Ъ 異⑷꺽 ?뚮룆 (Shock Chlorination)</div>
+                            <div class="text-sm text-zinc-500 leading-relaxed">??κ퇏 ?쒓굅瑜??꾪빐 ?꾨Ц媛瑜??듯븳 臾쇰━???뷀븰???뚮룆??鍮좊Ⅸ ?쒖씪 ?댁뿉 吏꾪뻾?댁빞 ?⑸땲??</div>
                         </div>
                         <div class="relative pl-6">
                             <div class="absolute w-3 h-3 bg-white border-[3px] border-zinc-300 rounded-full -left-[7.5px] top-1"></div>
                             <div class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1.5">Next 30 Days</div>
-                            <div class="text-sm font-semibold text-zinc-900 mb-1">수처리 시스템 설치 검토</div>
-                            <div class="text-sm text-zinc-500 leading-relaxed">근본적인 질산염 제거를 위해 Reverse Osmosis (역삼투압) 필터 등의 영구적인 시스템 설치가 필요합니다.</div>
+                            <div class="text-sm font-semibold text-zinc-900 mb-1">?섏쿂由??쒖뒪???ㅼ튂 寃??/div>
+                            <div class="text-sm text-zinc-500 leading-relaxed">洹쇰낯?곸씤 吏덉궛???쒓굅瑜??꾪빐 Reverse Osmosis (??궪?ъ븬) ?꾪꽣 ?깆쓽 ?곴뎄?곸씤 ?쒖뒪???ㅼ튂媛 ?꾩슂?⑸땲??</div>
                         </div>
                     </div>
                 </div>
@@ -252,16 +252,16 @@
                 <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm overflow-hidden">
                     <h4 class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
                         <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        해결 시나리오 비교
+                        ?닿껐 ?쒕굹由ъ삤 鍮꾧탳
                     </h4>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="border border-zinc-200 rounded-xl p-5 flex flex-col transition-all hover:border-zinc-300">
                             <div class="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-2">Option A</div>
-                            <div class="font-bold text-zinc-900 mb-2">목적지 정수 (Point of Use)</div>
-                            <div class="text-sm text-zinc-500 mb-4 flex-1 leading-relaxed">주방 싱크대 아래에만 역삼투압 필터를 설치하여 식수만 확보합니다. 샤워 등은 여전히 위험에 노출됩니다.</div>
+                            <div class="font-bold text-zinc-900 mb-2">紐⑹쟻吏 ?뺤닔 (Point of Use)</div>
+                            <div class="text-sm text-zinc-500 mb-4 flex-1 leading-relaxed">二쇰갑 ?깊겕? ?꾨옒?먮쭔 ??궪?ъ븬 ?꾪꽣瑜??ㅼ튂?섏뿬 ?앹닔留??뺣낫?⑸땲?? ?ㅼ썙 ?깆? ?ъ쟾???꾪뿕???몄텧?⑸땲??</div>
                             <div class="pt-4 border-t border-zinc-100 flex items-center justify-between mt-auto">
-                                <span class="text-xs font-semibold text-zinc-400 uppercase">예상 비용</span>
+                                <span class="text-xs font-semibold text-zinc-400 uppercase">?덉긽 鍮꾩슜</span>
                                 <span class="font-bold text-zinc-900">$300 - $800</span>
                             </div>
                         </div>
@@ -269,10 +269,10 @@
                         <div class="border-[1.5px] border-zinc-900 rounded-xl p-5 flex flex-col relative bg-zinc-50 shadow-sm">
                             <div class="absolute -top-2.5 right-4 bg-zinc-900 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full tracking-wider">RECOMMENDED</div>
                             <div class="text-[10px] font-bold text-zinc-900 uppercase tracking-widest mb-2">Option B</div>
-                            <div class="font-bold text-zinc-900 mb-2">집 전체 정수 (Point of Entry)</div>
-                            <div class="text-sm text-zinc-600 mb-4 flex-1 leading-relaxed">메인 배관에 시스템을 설치하여 집안 모든 물의 대장균과 질산염을 관리합니다. 영유아가 있는 집에 필수적입니다.</div>
+                            <div class="font-bold text-zinc-900 mb-2">吏??꾩껜 ?뺤닔 (Point of Entry)</div>
+                            <div class="text-sm text-zinc-600 mb-4 flex-1 leading-relaxed">硫붿씤 諛곌????쒖뒪?쒖쓣 ?ㅼ튂?섏뿬 吏묒븞 紐⑤뱺 臾쇱쓽 ??κ퇏怨?吏덉궛?쇱쓣 愿由ы빀?덈떎. ?곸쑀?꾧? ?덈뒗 吏묒뿉 ?꾩닔?곸엯?덈떎.</div>
                             <div class="pt-4 border-t border-zinc-200 flex items-center justify-between mt-auto">
-                                <span class="text-xs font-semibold text-zinc-500 uppercase">예상 비용</span>
+                                <span class="text-xs font-semibold text-zinc-500 uppercase">?덉긽 鍮꾩슜</span>
                                 <span class="font-bold text-zinc-900">$2,000+</span>
                             </div>
                         </div>
@@ -282,12 +282,12 @@
                 <!-- Block 4: CTA -->
                 <div class="bg-zinc-900 rounded-2xl p-6 lg:p-8 text-center lg:text-left flex flex-col lg:flex-row items-center justify-between shadow-float">
                     <div class="mb-5 lg:mb-0">
-                        <h4 class="text-lg font-bold text-white mb-2 tracking-tight">전문가의 도움이 필요하신가요?</h4>
-                        <p class="text-zinc-400 text-sm">신뢰할 수 있는 지역 공인 수질 전문가를 연결해 드립니다.</p>
+                        <h4 class="text-lg font-bold text-white mb-2 tracking-tight">?꾨Ц媛???꾩????꾩슂?섏떊媛??</h4>
+                        <p class="text-zinc-400 text-sm">?좊ː?????덈뒗 吏??怨듭씤 ?섏쭏 ?꾨Ц媛瑜??곌껐???쒕┰?덈떎.</p>
                     </div>
                     <div class="flex items-center gap-3 w-full lg:w-auto flex-col sm:flex-row">
-                        <button class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition-colors border border-zinc-700 shadow-sm">결과 PDF 저장</button>
-                        <button class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-white text-zinc-900 hover:bg-zinc-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/50">근처 전문가 찾기</button>
+                        <button class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition-colors border border-zinc-700 shadow-sm">寃곌낵 PDF ???/button>
+                        <button class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-white text-zinc-900 hover:bg-zinc-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/50">洹쇱쿂 ?꾨Ц媛 李얘린</button>
                     </div>
                 </div>
 

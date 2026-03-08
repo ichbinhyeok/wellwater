@@ -1,84 +1,79 @@
-# 문서 11. Source Data Collection Policy
+# 臾몄꽌 11. Source Data Collection Policy
 
-## 1. 목적
+## 1. 紐⑹쟻
 
-이 문서는 Well Water Verdict의 원천 데이터 수집/갱신 규칙을 정의한다.  
-핵심 원칙은 하나다.
+??臾몄꽌??Water Verdict???먯쿇 ?곗씠???섏쭛/媛깆떊 洹쒖튃???뺤쓽?쒕떎.  
+?듭떖 ?먯튃? ?섎굹??
 
-**원천 데이터는 수집/갱신 시마다 반드시 인터넷 검색을 통해 확인하고 기록한다.**
+**?먯쿇 ?곗씠?곕뒗 ?섏쭛/媛깆떊 ?쒕쭏??諛섎뱶???명꽣??寃?됱쓣 ?듯빐 ?뺤씤?섍퀬 湲곕줉?쒕떎.**
 
-## 2. 적용 범위
+## 2. ?곸슜 踰붿쐞
 
-아래 데이터는 모두 본 정책 대상이다.
+?꾨옒 ?곗씠?곕뒗 紐⑤몢 蹂??뺤콉 ??곸씠??
 
 - contaminant threshold/benchmark
-- federal/state/local guidance 링크
-- certification/standard claim 기준
-- pSEO 페이지의 사실 근거 문장
-- 수익화 링크 관련 공개 약관/조건
+- federal/state/local guidance 留곹겕
+- certification/standard claim 湲곗?
+- pSEO ?섏씠吏???ъ떎 洹쇨굅 臾몄옣
+- ?섏씡??留곹겕 愿??怨듦컻 ?쎄?/議곌굔
 
-## 3. 수집 절차 (필수)
+## 3. ?섏쭛 ?덉감 (?꾩닔)
 
-1. 검색
-- 대상 항목마다 웹 검색을 실행한다.
-- 검색 시점의 최신 문서를 우선한다.
+1. 寃??- ?????ぉ留덈떎 ??寃?됱쓣 ?ㅽ뻾?쒕떎.
+- 寃???쒖젏??理쒖떊 臾몄꽌瑜??곗꽑?쒕떎.
 
-2. 선별
-- 1차 출처(공공기관, 주정부, 대학/extension, 표준기관)를 우선 선택한다.
-- 상업 출처는 비용/오퍼 영역에서만 사용한다.
+2. ?좊퀎
+- 1李?異쒖쿂(怨듦났湲곌?, 二쇱젙遺, ???extension, ?쒖?湲곌?)瑜??곗꽑 ?좏깮?쒕떎.
+- ?곸뾽 異쒖쿂??鍮꾩슜/?ㅽ띁 ?곸뿭?먯꽌留??ъ슜?쒕떎.
 
-3. 검증
-- 문서 발행일/개정일/적용일을 확인한다.
-- 상충 출처가 있으면 보수적 해석 + 추가 확인 상태로 보류한다.
+3. 寃利?- 臾몄꽌 諛쒗뻾??媛쒖젙???곸슜?쇱쓣 ?뺤씤?쒕떎.
+- ?곸땐 異쒖쿂媛 ?덉쑝硫?蹂댁닔???댁꽍 + 異붽? ?뺤씤 ?곹깭濡?蹂대쪟?쒕떎.
 
-4. 기록
-- 현재 pSEO MVP의 `data/pseo/pages.csv`에는 아래 필드를 필수 저장한다.
+4. 湲곕줉
+- ?꾩옱 pSEO MVP??`data/pseo/pages.csv`?먮뒗 ?꾨옒 ?꾨뱶瑜??꾩닔 ??ν븳??
   - `source_url`
   - `search_query`
   - `search_performed_at` (UTC)
   - `fetched_at` (UTC)
-- decision/registry CSV(`data/registry/*.csv`)에는 아래 확장 메타데이터를 저장한다.
+- decision/registry CSV(`data/registry/*.csv`)?먮뒗 ?꾨옒 ?뺤옣 硫뷀??곗씠?곕? ??ν븳??
   - `source_publisher`
-  - `effective_date` (확인 가능 시 필수)
+  - `effective_date` (?뺤씤 媛?????꾩닔)
   - `source_type` (federal/state/university/standard/commercial)
-  - `notes` (판단 근거 요약)
+  - `notes` (?먮떒 洹쇨굅 ?붿빟)
 
-5. 승인
-- health-adjacent 문장은 Trust 체크를 거친 뒤 반영한다.
+5. ?뱀씤
+- health-adjacent 臾몄옣? Trust 泥댄겕瑜?嫄곗튇 ??諛섏쁺?쒕떎.
 
-## 4. 출처 우선순위
+## 4. 異쒖쿂 ?곗꽑?쒖쐞
 
 1. federal/public-health guidance
 2. state health/environment/private well resources
 3. extension/university resources
 4. standards/certification references
-5. commercial sources (cost/offer 전용)
+5. commercial sources (cost/offer ?꾩슜)
 
-## 5. 금지 규칙
+## 5. 湲덉? 洹쒖튃
 
-- 검색 없이 과거 값 복붙 후 배포
-- 출처 URL 없는 레코드 배포
-- 발행일/갱신일 미확인 상태에서 건강 관련 강한 결론에 사용
-- 상업 출처를 health 판단의 1차 근거로 사용
+- 寃???놁씠 怨쇨굅 媛?蹂듬텤 ??諛고룷
+- 異쒖쿂 URL ?녿뒗 ?덉퐫??諛고룷
+- 諛쒗뻾??媛깆떊??誘명솗???곹깭?먯꽌 嫄닿컯 愿??媛뺥븳 寃곕줎???ъ슜
+- ?곸뾽 異쒖쿂瑜?health ?먮떒??1李?洹쇨굅濡??ъ슜
 
-## 6. 신선도(SLA)
+## 6. ?좎꽑??SLA)
 
-- health 관련 기준 문장: 30일 이내 재검토
-- state/federal guidance 링크: 30일 이내 링크 유효성 점검
-- 상업 약관 링크: 14일 이내 재검토
+- health 愿??湲곗? 臾몄옣: 30???대궡 ?ш???- state/federal guidance 留곹겕: 30???대궡 留곹겕 ?좏슚???먭?
+- ?곸뾽 ?쎄? 留곹겕: 14???대궡 ?ш???
+SLA 珥덇낵 ??
+- ?대떦 ?섏씠吏 ?낅뜲?댄듃 ?곗꽑?쒖쐞瑜??곹뼢?쒕떎.
+- ?섏씡??臾멸뎄蹂대떎 ?덈궡 臾멸뎄瑜??곗꽑 ?몄텧?쒕떎.
 
-SLA 초과 시:
-- 해당 페이지 업데이트 우선순위를 상향한다.
-- 수익화 문구보다 안내 문구를 우선 노출한다.
+## 7. 媛먯궗 媛?μ꽦
 
-## 7. 감사 가능성
+- 紐⑤뱺 蹂寃쎌? `who/when/what/why/source` 濡쒓렇瑜??④릿??
+- 遺꾧린蹂꾨줈 source drift 由щ럭瑜??섑뻾?쒕떎.
 
-- 모든 변경은 `who/when/what/why/source` 로그를 남긴다.
-- 분기별로 source drift 리뷰를 수행한다.
-
-## 8. 구현 체크리스트
-
-- source 메타 필드가 CSV 스키마(헤더)에 존재하는가
-- source 메타 없는 레코드를 배포 차단하는가
-- 검색/검증/승인 워크플로가 운영 화면에서 강제되는가
-- stale source 경보가 대시보드에서 보이는가
+## 8. 援ы쁽 泥댄겕由ъ뒪??
+- source 硫뷀? ?꾨뱶媛 CSV ?ㅽ궎留??ㅻ뜑)??議댁옱?섎뒗媛
+- source 硫뷀? ?녿뒗 ?덉퐫?쒕? 諛고룷 李⑤떒?섎뒗媛
+- 寃??寃利??뱀씤 ?뚰겕?뚮줈媛 ?댁쁺 ?붾㈃?먯꽌 媛뺤젣?섎뒗媛
+- stale source 寃쎈낫媛 ??쒕낫?쒖뿉??蹂댁씠?붽?

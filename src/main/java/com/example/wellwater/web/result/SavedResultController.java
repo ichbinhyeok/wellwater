@@ -94,7 +94,7 @@ public class SavedResultController {
         return ResponseEntity.ok()
                 .header("X-Robots-Tag", "noindex, nofollow, noarchive")
                 .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename("wellwater-result-" + snapshot.id() + ".pdf")
+                        .filename("waterverdict-result-" + snapshot.id() + ".pdf")
                         .build()
                         .toString())
                 .contentType(MediaType.APPLICATION_PDF)

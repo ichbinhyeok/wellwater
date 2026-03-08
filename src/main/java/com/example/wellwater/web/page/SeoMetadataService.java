@@ -186,7 +186,7 @@ public class SeoMetadataService {
         payload.put("dateModified", updatedAt == null ? "" : updatedAt);
         payload.put("isPartOf", Map.of(
                 "@type", "WebSite",
-                "name", "Private Well Water Guide",
+                "name", "Water Verdict",
                 "url", absolute("/")
         ));
         return object(payload);
@@ -207,7 +207,7 @@ public class SeoMetadataService {
         payload.put("dateModified", pageView.page().fetchedAt());
         payload.put("isPartOf", Map.of(
                 "@type", "WebSite",
-                "name", "Private Well Water Guide",
+                "name", "Water Verdict",
                 "url", absolute("/")
         ));
         return object(payload);
@@ -263,7 +263,7 @@ public class SeoMetadataService {
     private Map<String, Object> editorialAuthor() {
         return Map.of(
                 "@type", "Organization",
-                "name", "Private Well Editorial Desk",
+                "name", "Water Verdict Editorial Desk",
                 "url", absolute("/trust/reviewers-and-expertise")
         );
     }
@@ -271,7 +271,7 @@ public class SeoMetadataService {
     private Map<String, Object> publisher() {
         return Map.of(
                 "@type", "Organization",
-                "name", "Private Well Water Guide",
+                "name", "Water Verdict",
                 "url", absolute("/"),
                 "sameAs", List.of(
                         absolute("/trust/methodology"),

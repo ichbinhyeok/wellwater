@@ -22,14 +22,14 @@ class SeoMetadataServiceTest {
             new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
             new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
     );
-    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://wellwater.example", new MockEnvironment());
+    private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://waterverdict.example", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
 
     @Test
     void detailMetadataBuildsCanonicalAndBreadcrumbJson() {
         SeoMetadata metadata = seoMetadataService.detail(experienceService.detailView("new-hampshire-arsenic-well-water").orElseThrow());
 
-        assertEquals("https://wellwater.example/well-water/new-hampshire-arsenic-well-water", metadata.canonicalUrl());
+        assertEquals("https://waterverdict.example/well-water/new-hampshire-arsenic-well-water", metadata.canonicalUrl());
         assertEquals(3, metadata.breadcrumbs().size());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Article\"")));
@@ -47,7 +47,7 @@ class SeoMetadataServiceTest {
     void trustMetadataBuildsCanonicalAndAboutPageJson() {
         SeoMetadata metadata = seoMetadataService.trustPage(trustPageService.findBySlug("methodology").orElseThrow());
 
-        assertEquals("https://wellwater.example/trust/methodology", metadata.canonicalUrl());
+        assertEquals("https://waterverdict.example/trust/methodology", metadata.canonicalUrl());
         assertEquals(3, metadata.breadcrumbs().size());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"AboutPage\"")));
