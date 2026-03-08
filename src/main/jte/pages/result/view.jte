@@ -9,12 +9,14 @@
 @param boolean sharedView
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
+@param String googleAnalyticsId
 
 @template.layout.engine(
     title = result.browserTitle(),
     robots = "noindex,nofollow",
     description = "Personalized well-water decision output.",
     activeEntryMode = result.entryMode().wireValue(),
+    googleAnalyticsId = googleAnalyticsId,
     leftPanel = @`
         <div class="hidden lg:flex flex-1 flex-col justify-center max-w-sm mx-auto w-full">
             <div class="mb-8">
@@ -92,7 +94,13 @@
         </div>
     `,
     rightPanel = @`
-        <div class="px-4 sm:px-6 lg:px-0 pb-10 lg:pb-12 h-auto overflow-visible lg:overflow-y-auto no-scrollbar bg-zinc-50 lg:bg-transparent">
+        <div class="px-4 sm:px-6 lg:px-0 pb-10 lg:pb-12 h-auto overflow-visible lg:overflow-y-auto no-scrollbar bg-zinc-50 lg:bg-transparent"
+             data-analytics-result-root="true"
+             data-entry-mode="${result.entryMode().wireValue()}"
+             data-branch="${result.branch().label()}"
+             data-tier="${result.tier().label()}"
+             data-problem-type="${result.problemType().wireValue()}"
+             data-shared-view="${sharedView}">
 
             <div class="lg:hidden pt-4 pb-5">
                 <div class="rounded-[24px] border border-zinc-200 bg-white/88 p-4 shadow-sm">
@@ -570,6 +578,18 @@
                 try {
                     await navigator.clipboard.writeText(absolute);
                     input.value = absolute;
+                    if (window.wvAnalytics && typeof window.wvAnalytics.track === 'function') {
+                        const resultContext = window.wvAnalytics.resultContext ? window.wvAnalytics.resultContext() : {};
+                        window.wvAnalytics.track('share', {
+                            entry_mode: resultContext && resultContext.entry_mode,
+                            result_tier: resultContext && resultContext.result_tier,
+                            result_branch: resultContext && resultContext.result_branch,
+                            problem_type: resultContext && resultContext.problem_type,
+                            shared_view: resultContext && resultContext.shared_view,
+                            method: 'copy_link',
+                            content_type: 'saved_result'
+                        });
+                    }
                     button.textContent = 'Copied';
                     setTimeout(() => {
                         button.textContent = 'Copy link';

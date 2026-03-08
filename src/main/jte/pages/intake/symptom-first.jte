@@ -8,12 +8,14 @@
 @param java.util.List<String> tasteTypes
 @param java.util.List<String> locationScopes
 @param java.util.List<String> changeTimings
+@param String googleAnalyticsId
 
 @template.layout.engine(
     title = "Symptom-First Well Water Tool",
     robots = "noindex,nofollow",
     description = "Start from symptom and triage into a decision path.",
     activeEntryMode = request.getEntryMode(),
+    googleAnalyticsId = googleAnalyticsId,
     leftPanel = @`
         <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">Start with a symptom</h2>
         <p class="text-zinc-500 text-sm mb-8 leading-relaxed">Choose the main issue you are observing. The engine will triage likely causes and propose safer next actions.</p>

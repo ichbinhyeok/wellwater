@@ -225,7 +225,7 @@ public class TrustPageService {
                             "The current repo uses a lightweight storage model, so this page is intentionally explicit about its limits.",
                             "Private result snapshots expire instead of staying available forever.",
                             "Admin access should stay credential-protected and noindex.",
-                            "If Google Analytics or Search Console verification is configured, it should stay on public pages and avoid sending saved-result content or follow-up notes into shared analytics surfaces.",
+                            "If Google Analytics or Search Console verification is configured, it should stay limited to low-sensitivity route metadata and avoid sending saved-result content, email fields, or follow-up notes into shared analytics surfaces.",
                             "This product should avoid collecting more personal detail than is required for the follow-up or saved-result flow."
                     )
             ),

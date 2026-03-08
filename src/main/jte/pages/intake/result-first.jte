@@ -10,6 +10,7 @@
 @param java.util.List<String> tasteTypes
 @param java.util.List<String> locationScopes
 @param java.util.List<String> changeTimings
+@param String googleAnalyticsId
 
 !{
     var unitOptions = java.util.List.of("mg/L", "ppm", "ppb", "ug/L", "ppt", "pCi/L", "grains/gal", "su", "cfu/100ml", "mpn/100ml", "presence/absence", "unknown");
@@ -30,6 +31,7 @@
     robots = "noindex,nofollow",
     description = "Enter test results and get a structured decision output.",
     activeEntryMode = request.getEntryMode(),
+    googleAnalyticsId = googleAnalyticsId,
     leftPanel = @`
         <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">Start with a lab result</h2>
         <p class="text-zinc-500 text-sm mb-8 leading-relaxed">Enter the latest analyte measurement from your lab report. The engine uses this data to route safer next actions.</p>

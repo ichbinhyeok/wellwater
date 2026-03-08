@@ -2,6 +2,7 @@
 @param String robots
 @param String description
 @param String activeEntryMode
+@param String googleAnalyticsId
 @param gg.jte.Content leftPanel
 @param gg.jte.Content rightPanel
 
@@ -14,6 +15,16 @@
     <meta name="description" content="${description}">
     <title>${title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    @if (googleAnalyticsId != null && !googleAnalyticsId.isBlank())
+        <script async src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}', { 'anonymize_ip': true });
+        </script>
+    @endif
+    <script defer src="/analytics.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

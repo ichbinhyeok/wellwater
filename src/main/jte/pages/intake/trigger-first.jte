@@ -8,12 +8,14 @@
 @param java.util.List<String> tasteTypes
 @param java.util.List<String> locationScopes
 @param java.util.List<String> changeTimings
+@param String googleAnalyticsId
 
 @template.layout.engine(
     title = "Trigger-First Well Water Tool",
     robots = "noindex,nofollow",
     description = "Start from event trigger and route to safe next actions.",
     activeEntryMode = request.getEntryMode(),
+    googleAnalyticsId = googleAnalyticsId,
     leftPanel = @`
         <h2 class="text-2xl font-bold tracking-tight text-zinc-900 mb-2">Start with a recent trigger</h2>
         <p class="text-zinc-500 text-sm mb-8 leading-relaxed">Select the recent event that changed your water behavior. The engine will prioritize practical risk checks.</p>
