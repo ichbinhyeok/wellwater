@@ -13,6 +13,7 @@
     <meta name="robots" content="${robots}">
     <meta name="description" content="${description}">
     <title>${title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -137,8 +138,8 @@
             <section class="engine-left w-full lg:w-1/2 flex flex-col relative z-30 overflow-visible lg:overflow-y-auto no-scrollbar pt-6 lg:pt-8 px-6 lg:px-10 xl:px-14">
                 <header class="mb-8 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4 min-w-0">
-                        <a href="/" class="engine-brand w-11 h-11 rounded-2xl bg-gradient-to-br from-accent to-accentdeep text-white flex items-center justify-center font-display font-semibold tracking-tight">
-                            WW
+                        <a href="/" class="engine-brand w-11 h-11 rounded-2xl flex items-center justify-center font-display font-semibold tracking-tight overflow-hidden shadow-sm">
+                            <img src="/favicon.svg" alt="Well Water Verdict Logo" class="w-full h-full object-cover">
                         </a>
                         <div class="min-w-0">
                             <p class="engine-kicker text-[11px] font-bold text-zinc-500 mb-1">Decision Engine</p>

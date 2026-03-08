@@ -166,15 +166,11 @@
             width: 48px;
             height: 48px;
             border-radius: 16px;
-            background:
-                linear-gradient(135deg, rgba(15, 118, 110, 0.9), rgba(12, 68, 78, 0.96));
-            color: #f7faf8;
-            display: grid;
-            place-items: center;
-            font-family: "Sora", sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             box-shadow: 0 16px 26px rgba(15, 118, 110, 0.22);
+            overflow: hidden;
         }
 
         .brand-copy {
@@ -795,7 +791,9 @@
 <div class="shell">
     <header class="site-header">
         <div class="brand">
-            <a href="/" class="brand-mark" aria-label="Private Well Water Guide">WW</a>
+            <a href="/" class="brand-mark" aria-label="Private Well Water Guide">
+                <img src="/favicon.svg" alt="Well Water Verdict Logo" class="w-full h-full object-cover">
+            </a>
             <div class="brand-copy">
                 <p class="brand-kicker">Private Well Guide</p>
                 <p class="brand-title">Well water test, symptom, and next-step guides</p>
