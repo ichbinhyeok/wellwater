@@ -122,6 +122,25 @@
                         </div>
                     </section>
 
+                    @if(!pageView.decisionDoc().decisionSplits().isEmpty())
+                        <section class="panel panel-accent">
+                            <div class="section-header">
+                                <div>
+                                    <p class="brand-kicker">Decision splits</p>
+                                    <h2>What changes the decision fastest</h2>
+                                </div>
+                            </div>
+                            <div class="stack" style="gap: 12px;">
+                                @for (var split : pageView.decisionDoc().decisionSplits())
+                                    <article class="card-link">
+                                        <span class="card-kicker">${split.signal()}</span>
+                                        <p class="card-meta">${split.meaning()}</p>
+                                    </article>
+                                @endfor
+                            </div>
+                        </section>
+                    @endif
+
                     <section class="panel">
                         <div class="section-header">
                             <div>
@@ -138,6 +157,25 @@
                             @endfor
                         </div>
                     </section>
+
+                    @if(!pageView.decisionDoc().escalationSignals().isEmpty())
+                        <section class="panel">
+                            <div class="section-header">
+                                <div>
+                                    <p class="brand-kicker">Escalation</p>
+                                    <h2>Escalate now if</h2>
+                                </div>
+                            </div>
+                            <div class="stack" style="gap: 12px;">
+                                @for (var signal : pageView.decisionDoc().escalationSignals())
+                                    <article class="card-link card-link-accent">
+                                        <span class="card-kicker">Escalate</span>
+                                        <p class="card-meta">${signal}</p>
+                                    </article>
+                                @endfor
+                            </div>
+                        </section>
+                    @endif
                 @endif
 
                 <section class="panel">

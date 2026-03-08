@@ -71,6 +71,8 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Do not buy yet")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("One-line call")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Three actions before you buy anything")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What changes the decision fastest")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Escalate now if")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Questions that should be answered before a purchase")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))

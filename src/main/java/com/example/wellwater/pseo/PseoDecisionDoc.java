@@ -8,6 +8,8 @@ public record PseoDecisionDoc(
         List<String> nextSteps,
         List<String> commonConfusions,
         String retestTiming,
+        List<PseoDecisionSplit> decisionSplits,
+        List<String> escalationSignals,
         List<PseoFaqItem> faqs
 ) {
 }

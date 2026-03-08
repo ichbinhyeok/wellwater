@@ -133,4 +133,26 @@ class PseoExperienceServiceTest {
             assertFalse(detailView.decisionDoc().nextSteps().isEmpty(), slug);
         }
     }
+
+    @Test
+    void winnerDecisionDocsExposeDecisionSplitsAndEscalationSignals() {
+        List<String> slugs = List.of(
+                "rotten-egg-smell",
+                "orange-stains",
+                "cloudy-water",
+                "metallic-taste",
+                "after-flood",
+                "home-purchase-test",
+                "nitrate",
+                "coliform",
+                "arsenic",
+                "lead"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
+            assertFalse(detailView.decisionDoc().escalationSignals().isEmpty(), slug);
+        }
+    }
 }

@@ -11,7 +11,7 @@ import java.util.Optional;
 public class PseoDecisionDocService {
 
     private final Map<String, PseoDecisionDoc> docs = Map.ofEntries(
-            Map.entry("rotten-egg-smell", doc(
+            Map.entry("rotten-egg-smell", winnerDoc(
                     "Treat rotten egg odor as a pattern-matching problem first, not a same-day equipment verdict.",
                     "Hot-only odor often points toward a water-heater issue or sulfur bacteria pattern, while whole-house odor pushes you toward source-water diagnosis and broader nuisance testing.",
                     List.of(
@@ -25,13 +25,23 @@ public class PseoDecisionDocService {
                             "A product comparison is premature if you have not mapped when and where the odor appears."
                     ),
                     "Retest or re-evaluate after heater service, disinfection, or any change in where the odor shows up.",
+                    splits(
+                            split("Hot water only", "Bias the decision toward heater inspection, heater disinfection, or anode-related troubleshooting before whole-house treatment."),
+                            split("Cold and hot throughout the house", "Treat it like a source-water or distribution-wide nuisance pattern and move toward testing plus compare-path narrowing."),
+                            split("Odor plus orange or black staining", "Widen the scope to iron, manganese, or overlapping nuisance patterns before choosing a sulfur-specific category.")
+                    ),
+                    List.of(
+                            "Escalate faster if the odor appeared after flooding, repair work, or a long period of inactivity.",
+                            "Escalate if the odor suddenly moved from one fixture to the whole house.",
+                            "Escalate if odor is paired with broader staining or sediment changes instead of staying an isolated smell problem."
+                    ),
                     faq(
                             item("Is rotten egg smell always dangerous?", "Not automatically. It is often a nuisance and maintenance problem, but it still needs pattern-based diagnosis before treatment."),
                             item("Should I buy a sulfur filter first?", "No. First determine whether the smell is hot-water-only, whole-house, or paired with staining because those patterns change the likely fix."),
                             item("What data matters most?", "Location of the odor, timing, staining, and whether a recent maintenance event changed the pattern.")
                     )
             )),
-            Map.entry("orange-stains", doc(
+            Map.entry("orange-stains", winnerDoc(
                     "Orange stains usually point toward nuisance minerals or corrosion clues, but the scope still needs sorting before you buy hardware.",
                     "If the issue is mostly staining without broader exposure concerns, it is often nuisance or plumbing related; if metallic taste, low pH, or copper clues appear too, the decision becomes more about corrosion and verification.",
                     List.of(
@@ -45,6 +55,16 @@ public class PseoDecisionDocService {
                             "A softener versus iron-filter decision is weak if you have not separated staining from corrosion context."
                     ),
                     "Retest after plumbing changes, pH correction, or any treatment install that is supposed to change staining behavior.",
+                    splits(
+                            split("Only one fixture or one branch", "Keep plumbing interaction and fixture-specific corrosion in scope before you jump to whole-house equipment."),
+                            split("Stains across multiple fixtures", "Shift toward a broader nuisance-mineral or source-wide maintenance diagnosis."),
+                            split("Stains plus metallic taste or blue-green marks", "Move the page toward corrosion logic, low-pH follow-up, and metal verification instead of straight iron shopping.")
+                    ),
+                    List.of(
+                            "Escalate if staining is spreading quickly after a recent plumbing change or low-pH clue.",
+                            "Escalate if stains are paired with metallic taste, copper clues, or visible corrosion signs.",
+                            "Escalate if the issue changed after treatment and the treatment claim now needs verification."
+                    ),
                     faq(
                             item("Are orange stains always an iron problem?", "Not always. They often suggest iron or related nuisance issues, but corrosion and plumbing interaction can change the answer."),
                             item("Should I compare filters right away?", "Only after you know whether the problem is source-wide, corrosion-shaped, or tied to a specific fixture."),
@@ -71,7 +91,7 @@ public class PseoDecisionDocService {
                             item("What helps most before buying?", "A clear symptom map and, if needed, targeted testing rather than category shopping from a single clue.")
                     )
             )),
-            Map.entry("cloudy-water", doc(
+            Map.entry("cloudy-water", winnerDoc(
                     "Cloudy well water is a timing and pattern problem first. Do not buy sediment gear until you know whether the change is temporary, trigger-driven, or persistent.",
                     "Short-lived cloudiness can behave like an operational or disturbance issue, while persistent change after storms, repairs, or source stress deserves a more cautious safety and retest path.",
                     List.of(
@@ -85,13 +105,23 @@ public class PseoDecisionDocService {
                             "Persistent cloudiness and temporary cloudiness should not be treated like the same problem."
                     ),
                     "Retest after the disturbance settles and again if the cloudiness persists beyond the immediate event window.",
+                    splits(
+                            split("Clears after standing", "Bias toward disturbance timing, entrained air, or temporary operational change before you buy hardware."),
+                            split("Stays cloudy for hours or days", "Treat it as a persistent condition that deserves broader verification and a tighter test path."),
+                            split("Started after storm, repair, or power event", "Use a trigger-first frame because event context changes how much old assumptions should still be trusted.")
+                    ),
+                    List.of(
+                            "Escalate if cloudy water persists after the immediate disturbance window.",
+                            "Escalate if cloudiness appeared with flood, heavy rain, or repair context.",
+                            "Escalate if cloudy water is paired with odor, microbial concern, or a strong change in household use confidence."
+                    ),
                     faq(
                             item("Is cloudy water always dangerous?", "Not automatically, but persistent or trigger-linked cloudiness should slow down shopping and raise verification."),
                             item("Should I buy a sediment filter right away?", "Not until you know whether the cloudiness is persistent, temporary, or tied to a recent event."),
                             item("What matters most?", "Whether the cloudiness clears, when it started, and what changed around the well or plumbing system.")
                     )
             )),
-            Map.entry("metallic-taste", doc(
+            Map.entry("metallic-taste", winnerDoc(
                     "Metallic taste often needs corrosion logic before treatment logic.",
                     "When metallic taste travels with low pH, blue-green staining, or plumbing clues, the issue leans toward corrosion and metal follow-up rather than a generic nuisance filter purchase.",
                     List.of(
@@ -105,13 +135,23 @@ public class PseoDecisionDocService {
                             "Under-sink fixes can hide a broader corrosion problem instead of solving it."
                     ),
                     "Retest after pH correction, plumbing changes, or any intervention meant to reduce corrosion or metal release.",
+                    splits(
+                            split("Metallic taste plus low pH or blue-green stains", "Push the page toward corrosion follow-up and plumbing interaction instead of a simple taste fix."),
+                            split("Taste after recent plumbing work", "Treat the symptom like a post-change verification problem before comparing treatment categories."),
+                            split("Taste across the whole house with no clear plumbing trigger", "Widen the scope to certified testing and source-versus-plumbing separation.")
+                    ),
+                    List.of(
+                            "Escalate if metallic taste appears with vulnerable-household lead exposure concerns.",
+                            "Escalate if taste is paired with blue-green staining, low pH, or visible corrosion clues.",
+                            "Escalate if the taste began right after plumbing work and does not settle out quickly."
+                    ),
                     faq(
                             item("Does metallic taste mean the well itself is contaminated?", "Not always. Plumbing interaction and corrosion can be part of the picture."),
                             item("Should I buy taste-improvement filtration first?", "No. First decide whether low pH and metal exposure need a broader test sequence."),
                             item("What is the strongest next check?", "Low pH, copper or lead follow-up, and whether the symptom is system-wide or tied to certain fixtures.")
                     )
             )),
-            Map.entry("after-flood", doc(
+            Map.entry("after-flood", winnerDoc(
                     "After a flood, treat older assumptions as stale and move into verification mode before product mode.",
                     "This is a safety-critical trigger first. Even if the visible problem looks minor, flood context raises the chance that normal nuisance logic is no longer enough.",
                     List.of(
@@ -125,6 +165,16 @@ public class PseoDecisionDocService {
                             "Post-flood treatment shopping can become a substitute for proper retesting if the sequence is wrong."
                     ),
                     "Retest after the initial flood response and again when local guidance or well conditions suggest the system has stabilized.",
+                    splits(
+                            split("Wellhead or surrounding area materially affected", "Move immediately into safer temporary water plus flood-specific testing and disinfection guidance."),
+                            split("No visible damage but floodwater reached the property", "Lower trust in older assumptions and still treat the page as verification-first."),
+                            split("Old lab results are being used to calm the decision", "Treat those results as stale until flood response and follow-up testing restore confidence.")
+                    ),
+                    List.of(
+                            "Escalate if floodwater likely contacted the wellhead, casing, or nearby surface runoff path.",
+                            "Escalate if anyone is still using old pre-flood results as the main evidence.",
+                            "Escalate if the water looks normal but the flood materially changed the site conditions."
+                    ),
                     faq(
                             item("Should I rely on old test results after a flood?", "No. Flood context can make old assumptions and older results much less reliable."),
                             item("Is this a time to compare filters?", "Usually not first. Verification, temporary safer water, and flood response steps come first."),
@@ -151,7 +201,7 @@ public class PseoDecisionDocService {
                             item("What is the best next move?", "Document the repair, watch the changed pattern, and retest the most affected signals.")
                     )
             )),
-            Map.entry("home-purchase-test", doc(
+            Map.entry("home-purchase-test", winnerDoc(
                     "A home-purchase panel is a timing-specific decision, not a complete lifetime safety verdict.",
                     "Home-purchase testing can be high-stakes because the transaction timeline is short, but it still should not be confused with a full long-term household risk plan.",
                     List.of(
@@ -165,6 +215,16 @@ public class PseoDecisionDocService {
                             "Local rules and household composition can change what counts as an adequate panel."
                     ),
                     "Retest after closing if the sale panel was narrow, state-limited, or missing issues tied to your actual household risk.",
+                    splits(
+                            split("Sale panel only", "Treat the page like a transaction checklist, not a full household-safety verdict."),
+                            split("Infants, pregnancy, or unusual geology risk", "Expand beyond the minimum sale logic because household vulnerability changes the test scope."),
+                            split("State-specific sale rules apply", "Use those rules as a floor, then decide what your real household still needs after closing.")
+                    ),
+                    List.of(
+                            "Escalate if the sale panel is being treated like a lifetime all-clear.",
+                            "Escalate if the household includes infants, pregnancy, or high-risk drinking-water use that the sale panel does not cover.",
+                            "Escalate if closing pressure is pushing you into treatment shopping before the test scope is clear."
+                    ),
                     faq(
                             item("Is a home-sale well test enough?", "Not always. It may satisfy transaction needs without covering every long-term health or geology question."),
                             item("Should I buy treatment before closing?", "Only if the scope is genuinely clear. Otherwise, separate the sale panel from longer-term decision-making."),
@@ -191,7 +251,7 @@ public class PseoDecisionDocService {
                             item("What if the retest is still bad?", "Go back into verification and scope mode instead of doubling down on the same buying assumption.")
                     )
             )),
-            Map.entry("nitrate", doc(
+            Map.entry("nitrate", winnerDoc(
                     "Nitrate is a verify-and-protect issue, especially when infants or pregnancy are in scope.",
                     "This is not a cosmetic nuisance problem. Vulnerable households move the page into safer-drinking-water and certified-testing logic first.",
                     List.of(
@@ -205,13 +265,23 @@ public class PseoDecisionDocService {
                             "Whole-house versus drinking-water-only scope matters and should not be guessed from fear."
                     ),
                     "Retest according to household vulnerability, regional risk, seasonality, and any official local guidance affecting nitrate screening cadence.",
+                    splits(
+                            split("Infants or pregnancy in scope", "Move immediately toward safer drinking water plus certified confirmation instead of routine compare browsing."),
+                            split("Agricultural or seasonal nitrate pattern", "Use repeat-screening and timing logic because one sample may not fully describe the risk window."),
+                            split("Whole-house treatment assumption", "Slow down and decide whether the real exposure question is drinking-water-only or broader use.")
+                    ),
+                    List.of(
+                            "Escalate if infant feeding or pregnancy is involved right now.",
+                            "Escalate if the water looks normal and the household is underreacting to a safety-oriented contaminant.",
+                            "Escalate if a treatment purchase is being considered before drinking-water scope is clear."
+                    ),
                     faq(
                             item("Why is nitrate treated differently from nuisance issues?", "Because the main problem is household safety and exposure management, not appearance or maintenance."),
                             item("Should I buy a filter right away?", "Not before household scope, certified confirmation, and safer temporary drinking-water decisions are clear."),
                             item("What makes nitrate urgent?", "Infants, pregnancy, and uncertainty about the current drinking-water source.")
                     )
             )),
-            Map.entry("coliform", doc(
+            Map.entry("coliform", winnerDoc(
                     "A total coliform positive is a verification and pathway question first, not a generic filter-shopping prompt.",
                     "This leans toward health and microbial caution because the main job is to confirm, interpret context, and decide whether disinfection or broader follow-up belongs in scope.",
                     List.of(
@@ -225,13 +295,23 @@ public class PseoDecisionDocService {
                             "Microbial interpretation gets weaker fast when sampling discipline is poor."
                     ),
                     "Retest on the schedule appropriate for microbial follow-up and any event context, especially after disinfection or corrective action.",
+                    splits(
+                            split("Positive after flood, repair, or vacancy", "Treat the result like an event-shaped microbial question and tighten verification before shopping."),
+                            split("Repeat positive or broader microbial concern", "Move the page toward corrective action, local guidance, and stronger disinfection-path logic."),
+                            split("Weak sample discipline", "Treat the test process itself as part of the problem before trusting any compare page.")
+                    ),
+                    List.of(
+                            "Escalate if the page is about a repeat positive rather than a one-off result.",
+                            "Escalate if sample quality or event context makes the positive hard to interpret cleanly.",
+                            "Escalate if someone is jumping straight to UV or chlorination without a tighter retest path."
+                    ),
                     faq(
                             item("Does a total coliform positive mean I should buy UV immediately?", "Not automatically. Confirmation, event context, and the corrective pathway still matter."),
                             item("Why does sample quality matter so much here?", "Because microbial decisions become weaker and more expensive when the sample itself is suspect."),
                             item("What should happen before product comparison?", "Certified retesting, context review, and a clearer view of whether the issue is transient, structural, or confirmed.")
                     )
             )),
-            Map.entry("arsenic", doc(
+            Map.entry("arsenic", winnerDoc(
                     "Arsenic is a health-and-scope issue first. Treatment comparison belongs after lab confidence and household scope are clear.",
                     "This is not a nuisance page. The key question is whether the result is confirmed, what the household actually drinks, and whether regional geology changes the testing path.",
                     List.of(
@@ -245,13 +325,23 @@ public class PseoDecisionDocService {
                             "An arsenic result still needs scope discipline; fear is not the same thing as a good whole-house decision."
                     ),
                     "Retest according to certified lab guidance, any treatment install, and the regional risk profile that shaped the original scope decision.",
+                    splits(
+                            split("Certified result with regional geology context", "Take the page more seriously as a treatment-scope decision and widen the testing plan where geology suggests it."),
+                            split("Single result without strong lab confidence", "Keep the page in verification mode rather than collapsing into category shopping."),
+                            split("Whole-house assumption from fear alone", "Slow down and decide whether the real risk path is drinking-water exposure or broader household use.")
+                    ),
+                    List.of(
+                            "Escalate if arsenic is being treated like a simple nuisance page because the water looks normal.",
+                            "Escalate if regional bedrock context suggests radionuclides or related tests may also belong in scope.",
+                            "Escalate if treatment comparison is starting before the result confidence is strong enough."
+                    ),
                     faq(
                             item("Is arsenic a whole-house problem by default?", "Not automatically. The best scope depends on how the water is used and what the verified exposure question actually is."),
                             item("Should I compare RO and adsorptive media immediately?", "Only after you have enough confidence in the result and in the use-case scope."),
                             item("Why does regional context matter so much?", "Because geology can change what else belongs in the test plan and how the result should be interpreted.")
                     )
             )),
-            Map.entry("lead", doc(
+            Map.entry("lead", winnerDoc(
                     "Lead belongs in a corrosion-and-exposure workflow first, not a generic taste or filter workflow.",
                     "Lead often rides with plumbing interaction, low pH, or fixture-specific clues, which means the page should tighten testing and scope before anyone treats it like a normal nuisance problem.",
                     List.of(
@@ -265,6 +355,16 @@ public class PseoDecisionDocService {
                             "Taste and appearance are weak signals for lead exposure on their own."
                     ),
                     "Retest after corrosion correction, plumbing changes, or any intervention meant to reduce exposure risk.",
+                    splits(
+                            split("Lead plus low pH or corrosion clues", "Bias the page toward corrosion correction and plumbing interaction, not just end-of-line shopping."),
+                            split("Fixture-specific or first-draw pattern", "Tighten the exposure path before you treat the whole house like the same problem."),
+                            split("Vulnerable household or child exposure concern", "Raise urgency and keep the page in exposure-control mode until follow-up testing is clearer.")
+                    ),
+                    List.of(
+                            "Escalate if infants, children, or pregnancy change the exposure threshold for action.",
+                            "Escalate if low pH, blue-green stains, or recent plumbing work suggest corrosion is actively shaping the result.",
+                            "Escalate if the page is drifting into simple taste or filter logic before the exposure path is understood."
+                    ),
                     faq(
                             item("Does lead always mean the well source is the problem?", "No. Plumbing interaction and corrosivity can be part of the decision path."),
                             item("Should I buy a drinking-water filter immediately?", "Not before the page and the follow-up testing narrow where the risk is entering the system."),
@@ -505,14 +605,35 @@ public class PseoDecisionDocService {
             String retestTiming,
             List<PseoFaqItem> faqs
     ) {
-        return new PseoDecisionDoc(oneLineVerdict, healthVsNuisance, nextSteps, commonConfusions, retestTiming, faqs);
+        return new PseoDecisionDoc(oneLineVerdict, healthVsNuisance, nextSteps, commonConfusions, retestTiming, List.of(), List.of(), faqs);
+    }
+
+    private PseoDecisionDoc winnerDoc(
+            String oneLineVerdict,
+            String healthVsNuisance,
+            List<String> nextSteps,
+            List<String> commonConfusions,
+            String retestTiming,
+            List<PseoDecisionSplit> decisionSplits,
+            List<String> escalationSignals,
+            List<PseoFaqItem> faqs
+    ) {
+        return new PseoDecisionDoc(oneLineVerdict, healthVsNuisance, nextSteps, commonConfusions, retestTiming, decisionSplits, escalationSignals, faqs);
     }
 
     private List<PseoFaqItem> faq(PseoFaqItem... items) {
         return List.of(items);
     }
 
+    private List<PseoDecisionSplit> splits(PseoDecisionSplit... items) {
+        return List.of(items);
+    }
+
     private PseoFaqItem item(String question, String answer) {
         return new PseoFaqItem(question, answer);
+    }
+
+    private PseoDecisionSplit split(String signal, String meaning) {
+        return new PseoDecisionSplit(signal, meaning);
     }
 }
