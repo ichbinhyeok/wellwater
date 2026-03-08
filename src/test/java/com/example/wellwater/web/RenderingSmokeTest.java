@@ -55,13 +55,14 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,nofollow")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Symbol (Optional)")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Add lab and household context")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("No symbol (Exact number)")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("MPN / 100mL")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Companion Report Lines")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Add report line")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Other Context Flags")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Run Decision Engine")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Run with basic result")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Run with added context")));
     }
 
     @Test
@@ -298,11 +299,13 @@ class RenderingSmokeTest {
         mockMvc.perform(get("/trust"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust pages")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Methodology")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Methodology")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Early follow-up")));
 
         mockMvc.perform(get("/trust/methodology"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How This Site Turns Well-Water Clues Into Next Steps")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/trust/methodology\"")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/trust/methodology\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Early follow-up")));
     }
 }

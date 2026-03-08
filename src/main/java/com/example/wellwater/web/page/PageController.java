@@ -42,13 +42,27 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model
+    ) {
         trackPublicPageView("home", "", "", "/", "indexable");
         model.addAttribute("familyCounts", pseoCatalogService.familyCounts());
         model.addAttribute("totalPageCount", pseoCatalogService.allPages().size());
         model.addAttribute("priorityPages", pseoExperienceService.priorityPages(16));
         model.addAttribute("featuredRegionalPages", pseoExperienceService.featuredRegionalPages());
         model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", new LeadCaptureContext(
+                "Not ready to enter lab data yet?",
+                "Leave an email and a short note if you only have a smell, stain, recent change, or a general well-water concern.",
+                "Request follow-up",
+                "/",
+                "home",
+                "home",
+                "",
+                "Water Verdict home"
+        ));
         model.addAttribute("seo", seoMetadataService.home(
                 "Water Verdict | Results, Symptoms, and Next Steps",
                 "Use test results, water symptoms, or recent changes to decide what to verify next for a private well."
@@ -139,9 +153,23 @@ public class PageController {
     }
 
     @GetMapping("/trust")
-    public String trustHub(Model model) {
+    public String trustHub(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model
+    ) {
         trackPublicPageView("trust-hub", "trust", "", "/trust", "indexable");
         model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", new LeadCaptureContext(
+                "Need help before you use the tool?",
+                "Leave an email if you have a well-water concern but are not ready to enter results. This keeps trust reading from becoming a dead end.",
+                "Request follow-up",
+                "/trust",
+                "trust-hub",
+                "trust",
+                "trust",
+                "Trust hub"
+        ));
         model.addAttribute("seo", seoMetadataService.trustHub(
                 "Trust And Method | Water Verdict",
                 "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface."
@@ -150,7 +178,12 @@ public class PageController {
     }
 
     @GetMapping("/trust/{slug}")
-    public String trustPage(@PathVariable String slug, Model model, HttpServletResponse response) {
+    public String trustPage(
+            @PathVariable String slug,
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model,
+            HttpServletResponse response
+    ) {
         var maybePage = trustPageService.findBySlug(slug);
         if (maybePage.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -160,6 +193,17 @@ public class PageController {
         trackPublicPageView("trust-page", maybePage.get().slug(), "", "/trust/" + maybePage.get().slug(), "indexable");
         model.addAttribute("page", maybePage.get());
         model.addAttribute("trustPages", trustPageService.allPages());
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", new LeadCaptureContext(
+                "Want a follow-up before you enter results?",
+                "Leave an email and a short note if this trust page matches your situation but you are still in the suspicion or scoping phase.",
+                "Request follow-up",
+                "/trust/" + maybePage.get().slug(),
+                "trust-page",
+                "trust",
+                maybePage.get().slug(),
+                maybePage.get().h1()
+        ));
         model.addAttribute("seo", seoMetadataService.trustPage(maybePage.get()));
         return "pages/trust/view";
     }

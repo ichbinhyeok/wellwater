@@ -473,6 +473,14 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         }
 
+        .hero-grid > *,
+        .detail-grid > *,
+        .grid > *,
+        .stack > *,
+        .section-header > * {
+            min-width: 0;
+        }
+
         .grid-compact {
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         }
@@ -480,6 +488,7 @@
         .card-link {
             display: grid;
             gap: 12px;
+            min-width: 0;
             min-height: 100%;
             padding: 22px;
             border-radius: var(--radius-md);
@@ -521,6 +530,13 @@
         .card-meta {
             color: var(--muted);
             font-size: 0.94rem;
+        }
+
+        .card-link h3,
+        .card-meta,
+        .meta-value {
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         .muted {
@@ -660,7 +676,6 @@
         .meta-value {
             color: var(--text);
             font-size: 0.95rem;
-            word-break: break-word;
         }
 
         .site-footer {

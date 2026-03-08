@@ -548,12 +548,12 @@
                             <h4 class="text-lg font-bold text-white mb-2 tracking-tight">Need more help?</h4>
                             <p class="text-zinc-400 text-sm leading-relaxed">Review certified guidance and trusted local resources before making any purchase decision.</p>
                         </div>
-                        <div class="flex items-center gap-3 w-full lg:w-auto flex-col sm:flex-row">
+                        <div class="flex items-stretch sm:items-center gap-3 w-full lg:w-auto flex-col sm:flex-row sm:flex-wrap">
                             @for(var cta : ctaLinks)
                                 @if(cta.type().contains("affiliate") || cta.type().contains("partner"))
-                                    <a href="${cta.outboundUrl()}" class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-white text-zinc-900 hover:bg-zinc-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/50 inline-block text-center whitespace-nowrap">${cta.label()}</a>
+                                    <a href="${cta.outboundUrl()}" class="w-full sm:w-auto max-w-full px-5 py-3 rounded-xl font-semibold text-sm bg-white text-zinc-900 hover:bg-zinc-100 transition-all shadow-[0_0_20px_rgba(255,255,255,0.15)] ring-1 ring-white/50 inline-block text-center">${cta.label()}</a>
                                 @else
-                                    <a href="${cta.outboundUrl()}" class="w-full sm:w-auto px-5 py-3 rounded-xl font-semibold text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition-colors border border-zinc-700 shadow-sm inline-block text-center whitespace-nowrap">${cta.label()}</a>
+                                    <a href="${cta.outboundUrl()}" class="w-full sm:w-auto max-w-full px-5 py-3 rounded-xl font-semibold text-sm bg-zinc-800 text-white hover:bg-zinc-700 transition-colors border border-zinc-700 shadow-sm inline-block text-center">${cta.label()}</a>
                                 @endif
                             @endfor
                         </div>

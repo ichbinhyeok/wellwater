@@ -46,7 +46,7 @@ class PageControllerTest {
     @Test
     void homeRendersWithJteTemplate() {
         Model model = new ExtendedModelMap();
-        String viewName = controller.home(model);
+        String viewName = controller.home(null, model);
 
         assertEquals("pages/home", viewName);
         assertNotNull(model.getAttribute("familyCounts"));
@@ -54,6 +54,8 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("priorityPages"));
         assertNotNull(model.getAttribute("featuredRegionalPages"));
         assertNotNull(model.getAttribute("trustPages"));
+        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
         @SuppressWarnings("unchecked")
         List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages =
@@ -190,10 +192,12 @@ class PageControllerTest {
     void trustHubRendersWithPages() {
         Model model = new ExtendedModelMap();
 
-        String viewName = controller.trustHub(model);
+        String viewName = controller.trustHub(null, model);
 
         assertEquals("pages/trust/list", viewName);
         assertNotNull(model.getAttribute("trustPages"));
+        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
     }
 
@@ -202,11 +206,13 @@ class PageControllerTest {
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        String viewName = controller.trustPage("methodology", model, response);
+        String viewName = controller.trustPage("methodology", null, model, response);
 
         assertEquals("pages/trust/view", viewName);
         assertEquals(200, response.getStatus());
         assertNotNull(model.getAttribute("page"));
+        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
     }
 }

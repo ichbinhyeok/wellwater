@@ -143,9 +143,9 @@
         }
     </style>
 </head>
-<body class="min-h-screen w-full overflow-hidden text-zinc-900">
+<body class="min-h-screen w-full overflow-x-hidden text-zinc-900">
     <div class="engine-frame w-full px-3 py-3 lg:px-5 lg:py-5">
-        <div class="engine-shell min-h-[calc(100vh-24px)] lg:min-h-0 rounded-[28px] lg:rounded-[34px] overflow-hidden flex flex-col lg:flex-row shadow-float">
+        <div class="engine-shell min-h-[calc(100vh-24px)] lg:min-h-[calc(100vh-40px)] rounded-[28px] lg:rounded-[34px] overflow-hidden flex flex-col lg:flex-row shadow-float">
             <section class="engine-left w-full lg:w-1/2 flex flex-col relative z-30 overflow-visible lg:overflow-y-auto no-scrollbar pt-6 lg:pt-8 px-6 lg:px-10 xl:px-14">
                 <header class="mb-8 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4 min-w-0">
