@@ -10,10 +10,12 @@ import com.example.wellwater.pseo.PseoFamilyView;
 import com.example.wellwater.pseo.RegionalContextRegistryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.ui.ExtendedModelMap;
+import org.springframework.ui.Model;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,8 +52,15 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("familyCounts"));
         assertNotNull(model.getAttribute("totalPageCount"));
         assertNotNull(model.getAttribute("priorityPages"));
+        assertNotNull(model.getAttribute("featuredRegionalPages"));
         assertNotNull(model.getAttribute("trustPages"));
         assertNotNull(model.getAttribute("seo"));
+        @SuppressWarnings("unchecked")
+        List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages =
+                (List<com.example.wellwater.pseo.PseoPage>) model.getAttribute("featuredRegionalPages");
+        assertNotNull(featuredRegionalPages);
+        assertEquals(4, featuredRegionalPages.size());
+        assertEquals("north-carolina-private-well-water-faqs", featuredRegionalPages.get(0).slug());
     }
 
     @Test

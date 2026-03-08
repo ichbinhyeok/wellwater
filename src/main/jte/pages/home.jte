@@ -1,6 +1,7 @@
 @param java.util.Map<String, Long> familyCounts
 @param Integer totalPageCount
 @param java.util.List<com.example.wellwater.pseo.PseoPage> priorityPages
+@param java.util.List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages
 @param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
 @param com.example.wellwater.web.page.SeoMetadata seo
 
@@ -126,6 +127,27 @@
                 <a class="chip" href="/well-water/family/compares">Comparisons</a>
             </div>
         </section>
+
+        @if (!featuredRegionalPages.isEmpty())
+            <section class="panel panel-accent">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">State-specific paths</p>
+                        <h2>Featured regional guides with official lab and guidance handoff</h2>
+                    </div>
+                    <p class="section-copy">These are the strongest local-entry pages right now because they change the next step based on state guidance, certified lab routing, and event context.</p>
+                </div>
+                <div class="grid">
+                    @for (var page : featuredRegionalPages)
+                        <a class="card-link card-link-accent" href="/well-water/${page.slug()}">
+                            <span class="card-kicker">${page.family()}</span>
+                            <h3>${page.h1()}</h3>
+                            <p class="card-meta">${page.metaDescription()}</p>
+                        </a>
+                    @endfor
+                </div>
+            </section>
+        @endif
 
         <section class="panel desktop-only">
             <div class="section-header">

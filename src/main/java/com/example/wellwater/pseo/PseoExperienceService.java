@@ -59,12 +59,18 @@ public class PseoExperienceService {
             "new-baby-at-home",
             "test-kit-vs-certified-lab"
     );
+    private static final List<String> FEATURED_REGIONAL_SLUGS = List.of(
+            "north-carolina-private-well-water-faqs",
+            "virginia-private-well-testing-program",
+            "oregon-private-well-testing-recommendations",
+            "washington-private-well-water-testing"
+    );
     private static final Map<String, List<String>> FAMILY_STARTER_SLUGS = Map.of(
             "contaminants", List.of("nitrate", "coliform", "arsenic"),
             "symptoms", List.of("rotten-egg-smell", "cloudy-water", "orange-stains"),
             "compares", List.of("test-kit-vs-certified-lab", "whole-house-vs-under-sink-ro", "uv-vs-chlorination"),
             "triggers", List.of("after-flood", "home-purchase-test", "after-heavy-rain"),
-            "regional", List.of("new-jersey-pwta-private-well-testing", "new-hampshire-arsenic-well-water", "florida-rotten-egg-smell-well-water"),
+            "regional", FEATURED_REGIONAL_SLUGS,
             "authority", List.of("how-to-read-a-well-water-lab-report", "private-well-home-sale-testing-by-state", "private-well-testing-schedule-by-household")
     );
     private static final Map<String, Set<String>> CLUSTER_COMPANIONS = Map.ofEntries(
@@ -146,6 +152,24 @@ public class PseoExperienceService {
             addUnique(ordered, allPages.stream()
                     .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
                     .toList(), limit);
+        }
+        return List.copyOf(ordered);
+    }
+
+    public List<PseoPage> featuredRegionalPages() {
+        List<PseoPage> regionalPages = catalogService.byFamily("regional");
+        if (regionalPages.isEmpty()) {
+            return List.of();
+        }
+        LinkedHashMap<String, PseoPage> bySlug = regionalPages.stream()
+                .collect(Collectors.toMap(PseoPage::slug, page -> page, (left, right) -> left, LinkedHashMap::new));
+        List<PseoPage> ordered = new ArrayList<>();
+        addBySlugOrder(ordered, bySlug, FEATURED_REGIONAL_SLUGS, FEATURED_REGIONAL_SLUGS.size());
+        if (ordered.size() < FEATURED_REGIONAL_SLUGS.size()) {
+            addUnique(ordered, regionalPages.stream()
+                    .filter(page -> "A".equals(page.normalizedTier()))
+                    .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
+                    .toList(), FEATURED_REGIONAL_SLUGS.size());
         }
         return List.copyOf(ordered);
     }
@@ -438,16 +462,24 @@ public class PseoExperienceService {
         if (pages == null || pages.isEmpty()) {
             return List.of();
         }
+        int limit = familyStarterLimit(family);
         LinkedHashMap<String, PseoPage> bySlug = pages.stream()
                 .collect(Collectors.toMap(PseoPage::slug, page -> page, (left, right) -> left, LinkedHashMap::new));
         List<PseoPage> starters = new ArrayList<>();
-        addBySlugOrder(starters, bySlug, FAMILY_STARTER_SLUGS.getOrDefault(family, List.of()), 3);
-        if (starters.size() < 3) {
+        addBySlugOrder(starters, bySlug, FAMILY_STARTER_SLUGS.getOrDefault(family, List.of()), limit);
+        if (starters.size() < limit) {
             addUnique(starters, pages.stream()
                     .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
-                    .toList(), 3);
+                    .toList(), limit);
         }
         return List.copyOf(starters);
+    }
+
+    private int familyStarterLimit(String family) {
+        if ("regional".equals(family)) {
+            return 4;
+        }
+        return 3;
     }
 
     private List<String> familyCommonMistakes(String family) {

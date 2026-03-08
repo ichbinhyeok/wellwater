@@ -47,6 +47,7 @@ public class PageController {
         model.addAttribute("familyCounts", pseoCatalogService.familyCounts());
         model.addAttribute("totalPageCount", pseoCatalogService.allPages().size());
         model.addAttribute("priorityPages", pseoExperienceService.priorityPages(16));
+        model.addAttribute("featuredRegionalPages", pseoExperienceService.featuredRegionalPages());
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("seo", seoMetadataService.home(
                 "Private Well Water Guide | Results, Symptoms, and Next Steps",

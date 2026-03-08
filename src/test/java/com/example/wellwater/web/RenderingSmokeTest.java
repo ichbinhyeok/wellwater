@@ -40,6 +40,8 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a safer next step")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Rotten Egg Smell in Well Water")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Featured regional guides with official lab and guidance handoff")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("North Carolina Private Well Water FAQ and Testing Path")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional Guides")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority Articles")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust surface")))

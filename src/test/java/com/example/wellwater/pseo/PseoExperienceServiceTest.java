@@ -4,6 +4,7 @@ import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -167,6 +168,36 @@ class PseoExperienceServiceTest {
         assertEquals("rotten-egg-smell", priorityPages.get(0).slug());
         assertEquals("nitrate", priorityPages.get(1).slug());
         assertEquals("coliform", priorityPages.get(2).slug());
+    }
+
+    @Test
+    void featuredRegionalPagesPreferNewATierLaunchPages() {
+        List<String> slugs = experienceService.featuredRegionalPages().stream()
+                .map(PseoPage::slug)
+                .collect(Collectors.toList());
+
+        assertEquals(List.of(
+                "north-carolina-private-well-water-faqs",
+                "virginia-private-well-testing-program",
+                "oregon-private-well-testing-recommendations",
+                "washington-private-well-water-testing"
+        ), slugs);
+    }
+
+    @Test
+    void regionalFamilyViewNowStartsWithFourATierStatePages() {
+        PseoFamilyView familyView = experienceService.familyView("regional", catalogService.byFamily("regional"));
+        List<String> slugs = familyView.starterPages().stream()
+                .map(PseoPage::slug)
+                .collect(Collectors.toList());
+
+        assertEquals(4, familyView.starterPages().size());
+        assertEquals(List.of(
+                "north-carolina-private-well-water-faqs",
+                "virginia-private-well-testing-program",
+                "oregon-private-well-testing-recommendations",
+                "washington-private-well-water-testing"
+        ), slugs);
     }
 
     @Test
