@@ -102,10 +102,10 @@ jobs:
         env:
           OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
         run: |
-          ssh -p "${OCI_PORT}" -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST_CLEAN}" <<EOF
+          ssh -T -p "${OCI_PORT}" -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST_CLEAN}" <<'EOF'
           set -eu
-          mkdir -p "${DEPLOY_PATH}/data"
-          cd "${DEPLOY_PATH}"
+          mkdir -p ~/deploy/waterverdict/data
+          cd ~/deploy/waterverdict
 
           cat > .env <<'ENVEOF'
           SPRING_PROFILES_ACTIVE=prod
@@ -114,25 +114,25 @@ jobs:
           APP_ADMIN_PASSWORD=shinhyeok
           ENVEOF
 
-          cat > docker-compose.yml <<COMPOSEEOF
+          cat > docker-compose.yml <<'COMPOSEEOF'
           services:
             app:
-              image: ${DOCKERHUB_IMAGE}:latest
-              container_name: ${APP_NAME}
+              image: shinhyeok22/waterverdict:latest
+              container_name: waterverdict
               restart: unless-stopped
               ports:
-                - "${HOST_PORT}:${CONTAINER_PORT}"
+                - "8809:8080"
               environment:
-                SPRING_PROFILES_ACTIVE: \${SPRING_PROFILES_ACTIVE}
-                APP_SITE_BASE_URL: \${APP_SITE_BASE_URL}
-                APP_ADMIN_USERNAME: \${APP_ADMIN_USERNAME}
-                APP_ADMIN_PASSWORD: \${APP_ADMIN_PASSWORD}
+                SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE}
+                APP_SITE_BASE_URL: ${APP_SITE_BASE_URL}
+                APP_ADMIN_USERNAME: ${APP_ADMIN_USERNAME}
+                APP_ADMIN_PASSWORD: ${APP_ADMIN_PASSWORD}
               volumes:
                 - ./data:/app/data
               mem_limit: 512m
           COMPOSEEOF
 
-          echo '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' --password-stdin
+          printf '%s' '${{ secrets.DOCKERHUB_TOKEN }}' | docker login -u '${{ secrets.DOCKERHUB_USERNAME }}' --password-stdin
           docker compose pull
           docker compose up -d --remove-orphans
           docker image prune -f
