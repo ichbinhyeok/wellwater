@@ -60,6 +60,33 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Normalize OCI SSH target
+        shell: bash
+        run: |
+          RAW_HOST='${{ secrets.OCI_HOST }}'
+          RAW_HOST="${RAW_HOST//$'\r'/}"
+          RAW_HOST="${RAW_HOST//$'\n'/}"
+          RAW_HOST="$(echo "${RAW_HOST}" | xargs)"
+          RAW_HOST="${RAW_HOST#http://}"
+          RAW_HOST="${RAW_HOST#https://}"
+          RAW_HOST="${RAW_HOST%%/*}"
+
+          OCI_HOST_CLEAN="${RAW_HOST}"
+          OCI_PORT="22"
+
+          if [[ "${OCI_HOST_CLEAN}" == *:* && "${OCI_HOST_CLEAN}" != \[*\] ]]; then
+            OCI_PORT="${OCI_HOST_CLEAN##*:}"
+            OCI_HOST_CLEAN="${OCI_HOST_CLEAN%:*}"
+          fi
+
+          if [[ -z "${OCI_HOST_CLEAN}" ]]; then
+            echo "OCI_HOST secret is empty or invalid after normalization."
+            exit 1
+          fi
+
+          echo "OCI_HOST_CLEAN=${OCI_HOST_CLEAN}" >> "${GITHUB_ENV}"
+          echo "OCI_PORT=${OCI_PORT}" >> "${GITHUB_ENV}"
+
       - name: Configure SSH
         shell: bash
         run: |
@@ -68,15 +95,14 @@ jobs:
           ${{ secrets.OCI_KEY }}
           KEY
           chmod 600 ~/.ssh/oci_key
-          ssh-keyscan -H "${{ secrets.OCI_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -p "${OCI_PORT}" -H "${OCI_HOST_CLEAN}" >> ~/.ssh/known_hosts
 
       - name: Deploy to OCI
         shell: bash
         env:
-          OCI_HOST: ${{ secrets.OCI_HOST }}
           OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
         run: |
-          ssh -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST}" <<EOF
+          ssh -p "${OCI_PORT}" -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST_CLEAN}" <<EOF
           set -eu
           mkdir -p "${DEPLOY_PATH}/data"
           cd "${DEPLOY_PATH}"
