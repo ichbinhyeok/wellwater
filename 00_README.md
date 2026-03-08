@@ -116,6 +116,7 @@ Use these files as the current source of truth:
 - `10_Implementation_Plan_SpringBoot_JTE.md`
 - `11_Source_Data_Collection_Policy.md`
 - `12_PSEO_MVP_Playbook.md`
+- `13_Current_SEO_Implementation_Notes.md`
 
 Session-specific handoff files have been removed so the active documentation set stays clean.
 
