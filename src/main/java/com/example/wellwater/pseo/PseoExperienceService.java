@@ -659,10 +659,40 @@ public class PseoExperienceService {
         if (citation == null || citation.url() == null || citation.url().isBlank()) {
             return;
         }
-        String key = (citation.label() == null ? "" : citation.label().trim().toLowerCase(Locale.ROOT))
-                + "::"
-                + citation.url().trim();
-        citations.putIfAbsent(key, citation);
+        String key = citation.url().trim().toLowerCase(Locale.ROOT);
+        PseoCitation existing = citations.get(key);
+        if (existing == null || shouldReplaceCitation(existing, citation)) {
+            citations.put(key, citation);
+        }
+    }
+
+    private boolean shouldReplaceCitation(PseoCitation existing, PseoCitation candidate) {
+        String existingLabel = normalizeCitationLabel(existing);
+        String candidateLabel = normalizeCitationLabel(candidate);
+        if (existingLabel.isBlank()) {
+            return !candidateLabel.isBlank();
+        }
+        if (candidateLabel.isBlank()) {
+            return false;
+        }
+        if (isGenericCitationLabel(existingLabel) && !isGenericCitationLabel(candidateLabel)) {
+            return true;
+        }
+        if (!isGenericCitationLabel(existingLabel) && isGenericCitationLabel(candidateLabel)) {
+            return false;
+        }
+        return candidateLabel.length() > existingLabel.length();
+    }
+
+    private String normalizeCitationLabel(PseoCitation citation) {
+        if (citation == null || citation.label() == null) {
+            return "";
+        }
+        return citation.label().trim().toLowerCase(Locale.ROOT);
+    }
+
+    private boolean isGenericCitationLabel(String label) {
+        return label.isBlank() || "primary official source".equals(label);
     }
 
     private Optional<String> stateHint(PseoPage page) {

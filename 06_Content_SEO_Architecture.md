@@ -25,6 +25,8 @@ It is trying to rank situation queries where the user needs the next safe step.
 Public pages orient the situation.
 Noindex result pages do the more personalized reasoning.
 
+Regional public pages now also expose visible state-aware guidance and certified lab routing when local context changes the next action.
+
 ## 3. Current Page Families
 
 ### Contaminants
@@ -75,6 +77,9 @@ Examples:
 - Connecticut low pH
 - New York PFAS
 
+Regional pages are justified only when there is a real state delta.
+That delta is now tracked in `data/registry/regional_context_registry.csv` and rendered into the public detail experience.
+
 ### Authority
 Use when the user needs a trust-building or claim-check document.
 Examples:
@@ -107,6 +112,10 @@ Current link directions:
 - regional page -> matching contaminant, symptom, compare, and authority pages
 - authority page -> matching compare pages or core cluster pages
 
+Regional pages should also link outward using the state delta:
+- regional page -> state guidance
+- regional page -> certified lab path
+
 ## 6. Commercial Positioning
 
 The commercial layer is currently internal-first.
@@ -130,6 +139,8 @@ The highest-intent public pages now carry deeper answer blocks:
 - common confusions
 - FAQ
 
+Winner regional pages now use the same pattern when local guidance changes what the user should do first.
+
 Current core set:
 - rotten-egg-smell
 - orange-stains
@@ -143,6 +154,11 @@ Current core set:
 - nitrate
 - coliform
 - arsenic
+- new-hampshire-arsenic-well-water
+- florida-rotten-egg-smell-well-water
+- iowa-nitrate-baby-well-water
+- connecticut-low-ph-blue-green-stains
+- pennsylvania-private-well-radon
 
 ## 8. Structured Search Signals
 
@@ -150,6 +166,8 @@ Public pages currently include:
 - canonical URL
 - breadcrumb markup
 - JSON-LD
+- visible review and traceability metadata in the page body
+- source count and linked official citations on detail pages
 
 Trust pages use static page markup.
 Detail pages use structured data tied to the page context and breadcrumb hierarchy.
@@ -163,6 +181,12 @@ A new page family or page variant is justified only when:
 - the next action changes
 - the evidence hierarchy changes
 - the page can link into a meaningful cluster
+
+For regional pages, that rule is stricter:
+- the state must change the decision sequence
+- the page must have a state guidance path
+- the page must have a certified lab path
+- the delta must be explicit enough to show on-page
 
 ## 10. Near-Term Growth Rule
 

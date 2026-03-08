@@ -9,9 +9,11 @@ This repo is no longer just a pSEO skeleton.
 Current public surface:
 - indexable home page
 - family hubs for `contaminants`, `symptoms`, `compares`, `triggers`, `regional`, `authority`
-- 98 pSEO detail pages backed by CSV
+- 97 pSEO detail pages backed by CSV and registry context
 - trust hub and 4 trust pages at `/trust/*`
 - structured data, canonical, and breadcrumb support on public pages
+- visible review and traceability block on public detail pages
+- regional detail pages that surface state-specific decision deltas, guidance, and certified lab paths
 
 Current tool surface:
 - `/tool/result-first`
@@ -62,6 +64,14 @@ Core high-intent pages also have a deeper decision-doc layer with:
 - common confusion block
 - FAQ
 
+Regional winner pages now follow the same depth model when state context changes the next action.
+Current examples include:
+- New Hampshire arsenic
+- Florida sulfur smell
+- Iowa nitrate and baby-risk follow-up
+- Connecticut low pH and blue-green stains
+- Pennsylvania radon
+
 ## Commercial Readiness
 
 The current site can support partner or lead routing for the right clusters.
@@ -108,3 +118,8 @@ Use these files as the current source of truth:
 - `12_PSEO_MVP_Playbook.md`
 
 Session-specific handoff files have been removed so the active documentation set stays clean.
+
+For current SEO implementation truth, also check:
+- `data/registry/regional_context_registry.csv`
+- `src/main/java/com/example/wellwater/pseo/RegionalContextRegistryService.java`
+- `src/main/jte/pages/pseo/detail.jte`

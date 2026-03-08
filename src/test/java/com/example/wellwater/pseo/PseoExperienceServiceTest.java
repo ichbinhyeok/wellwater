@@ -89,8 +89,10 @@ class PseoExperienceServiceTest {
     void regionalPagesExposeStateGuidanceAndLabCitations() {
         PseoDetailView detailView = experienceService.detailView("texas-private-well-sampling-testing").orElseThrow();
 
+        assertEquals(3, detailView.citations().size());
         assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX testing guidance")));
         assertTrue(detailView.citations().stream().anyMatch(citation -> citation.label().equals("TX certified lab path")));
+        assertFalse(detailView.citations().stream().anyMatch(citation -> citation.label().equals("Primary official source")));
     }
 
     @Test

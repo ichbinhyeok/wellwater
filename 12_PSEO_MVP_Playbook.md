@@ -18,6 +18,8 @@ Public surface now includes:
 - structured metadata
 - regional and authority clusters
 - lead capture on high-intent public pages
+- visible review and traceability on public detail pages
+- state-delta blocks on regional pages
 
 Decision surface now includes:
 - result-first
@@ -26,6 +28,8 @@ Decision surface now includes:
 - noindex result page
 - branch-based CTA routing
 - state guidance and certified lab routing
+
+Regional context is now backed by `data/registry/regional_context_registry.csv`, not by page copy alone.
 
 ## 3. Current Content Logic
 
@@ -78,6 +82,14 @@ The current core 12 pages carry deeper blocks:
 
 That is the right model for future waves too.
 
+The same rule now applies to regional winner pages when a state changes the next action.
+Current regional winner set:
+- new-hampshire-arsenic-well-water
+- florida-rotten-egg-smell-well-water
+- iowa-nitrate-baby-well-water
+- connecticut-low-ph-blue-green-stains
+- pennsylvania-private-well-radon
+
 ## 7. What Qualifies As A Good New Page
 
 A new page is justified only when at least one of these changes:
@@ -96,6 +108,9 @@ Good cluster shapes in this repo:
 - contaminant -> authority -> compare -> tool
 - trigger -> state guidance -> tool
 - regional -> authority -> compare -> tool
+
+For state-aware pages, the route should read:
+- regional delta -> state guidance -> certified lab path -> authority or compare -> tool
 
 Weak cluster shape:
 - page -> vendor link
@@ -117,3 +132,8 @@ Use this order:
 2. expand scenario compare pages
 3. activate verified partner links only where the page already earns them
 4. expand clusters, not just page count
+
+Current maintenance rule:
+- refresh registries before widening page count
+- prefer stronger state deltas over new state-name variants
+- keep public trust copy aligned with what the page can actually cite and route to
