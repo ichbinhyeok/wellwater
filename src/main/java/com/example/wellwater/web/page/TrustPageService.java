@@ -134,6 +134,99 @@ public class TrustPageService {
                             "Low-confidence paths should carry more caution, not more aggressive calls to action.",
                             "If a page cannot justify a product path from the available evidence, the correct output is to keep the user in verification mode."
                     )
+            ),
+            page(
+                    "reviewers-and-expertise",
+                    "Reviewers And Expertise",
+                    "Who Reviews This Well-Water Guidance",
+                    "See who reviews this site, what kind of expertise is represented, and what this editorial desk can and cannot verify.",
+                    "Reviewers",
+                    "This page makes the reviewer surface explicit so the site does not ask for trust through tone alone.",
+                    "Trust gets stronger when visitors can see who is responsible for judgment, limits, refreshes, and claim-check discipline.",
+                    "2026-03-08",
+                    section(
+                            "Editorial desk",
+                            "This site is reviewed by a named editorial desk instead of pretending the content is anonymous or auto-generated.",
+                            "Editorial lead: Private Well Editorial Desk.",
+                            "Primary review focus: private-well testing logic, result interpretation, scope control, and claim-check discipline.",
+                            "Commercial review focus: whether a page has earned a compare or partner handoff without skipping evidence."
+                    ),
+                    section(
+                            "What the review actually covers",
+                            "Reviewer visibility matters only if it is tied to concrete review responsibilities.",
+                            "High-risk health pages should be reviewed for escalation logic, benchmark language, and unsupported claims.",
+                            "Nuisance and equipment pages should still be reviewed for scope mistakes, maintenance burden, and over-buying risk.",
+                            "State-aware pages should be checked when local guidance changes, not just when the copy feels old."
+                    ),
+                    section(
+                            "What this expertise does not claim",
+                            "This site is still a decision-support product, not a substitute for a state lab, a physician, or emergency instructions.",
+                            "Reviewer visibility does not turn one page into a household-specific diagnosis.",
+                            "Where evidence is weak, the review standard is to narrow the recommendation instead of sounding more certain.",
+                            "If a page needs stronger local or lab input, the correct output is to route the user outward."
+                    )
+            ),
+            page(
+                    "privacy-and-data-handling",
+                    "Privacy And Data Handling",
+                    "How This Site Handles Saved Results, Follow-Up Requests, and Analytics",
+                    "Understand what this site stores when you save a result, request follow-up, or click through a decision path.",
+                    "Privacy and data",
+                    "This page explains the minimum data stored by the current product and the limits of that storage model.",
+                    "A diagnostic product that stores results and follow-up requests should explain retention, visibility, and limits in plain English.",
+                    "2026-03-08",
+                    section(
+                            "What is stored today",
+                            "The current product stores a limited set of operational data so results can be reopened and follow-up requests can be reviewed.",
+                            "Saved results are stored as private snapshot files with a time limit instead of being published as indexable pages.",
+                            "Analytics events record route behavior such as tool entry, result views, and CTA clicks.",
+                            "Lead requests store the contact details and page context the visitor explicitly submitted."
+                    ),
+                    section(
+                            "What this storage model is for",
+                            "The point of storage is to support decision continuity, not to silently create public profiles.",
+                            "Saved results exist so a household can reopen, share, or export a private decision snapshot.",
+                            "Analytics are used to understand which clusters lead to testing, compare clicks, and follow-up demand.",
+                            "Follow-up requests exist so high-intent visitors do not hit a dead end after a result."
+                    ),
+                    section(
+                            "Current limits and handling rules",
+                            "The current repo uses a lightweight storage model, so this page is intentionally explicit about its limits.",
+                            "Private result snapshots expire instead of staying available forever.",
+                            "Admin access should stay credential-protected and noindex.",
+                            "This product should avoid collecting more personal detail than is required for the follow-up or saved-result flow."
+                    )
+            ),
+            page(
+                    "commercial-disclosure",
+                    "Commercial Disclosure",
+                    "How Commercial Routing Works On This Site",
+                    "Read how testing referrals, compare pages, lead capture, and future affiliate routing are constrained by evidence and safety rules.",
+                    "Commercial disclosure",
+                    "This page explains how money can flow through the product without letting commerce outrun testing, scope, or trust.",
+                    "A well-water decision product should make the commercial model explicit because hidden incentives are a trust risk in YMYL categories.",
+                    "2026-03-08",
+                    section(
+                            "What the commercial layer is allowed to do",
+                            "Commercial routing is intentionally downstream from evidence and safety.",
+                            "Testing, interpretation, and state guidance can appear before any product or partner handoff.",
+                            "Category compare pages can be commercial bridges only when the page already explains what the category cannot solve.",
+                            "Lead capture is allowed where the page has enough intent and context to justify a follow-up."
+                    ),
+                    section(
+                            "What the commercial layer is not allowed to do",
+                            "Some commercial patterns are blocked on purpose because they damage trust and decision quality.",
+                            "No page should jump from one weak clue straight to a product verdict.",
+                            "No affiliate or partner path should outrank certified testing on red or low-confidence paths.",
+                            "No nuisance equipment module should be used to imply broad health protection."
+                    ),
+                    section(
+                            "How to read a commercial CTA on this site",
+                            "A commercial CTA should be read as a next-step option, not as proof that the problem is fully understood.",
+                            "Internal compare pages are often the first commercial bridge because they keep claim-checks visible.",
+                            "Testing and follow-up routes can be monetized without pretending the user is already ready to buy equipment.",
+                            "If a CTA appears, the page should still state what remains unknown."
+                    )
             )
     );
 

@@ -1,6 +1,7 @@
 package com.example.wellwater.web.tool;
 
 import com.example.wellwater.decision.model.DecisionInput;
+import com.example.wellwater.decision.model.DecisionReportLine;
 import com.example.wellwater.decision.model.EntryMode;
 
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ public class ToolRequest {
     private String useScope;
     private String existingTreatment;
     private List<String> existingTreatments = new ArrayList<>();
+    private List<String> supportingSignals = new ArrayList<>();
+    private List<CompanionReportLineForm> companionLines = new ArrayList<>();
     private String symptomFlag;
     private String triggerFlag;
     private String labName;
@@ -51,6 +54,8 @@ public class ToolRequest {
                 useScope,
                 primaryExistingTreatment,
                 List.copyOf(existingTreatments),
+                List.copyOf(supportingSignals),
+                buildCompanionReportLines(),
                 symptomFlag,
                 triggerFlag,
                 labName,
@@ -67,6 +72,14 @@ public class ToolRequest {
         );
     }
 
+    public List<CompanionReportLineForm> getCompanionLinesForView() {
+        List<CompanionReportLineForm> forms = sanitizedCompanionLines();
+        while (forms.size() < 2) {
+            forms.add(new CompanionReportLineForm());
+        }
+        return forms;
+    }
+
     private String resolvePrimaryExistingTreatment() {
         if (existingTreatment != null && !existingTreatment.isBlank()) {
             return existingTreatment;
@@ -75,6 +88,24 @@ public class ToolRequest {
             return existingTreatments.get(0);
         }
         return "";
+    }
+
+    private List<DecisionReportLine> buildCompanionReportLines() {
+        return sanitizedCompanionLines().stream()
+                .map(CompanionReportLineForm::toDecisionReportLine)
+                .filter(line -> !line.isBlank())
+                .toList();
+    }
+
+    private List<CompanionReportLineForm> sanitizedCompanionLines() {
+        List<CompanionReportLineForm> forms = new ArrayList<>();
+        for (CompanionReportLineForm line : companionLines) {
+            if (line == null) {
+                continue;
+            }
+            forms.add(line);
+        }
+        return forms;
     }
 
     public String getEntryMode() {
@@ -189,6 +220,29 @@ public class ToolRequest {
             return true;
         }
         return existingTreatments.stream().anyMatch(value -> candidate.equalsIgnoreCase(value));
+    }
+
+    public List<String> getSupportingSignals() {
+        return supportingSignals;
+    }
+
+    public void setSupportingSignals(List<String> supportingSignals) {
+        this.supportingSignals = supportingSignals == null ? new ArrayList<>() : new ArrayList<>(supportingSignals);
+    }
+
+    public boolean hasSupportingSignal(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            return false;
+        }
+        return supportingSignals.stream().anyMatch(value -> candidate.equalsIgnoreCase(value));
+    }
+
+    public List<CompanionReportLineForm> getCompanionLines() {
+        return companionLines;
+    }
+
+    public void setCompanionLines(List<CompanionReportLineForm> companionLines) {
+        this.companionLines = companionLines == null ? new ArrayList<>() : new ArrayList<>(companionLines);
     }
 
     public String getSymptomFlag() {

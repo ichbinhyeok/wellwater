@@ -11,7 +11,7 @@
 
 @template.layout.engine(
     title = "Trigger-First Well Water Tool",
-    robots = "index,follow",
+    robots = "noindex,nofollow",
     description = "Start from event trigger and route to safe next actions.",
     activeEntryMode = request.getEntryMode(),
     leftPanel = @`

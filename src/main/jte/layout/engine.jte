@@ -88,27 +88,53 @@
             box-shadow: 0 16px 30px rgba(15, 118, 110, 0.22);
         }
         @media (max-width: 1023px) {
-            .mobile-bottom-sheet {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 50;
-                border-top-left-radius: 28px;
-                border-top-right-radius: 28px;
-                box-shadow: 0 -12px 42px rgba(16, 30, 21, 0.14);
-                max-height: 88vh;
-                transform: translateY(calc(100% - 82px));
-                transition: transform 0.42s cubic-bezier(0.32, 0.72, 0, 1);
+            body {
+                overflow-y: auto;
             }
-            .mobile-bottom-sheet.expanded { transform: translateY(0); }
+            .engine-frame {
+                height: auto;
+                min-height: 100vh;
+                padding: 10px;
+            }
+            .engine-shell {
+                height: auto;
+                min-height: calc(100vh - 20px);
+                overflow: visible;
+            }
+            .engine-left,
+            .engine-right {
+                width: 100%;
+                height: auto;
+                overflow: visible;
+            }
+            .engine-left {
+                box-shadow: none;
+                padding-bottom: 28px;
+            }
+            .engine-right {
+                border-top: 1px solid rgba(18, 25, 20, 0.08);
+            }
+            .mobile-bottom-sheet {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                right: auto;
+                z-index: auto;
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+                box-shadow: none;
+                max-height: none;
+                transform: none;
+                transition: none;
+            }
+            .mobile-bottom-sheet.expanded { transform: none; }
         }
     </style>
 </head>
 <body class="min-h-screen w-full overflow-hidden text-zinc-900">
-    <div class="engine-frame h-screen w-full px-3 py-3 lg:px-5 lg:py-5">
-        <div class="engine-shell h-full rounded-[28px] lg:rounded-[34px] overflow-hidden flex flex-col lg:flex-row shadow-float">
-            <section class="engine-left w-full lg:w-1/2 h-full flex flex-col relative z-30 overflow-y-auto no-scrollbar pt-6 lg:pt-8 px-6 lg:px-10 xl:px-14">
+    <div class="engine-frame w-full px-3 py-3 lg:px-5 lg:py-5">
+        <div class="engine-shell min-h-[calc(100vh-24px)] lg:min-h-0 rounded-[28px] lg:rounded-[34px] overflow-hidden flex flex-col lg:flex-row shadow-float">
+            <section class="engine-left w-full lg:w-1/2 flex flex-col relative z-30 overflow-visible lg:overflow-y-auto no-scrollbar pt-6 lg:pt-8 px-6 lg:px-10 xl:px-14">
                 <header class="mb-8 flex items-center justify-between gap-4">
                     <div class="flex items-center gap-4 min-w-0">
                         <a href="/" class="engine-brand w-11 h-11 rounded-2xl bg-gradient-to-br from-accent to-accentdeep text-white flex items-center justify-center font-display font-semibold tracking-tight">
@@ -133,7 +159,7 @@
                 </div>
             </section>
 
-            <section class="engine-right w-full lg:w-1/2 h-full flex flex-col mobile-bottom-sheet lg:relative lg:transform-none lg:z-0 py-0 lg:py-8 px-0 lg:px-10 xl:px-14 overflow-visible lg:overflow-y-auto no-scrollbar">
+            <section class="engine-right w-full lg:w-1/2 flex flex-col mobile-bottom-sheet lg:relative lg:transform-none lg:z-0 py-0 lg:py-8 px-0 lg:px-10 xl:px-14 overflow-visible lg:overflow-y-auto no-scrollbar">
                 ${rightPanel}
             </section>
         </div>
@@ -145,6 +171,7 @@
             const icon = document.getElementById('chevron-icon');
             const summary = document.getElementById('mobile-summary');
             if (!sheet) return;
+            if (window.innerWidth > 1023) return;
             sheet.classList.toggle('expanded');
 
             if (sheet.classList.contains('expanded')) {

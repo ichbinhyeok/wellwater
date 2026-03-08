@@ -28,7 +28,8 @@ $requiredColumns = @(
     "source_url",
     "search_query",
     "search_performed_at",
-    "fetched_at"
+    "fetched_at",
+    "tier"
 )
 
 if ($rows.Count -eq 0) {
@@ -47,7 +48,7 @@ if ($rows.Count -lt $MinRows) {
     $errors.Add("Expected at least $MinRows rows but found $($rows.Count)")
 }
 
-$allowedFamilies = @("contaminants", "symptoms", "compares", "triggers")
+$allowedFamilies = @("contaminants", "symptoms", "compares", "triggers", "regional", "authority")
 $dupeSlugs = $rows | Group-Object slug | Where-Object { $_.Count -gt 1 }
 foreach ($d in $dupeSlugs) {
     $errors.Add("Duplicate slug: $($d.Name)")

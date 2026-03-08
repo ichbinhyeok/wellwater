@@ -396,4 +396,251 @@ class DecisionEngineServiceTest {
         assertTrue(result.thresholdSummary().contains("EPA MCL"));
         assertTrue(result.scenarios().stream().anyMatch(s -> s.scenarioId().equals("verify-first")));
     }
+
+    @Test
+    void hardnessWithCorrosionSupportSignalsDelaysSoftenerComparePath() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "hardness",
+                "18",
+                "grains/gal",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "whole-house",
+                "",
+                List.of(),
+                List.of("lead", "ph"),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertEquals(ProblemType.AESTHETIC_OPERATIONAL, result.problemType());
+        assertTrue(result.compareReadinessChecks().stream().anyMatch(check -> check.contains("Do not open the softener path yet")));
+        assertTrue(result.ctas().stream().anyMatch(cta -> cta.targetUrl().equals("/well-water/acid-neutralizer-vs-soda-ash")));
+        assertTrue(result.ctas().stream().anyMatch(cta -> cta.targetUrl().equals("/well-water/low-ph-copper-corrosion-testing-order")));
+        assertTrue(result.hasSoftenerSizingPreview());
+        assertTrue(!result.softenerSizingPreview().eligible());
+        assertTrue(result.consumerSupportingSignals().contains("Lead"));
+        assertTrue(result.consumerSupportingSignals().contains("pH"));
+    }
+
+    @Test
+    void nitrateWithBacteriaContextPushesSamplingMistakeAuthorityPath() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "nitrate",
+                "9",
+                "mg/L",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "IA",
+                "drinking-only",
+                "",
+                List.of(),
+                List.of("total coliform", "after-heavy-rain"),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertTrue(result.hasRecommendedTestCards());
+        assertTrue(result.recommendedTestCards().stream().anyMatch(test -> test.testName().equals("Broader contamination follow-up")));
+        assertTrue(result.recommendedTestCards().stream().anyMatch(test -> "IA certified lab path".equals(test.resourceLabel())));
+        assertTrue(result.ctas().stream().anyMatch(cta -> cta.targetUrl().equals("/well-water/private-well-sampling-mistakes-that-break-results")));
+    }
+
+    @Test
+    void floodTriggerOrdersEventSensitiveTestingFirst() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "total coliform",
+                "positive",
+                "presence/absence",
+                "positive",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "FL",
+                "drinking-only",
+                "",
+                List.of(),
+                List.of(),
+                List.of(),
+                "",
+                "after-flood",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertTrue(result.hasRecommendedTestOrderNote());
+        assertEquals("Post-flood certified bacteria retest", result.recommendedTestCards().get(0).testName());
+        assertEquals("Recent untreated follow-up sample", result.recommendedTestCards().get(1).testName());
+    }
+
+    @Test
+    void homePurchaseTriggerMovesCertifiedPanelAheadOfGenericChecks() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.TRIGGER_FIRST,
+                "",
+                "",
+                "",
+                "none",
+                "",
+                "",
+                "raw well",
+                "yes",
+                "NJ",
+                "both",
+                "",
+                List.of(),
+                List.of(),
+                List.of(),
+                "",
+                "home-purchase-test",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertTrue(result.hasRecommendedTestOrderNote());
+        assertEquals("Home-purchase certified panel", result.recommendedTestCards().get(0).testName());
+        assertEquals("Untreated baseline confirmation", result.recommendedTestCards().get(1).testName());
+    }
+
+    @Test
+    void companionReportLinesCanDriveSupportingSignalRouting() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "hardness",
+                "18",
+                "grains/gal",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "whole-house",
+                "",
+                List.of(),
+                List.of(),
+                List.of(
+                        new com.example.wellwater.decision.model.DecisionReportLine("lead", "20", "ppb", "none", ""),
+                        new com.example.wellwater.decision.model.DecisionReportLine("ph", "6.0", "su", "none", "")
+                ),
+                "",
+                "",
+                "",
+                "4",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertTrue(result.consumerSupportingSignals().contains("Lead"));
+        assertTrue(result.consumerSupportingSignals().contains("pH"));
+        assertTrue(result.compareReadinessChecks().stream().anyMatch(check -> check.contains("Do not open the softener path yet")));
+    }
+
+    @Test
+    void hardnessWithHouseholdSizeBuildsSoftenerSizingPreview() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "hardness",
+                "20",
+                "grains/gal",
+                "none",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "whole-house",
+                "",
+                List.of(),
+                List.of(),
+                "",
+                "",
+                "",
+                "4",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var result = service.decide(input);
+
+        assertTrue(result.hasSoftenerSizingPreview());
+        assertTrue(result.softenerSizingPreview().eligible());
+        assertEquals("48k grain class", result.softenerSizingPreview().recommendedClass());
+        assertTrue(result.softenerSizingPreview().dailyGrainLoadLabel().contains("6,000"));
+    }
 }

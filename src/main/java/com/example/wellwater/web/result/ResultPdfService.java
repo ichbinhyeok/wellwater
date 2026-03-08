@@ -70,16 +70,66 @@ public class ResultPdfService {
                 writeBulletList(cursor, result.keyReasons());
             }
 
+            if (result.hasReportLinesReviewed()) {
+                writeSectionTitle(cursor, "Report lines reviewed");
+                List<String> reportLines = new ArrayList<>();
+                result.reportLinesReviewed().forEach(line -> reportLines.add(
+                        (line.primary() ? "Primary" : "Supporting")
+                                + " | "
+                                + line.analyteLabel()
+                                + " | "
+                                + line.observedValueLabel()
+                                + " | "
+                                + line.interpretationNote()
+                ));
+                writeBulletList(cursor, reportLines);
+            }
+
             writeSectionTitle(cursor, "Action timeline");
             writeLabeledBullets(cursor, "Today", result.todayActions());
             writeLabeledBullets(cursor, "This week", result.thisWeekActions());
             writeLabeledBullets(cursor, "Next 30 days", result.laterActions());
+
+            if (result.hasRecommendedTestCards()) {
+                writeSectionTitle(cursor, "Recommended tests");
+                if (result.hasRecommendedTestOrderNote()) {
+                    writeParagraph(cursor, result.recommendedTestOrderNote(), BODY_FONT, 10.5f, 15f, PAGE_MARGIN, CONTENT_WIDTH, INK);
+                }
+                for (int i = 0; i < result.recommendedTestCards().size(); i++) {
+                    var card = result.recommendedTestCards().get(i);
+                    List<String> items = new ArrayList<>();
+                    items.add("Why now: " + card.whyNow());
+                    items.add("Sample plan: " + card.samplePlan());
+                    if (card.hasResourceLink()) {
+                        items.add(card.resourceLabel() + ": " + card.resourceUrl());
+                    }
+                    drawInfoPanel(cursor, "Step " + (i + 1) + " | " + card.testName(), items);
+                }
+            }
 
             if (!result.scenarios().isEmpty()) {
                 writeSectionTitle(cursor, "Scenario compare");
                 for (ScenarioOption scenario : result.scenarios()) {
                     drawScenarioCard(cursor, scenario, result.isRecommendedScenario(scenario));
                 }
+            }
+
+            if (result.hasSoftenerSizingPreview()) {
+                writeSectionTitle(cursor, "Softener sizing preview");
+                List<String> items = new ArrayList<>();
+                items.add(result.softenerSizingPreview().summary());
+                if (result.softenerSizingPreview().eligible()) {
+                    items.add("Recommended class: " + result.softenerSizingPreview().recommendedClass());
+                    items.add("Sizing verdict: " + result.softenerSizingPreview().sizingVerdict());
+                    items.add("Hardness basis: " + result.softenerSizingPreview().hardnessLabel());
+                    items.add("Daily grain load: " + result.softenerSizingPreview().dailyGrainLoadLabel());
+                    items.add("Regeneration pace: " + result.softenerSizingPreview().regenerationLabel());
+                } else {
+                    items.add("Status: " + result.softenerSizingPreview().sizingVerdict());
+                }
+                items.addAll(result.softenerSizingPreview().notes());
+                items.add("Next action: " + result.softenerSizingPreview().nextAction());
+                writeBulletList(cursor, items);
             }
 
             writeSectionTitle(cursor, "Data quality");

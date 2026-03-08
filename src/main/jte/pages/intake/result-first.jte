@@ -4,15 +4,18 @@
 @param java.util.List<String> states
 @param java.util.List<String> useScopes
 @param java.util.List<String> existingTreatments
+@param java.util.List<String> reportSupportSignals
 @param java.util.List<String> smellTypes
 @param java.util.List<String> stainTypes
 @param java.util.List<String> tasteTypes
 @param java.util.List<String> locationScopes
 @param java.util.List<String> changeTimings
 
+!{var unitOptions = java.util.List.of("mg/L", "ppm", "ppb", "ug/L", "ppt", "pCi/L", "grains/gal", "su", "cfu/100ml", "presence/absence", "unknown");}
+
 @template.layout.engine(
     title = "Result-First Well Water Tool",
-    robots = "index,follow",
+    robots = "noindex,nofollow",
     description = "Enter test results and get a structured decision output.",
     activeEntryMode = request.getEntryMode(),
     leftPanel = @`
@@ -199,6 +202,61 @@
                 </div>
             </div>
 
+            <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+                <p class="text-xs font-bold text-zinc-900 mb-1 tracking-wide uppercase">Companion Report Lines</p>
+                <p class="text-xs text-zinc-500 mb-3">Optional. Add other lines from the same lab report so the engine can read surrounding context before it recommends testing or compare paths.</p>
+                !{var companionLines = request.getCompanionLinesForView();}
+                <div id="companion-lines" data-next-index="${companionLines.size()}" class="space-y-3">
+                    @for (int i = 0; i < companionLines.size(); i++)
+                        !{var companionLine = companionLines.get(i);}
+                        !{var fieldPrefix = "companionLines[" + i + "]";}
+                        <div data-companion-row class="rounded-xl border border-zinc-200 bg-white p-3">
+                            <div class="flex items-center justify-between gap-3 mb-3">
+                                <p class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Report line ${i + 1}</p>
+                                <button type="button" onclick="removeCompanionLineRow(this)" class="text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">Remove</button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
+                                <select name="${fieldPrefix}.analyteName" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                    <option value="">Companion analyte</option>
+                                    @for (var analyte : analytes)
+                                        <option value="${analyte}" selected="${analyte.equalsIgnoreCase(companionLine.getAnalyteName())}">${analyte}</option>
+                                    @endfor
+                                </select>
+                                <input name="${fieldPrefix}.resultValue" value="${companionLine.getResultValue()}" placeholder="Value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                <select name="${fieldPrefix}.unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                    <option value="">Unit</option>
+                                    @for (var unitOption : unitOptions)
+                                        <option value="${unitOption}" selected="${unitOption.equalsIgnoreCase(companionLine.getUnit())}">${unitOption.equals("cfu/100ml") ? "CFU/100mL" : unitOption}</option>
+                                    @endfor
+                                </select>
+                                <select name="${fieldPrefix}.qualifier" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                    @for (var qualifier : qualifiers)
+                                        <option value="${qualifier}" selected="${qualifier.equalsIgnoreCase(companionLine.getQualifier())}">${qualifier}</option>
+                                    @endfor
+                                </select>
+                                <input name="${fieldPrefix}.qualifierValue" value="${companionLine.getQualifierValue()}" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+                <button type="button" onclick="addCompanionLineRow()" class="mt-3 inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm font-semibold text-zinc-900 hover:border-zinc-900 transition-colors">
+                    Add report line
+                </button>
+            </div>
+
+            <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200">
+                <p class="text-xs font-bold text-zinc-900 mb-1 tracking-wide uppercase">Other Context Flags</p>
+                <p class="text-xs text-zinc-500 mb-3">Optional. Mark event or symptom context that matters even if it is not a clean analyte line from the report.</p>
+                <div class="grid grid-cols-2 gap-2">
+                    @for (var signal : reportSupportSignals)
+                        <label class="flex items-center gap-2 text-sm text-zinc-700">
+                            <input type="checkbox" name="supportingSignals" value="${signal}" checked="${request.hasSupportingSignal(signal)}" class="w-4 h-4 rounded text-zinc-900 focus:ring-zinc-900 border-zinc-300">
+                            <span>${signal}</span>
+                        </label>
+                    @endfor
+                </div>
+            </div>
+
             <!-- Vulnerable Household Flags -->
             <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200 mt-4">
                 <p class="text-xs font-bold text-zinc-900 mb-3 tracking-wide uppercase">Household Vulnerability</p>
@@ -222,6 +280,62 @@
                 Run Decision Engine
             </button>
         </form>
+
+        <template id="companion-line-template">
+            <div data-companion-row class="rounded-xl border border-zinc-200 bg-white p-3">
+                <div class="flex items-center justify-between gap-3 mb-3">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-zinc-500">Report line</p>
+                    <button type="button" onclick="removeCompanionLineRow(this)" class="text-xs font-semibold text-zinc-500 hover:text-zinc-900 transition-colors">Remove</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-2">
+                    <select name="companionLines[__INDEX__].analyteName" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                        <option value="">Companion analyte</option>
+                        @for (var analyte : analytes)
+                            <option value="${analyte}">${analyte}</option>
+                        @endfor
+                    </select>
+                    <input name="companionLines[__INDEX__].resultValue" placeholder="Value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                    <select name="companionLines[__INDEX__].unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                        <option value="">Unit</option>
+                        @for (var unitOption : unitOptions)
+                            <option value="${unitOption}">${unitOption.equals("cfu/100ml") ? "CFU/100mL" : unitOption}</option>
+                        @endfor
+                    </select>
+                    <select name="companionLines[__INDEX__].qualifier" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                        @for (var qualifier : qualifiers)
+                            <option value="${qualifier}" selected="${"none".equalsIgnoreCase(qualifier)}">${qualifier}</option>
+                        @endfor
+                    </select>
+                    <input name="companionLines[__INDEX__].qualifierValue" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                </div>
+            </div>
+        </template>
+
+        <script>
+            function addCompanionLineRow() {
+                const container = document.getElementById('companion-lines');
+                const template = document.getElementById('companion-line-template');
+                if (!container || !template) {
+                    return;
+                }
+                const index = Number(container.dataset.nextIndex || '0');
+                const markup = template.innerHTML.replace(/__INDEX__/g, String(index));
+                container.insertAdjacentHTML('beforeend', markup);
+                container.dataset.nextIndex = String(index + 1);
+            }
+
+            function removeCompanionLineRow(button) {
+                const container = document.getElementById('companion-lines');
+                const row = button.closest('[data-companion-row]');
+                if (!container || !row) {
+                    return;
+                }
+                row.remove();
+                if (!container.querySelector('[data-companion-row]')) {
+                    addCompanionLineRow();
+                }
+            }
+        </script>
     `,
     rightPanel = @`
         <div class="flex-1 flex flex-col items-center justify-center text-center px-10 h-[calc(100vh-80px)] lg:h-full">
@@ -230,7 +344,7 @@
             </div>
             <h3 class="text-2xl font-bold text-zinc-900 mb-2">Awaiting input</h3>
             <p class="text-zinc-500 text-sm max-w-[280px] leading-relaxed">
-                Add your analyte value to generate a clean decision summary, confidence level, and practical next steps.
+                Add the main analyte and any supporting report flags so the engine can separate testing, interpretation, and compare readiness more cleanly.
             </p>
         </div>
     `

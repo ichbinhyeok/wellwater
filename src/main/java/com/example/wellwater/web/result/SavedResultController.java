@@ -1,6 +1,7 @@
 package com.example.wellwater.web.result;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
+import com.example.wellwater.lead.LeadCaptureContext;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -9,7 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -42,7 +45,8 @@ public class SavedResultController {
     }
 
     @GetMapping("/result/saved/{snapshotId}")
-    public String savedResult(@PathVariable String snapshotId, Model model) {
+    public String savedResult(@PathVariable String snapshotId, @RequestParam(required = false) String lead, Model model, HttpServletResponse response) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
         ResultSnapshot snapshot = loadSnapshot(snapshotId);
         model.addAttribute("result", snapshot.result());
         model.addAttribute("sessionId", snapshot.sessionId());
@@ -53,6 +57,8 @@ public class SavedResultController {
         model.addAttribute("savedAtLabel", formatTimestamp(snapshot.createdAt()));
         model.addAttribute("expiresLabel", formatTimestamp(snapshot.expiresAt()));
         model.addAttribute("sharedView", true);
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", buildResultLeadContext(snapshot));
 
         analyticsEventService.logEvent(
                 "result_snapshot_viewed",
@@ -113,5 +119,28 @@ public class SavedResultController {
             return "";
         }
         return SNAPSHOT_DATE_FORMAT.format(Instant.parse(instantValue));
+    }
+
+    private String sanitizeLeadStatus(String lead) {
+        if ("success".equalsIgnoreCase(lead)) {
+            return "success";
+        }
+        if ("invalid".equalsIgnoreCase(lead)) {
+            return "invalid";
+        }
+        return "";
+    }
+
+    private LeadCaptureContext buildResultLeadContext(ResultSnapshot snapshot) {
+        return new LeadCaptureContext(
+                "Need a private-well follow-up on this result?",
+                "Use this when you want help turning the verdict into a testing, compare, or next-action plan without losing the saved snapshot context.",
+                "Request follow-up",
+                savedResultPath(snapshot.id()),
+                "result-snapshot",
+                snapshot.result().problemType().wireValue(),
+                snapshot.sourceSlug(),
+                snapshot.result().primaryVerdictLabel()
+        );
     }
 }

@@ -77,7 +77,7 @@ public class SeoMetadataService {
                 canonicalUrl,
                 breadcrumbs,
                 List.of(
-                        staticPageJson("AboutPage", canonicalUrl, page.h1(), page.metaDescription()),
+                        staticPageJson("AboutPage", canonicalUrl, page.h1(), page.metaDescription(), page.updatedAt()),
                         breadcrumbJson(breadcrumbs)
                 )
         );
@@ -135,20 +135,27 @@ public class SeoMetadataService {
     }
 
     private String staticPageJson(String pageType, String canonicalUrl, String title, String description) {
-        return object(Map.of(
-                "@context", "https://schema.org",
-                "@type", pageType,
-                "url", canonicalUrl,
-                "name", title,
-                "headline", title,
-                "description", description,
-                "inLanguage", "en",
-                "isPartOf", Map.of(
-                        "@type", "WebSite",
-                        "name", "Private Well Water Guide",
-                        "url", absolute("/")
-                )
+        return staticPageJson(pageType, canonicalUrl, title, description, "");
+    }
+
+    private String staticPageJson(String pageType, String canonicalUrl, String title, String description, String updatedAt) {
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("@context", "https://schema.org");
+        payload.put("@type", pageType);
+        payload.put("url", canonicalUrl);
+        payload.put("name", title);
+        payload.put("headline", title);
+        payload.put("description", description);
+        payload.put("inLanguage", "en");
+        payload.put("author", editorialAuthor());
+        payload.put("publisher", publisher());
+        payload.put("dateModified", updatedAt == null ? "" : updatedAt);
+        payload.put("isPartOf", Map.of(
+                "@type", "WebSite",
+                "name", "Private Well Water Guide",
+                "url", absolute("/")
         ));
+        return object(payload);
     }
 
     private String pageJson(PseoDetailView pageView, String canonicalUrl) {
@@ -161,6 +168,9 @@ public class SeoMetadataService {
         payload.put("description", pageView.page().metaDescription());
         payload.put("about", pageView.riskLabel());
         payload.put("inLanguage", "en");
+        payload.put("author", editorialAuthor());
+        payload.put("publisher", publisher());
+        payload.put("dateModified", pageView.page().fetchedAt());
         payload.put("isPartOf", Map.of(
                 "@type", "WebSite",
                 "name", "Private Well Water Guide",
@@ -214,6 +224,27 @@ public class SeoMetadataService {
             case "regional" -> "Article";
             default -> "WebPage";
         };
+    }
+
+    private Map<String, Object> editorialAuthor() {
+        return Map.of(
+                "@type", "Organization",
+                "name", "Private Well Editorial Desk",
+                "url", absolute("/trust/reviewers-and-expertise")
+        );
+    }
+
+    private Map<String, Object> publisher() {
+        return Map.of(
+                "@type", "Organization",
+                "name", "Private Well Water Guide",
+                "url", absolute("/"),
+                "sameAs", List.of(
+                        absolute("/trust/methodology"),
+                        absolute("/trust/review-policy"),
+                        absolute("/trust/reviewers-and-expertise")
+                )
+        );
     }
 
     private String familyLabel(String family) {

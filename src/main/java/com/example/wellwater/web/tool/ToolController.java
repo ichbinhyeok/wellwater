@@ -6,6 +6,7 @@ import com.example.wellwater.decision.model.DecisionInput;
 import com.example.wellwater.decision.model.DecisionResult;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
+import com.example.wellwater.lead.LeadCaptureContext;
 import com.example.wellwater.web.result.RenderableCta;
 import com.example.wellwater.web.result.ResultCtaService;
 import com.example.wellwater.web.result.ResultSnapshot;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.view.RedirectView;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.net.URI;
 import java.util.LinkedHashSet;
@@ -35,6 +37,26 @@ public class ToolController {
             "cdc.gov",
             "www.google.com",
             "google.com"
+    );
+    private static final List<String> REPORT_SUPPORT_SIGNALS = List.of(
+            "lead",
+            "copper",
+            "ph",
+            "radium",
+            "radon",
+            "hardness",
+            "iron",
+            "manganese",
+            "total coliform",
+            "e. coli",
+            "metallic-taste",
+            "blue-green-stains",
+            "orange-stains",
+            "scale-buildup",
+            "rotten-egg-smell",
+            "after-heavy-rain",
+            "after-flood",
+            "home-purchase-test"
     );
 
     private final DecisionEngineService decisionEngineService;
@@ -67,8 +89,10 @@ public class ToolController {
             @RequestParam(required = false) String analyte,
             @RequestParam(required = false) String state,
             @RequestParam(required = false) String slug,
-            Model model
+            Model model,
+            HttpServletResponse response
     ) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
         ToolRequest request = new ToolRequest();
         request.setEntryMode("result-first");
         request.setAnalyteName(analyte);
@@ -85,8 +109,10 @@ public class ToolController {
             @RequestParam(required = false) String symptom,
             @RequestParam(required = false) String state,
             @RequestParam(required = false) String slug,
-            Model model
+            Model model,
+            HttpServletResponse response
     ) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
         ToolRequest request = new ToolRequest();
         request.setEntryMode("symptom-first");
         request.setSymptomFlag(symptom);
@@ -103,8 +129,10 @@ public class ToolController {
             @RequestParam(required = false) String trigger,
             @RequestParam(required = false) String state,
             @RequestParam(required = false) String slug,
-            Model model
+            Model model,
+            HttpServletResponse response
     ) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
         ToolRequest request = new ToolRequest();
         request.setEntryMode("trigger-first");
         request.setTriggerFlag(trigger);
@@ -117,7 +145,8 @@ public class ToolController {
     }
 
     @PostMapping("/tool/result")
-    public String decisionResult(@ModelAttribute("request") ToolRequest request, Model model) {
+    public String decisionResult(@ModelAttribute("request") ToolRequest request, Model model, HttpServletResponse response) {
+        response.setHeader("X-Robots-Tag", "noindex, nofollow, noarchive");
         addSharedOptions(model);
 
         DecisionInput input = request.toDecisionInput();
@@ -136,6 +165,8 @@ public class ToolController {
         model.addAttribute("savedAtLabel", "just now");
         model.addAttribute("expiresLabel", snapshot.expiresAt().substring(0, 10));
         model.addAttribute("sharedView", false);
+        model.addAttribute("leadStatus", "");
+        model.addAttribute("leadContext", buildResultLeadContext(result, snapshot.id(), input.slugHint()));
 
         analyticsEventService.logEvent(
                 "test_completed",
@@ -248,10 +279,24 @@ public class ToolController {
         model.addAttribute("existingTreatments", List.of(
                 "ro", "uv", "softener", "iron filter", "carbon", "sediment", "unknown"
         ));
+        model.addAttribute("reportSupportSignals", REPORT_SUPPORT_SIGNALS);
         model.addAttribute("smellTypes", List.of("rotten-egg", "chemical", "musty", "other"));
         model.addAttribute("stainTypes", List.of("orange", "black", "blue-green"));
         model.addAttribute("tasteTypes", List.of("metallic", "salty", "bitter"));
         model.addAttribute("locationScopes", List.of("one-fixture", "hot-only", "cold-only", "whole-house", "unknown"));
         model.addAttribute("changeTimings", List.of("after-rain", "after-repair", "gradual", "sudden", "unknown"));
+    }
+
+    private LeadCaptureContext buildResultLeadContext(DecisionResult result, String snapshotId, String slugHint) {
+        return new LeadCaptureContext(
+                "Need a private-well follow-up on this result?",
+                "Use this when you want help turning the verdict into a testing, compare, or next-action plan without losing the diagnostic context.",
+                "Request follow-up",
+                "/result/saved/" + snapshotId,
+                "result-snapshot",
+                result.problemType().wireValue(),
+                slugHint == null ? "" : slugHint,
+                result.primaryVerdictLabel()
+        );
     }
 }

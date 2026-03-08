@@ -525,6 +525,10 @@
             background: var(--accent);
         }
 
+        .mobile-only {
+            display: none;
+        }
+
         .prose {
             max-width: 72ch;
             color: var(--text);
@@ -666,6 +670,10 @@
                 font-size: 2.3rem;
             }
 
+            .stack {
+                gap: 20px;
+            }
+
             .panel,
             .hero {
                 border-radius: 24px;
@@ -673,6 +681,33 @@
 
             .card-link {
                 padding: 18px;
+            }
+
+            .section-header {
+                align-items: start;
+                flex-direction: column;
+            }
+
+            .section-copy {
+                max-width: none;
+                font-size: 0.94rem;
+            }
+
+            .hero-note {
+                padding: 18px;
+            }
+
+            .metric {
+                padding: 12px 14px;
+            }
+
+            .mobile-only {
+                display: block;
+            }
+
+            .desktop-only,
+            .mobile-card-hidden {
+                display: none !important;
             }
         }
     </style>
@@ -725,8 +760,11 @@
             <a href="/trust">Trust hub</a>
             <a href="/trust/methodology">Methodology</a>
             <a href="/trust/review-policy">Review policy</a>
+            <a href="/trust/reviewers-and-expertise">Reviewers</a>
             <a href="/trust/sources-policy">Sources policy</a>
             <a href="/trust/safety-and-scope">Safety and scope</a>
+            <a href="/trust/privacy-and-data-handling">Privacy and data</a>
+            <a href="/trust/commercial-disclosure">Commercial disclosure</a>
         </nav>
     </footer>
 </div>

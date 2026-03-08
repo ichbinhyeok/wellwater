@@ -56,6 +56,8 @@ class ResultSnapshotServiceTest {
                 List.of("Action today"),
                 List.of("Action this week"),
                 List.of("Action later"),
+                List.of("Recommended test"),
+                List.of("Compare gate"),
                 List.of(),
                 "Fresh",
                 92,

@@ -239,6 +239,7 @@ public class DecisionInputNormalizationService {
                 count++;
             }
         }
+        count += Math.min(3, input.normalizedSupportingSignals().size());
         return count;
     }
 

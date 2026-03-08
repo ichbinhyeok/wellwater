@@ -299,6 +299,33 @@
                         </div>
                     </div>
                 </section>
+
+                <section class="panel panel-accent">
+                    <div class="section-header">
+                        <div>
+                            <p class="brand-kicker">Trust surface</p>
+                            <h2>Method, review, and disclosure</h2>
+                        </div>
+                    </div>
+                    <p class="card-meta">This page sits inside a larger trust layer. Use these public pages to inspect the rules behind review, evidence, saved results, and commercial gating.</p>
+                    <div class="stack" style="gap: 12px; margin-top: 16px;">
+                        <a class="card-link" href="/trust/methodology">
+                            <span class="card-kicker">Methodology</span>
+                            <h3>How the engine separates testing, interpretation, and compare paths</h3>
+                            <p class="card-meta">Review the public evidence hierarchy and why personalized outputs stay noindex.</p>
+                        </a>
+                        <a class="card-link" href="/trust/reviewers-and-expertise">
+                            <span class="card-kicker">Reviewers</span>
+                            <h3>Who reviews the guidance and what the review does not claim</h3>
+                            <p class="card-meta">Check reviewer visibility, scope limits, and claim-check responsibilities.</p>
+                        </a>
+                        <a class="card-link" href="/trust/commercial-disclosure">
+                            <span class="card-kicker">Commercial disclosure</span>
+                            <h3>How compare paths and follow-up routes are constrained</h3>
+                            <p class="card-meta">Use this before treating any CTA like proof that a household problem is solved.</p>
+                        </a>
+                    </div>
+                </section>
             </aside>
         </section>
 

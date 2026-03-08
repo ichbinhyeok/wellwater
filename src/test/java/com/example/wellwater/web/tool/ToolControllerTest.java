@@ -10,11 +10,13 @@ import com.example.wellwater.web.result.ResultCtaService;
 import com.example.wellwater.web.result.ResultSnapshotService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -66,15 +68,19 @@ class ToolControllerTest {
                 newSnapshotService()
         );
         Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        String viewName = controller.resultFirst("nitrate", "PA", "nitrate", model);
+        String viewName = controller.resultFirst("nitrate", "PA", "nitrate", model, response);
 
         assertEquals("pages/intake/result-first", viewName);
         assertNotNull(model.getAttribute("request"));
         assertNotNull(model.getAttribute("analytes"));
         assertNotNull(model.getAttribute("states"));
+        assertNotNull(model.getAttribute("reportSupportSignals"));
+        assertEquals("noindex, nofollow, noarchive", response.getHeader("X-Robots-Tag"));
         assertTrue(((java.util.List<?>) model.getAttribute("analytes")).contains("radon"));
         assertEquals("PA", ((ToolRequest) model.getAttribute("request")).getState());
+        assertEquals(2, ((ToolRequest) model.getAttribute("request")).getCompanionLinesForView().size());
     }
 
     @Test
@@ -106,13 +112,22 @@ class ToolControllerTest {
         request.setUseScope("drinking-only");
         request.setExistingTreatment("none");
         request.setInfantPresent(true);
+        CompanionReportLineForm line = new CompanionReportLineForm();
+        line.setAnalyteName("total coliform");
+        line.setResultValue("positive");
+        line.setUnit("presence/absence");
+        line.setQualifier("positive");
+        request.setCompanionLines(List.of(line));
+        MockHttpServletResponse response = new MockHttpServletResponse();
 
-        String viewName = controller.decisionResult(request, model);
+        String viewName = controller.decisionResult(request, model, response);
 
         assertEquals("pages/result/view", viewName);
         assertNotNull(model.getAttribute("result"));
         assertNotNull(model.getAttribute("sessionId"));
         assertNotNull(model.getAttribute("ctaLinks"));
+        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals("noindex, nofollow, noarchive", response.getHeader("X-Robots-Tag"));
         assertTrue(((String) model.getAttribute("savedResultUrl")).startsWith("/result/saved/"));
         assertTrue(((String) model.getAttribute("pdfUrl")).endsWith(".pdf"));
     }

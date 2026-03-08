@@ -11,7 +11,7 @@
 
 @template.layout.engine(
     title = "Symptom-First Well Water Tool",
-    robots = "index,follow",
+    robots = "noindex,nofollow",
     description = "Start from symptom and triage into a decision path.",
     activeEntryMode = request.getEntryMode(),
     leftPanel = @`

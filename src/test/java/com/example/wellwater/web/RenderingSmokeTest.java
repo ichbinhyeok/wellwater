@@ -45,6 +45,11 @@ class RenderingSmokeTest {
     void resultFirstPageRenders() throws Exception {
         mockMvc.perform(get("/tool/result-first"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,nofollow")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Companion Report Lines")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Add report line")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Other Context Flags")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Run Decision Engine")));
     }
 
@@ -61,14 +66,97 @@ class RenderingSmokeTest {
                         .param("labCertified", "yes")
                         .param("state", "PA"))
                 .andExpect(status().isOk())
+                .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("<title>Decision Result</title>"))))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Data First")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Threshold Check")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Recommended Tests")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Sample plan")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("PA certified lab path")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("PA testing guidance")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Before You Compare Or Buy")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Save Result")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Download PDF")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Share Link")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Review saved view")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Copy link")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Method And Trust")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("right panel"))))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("/result/saved/")));
+    }
+
+    @Test
+    void floodDrivenResultShowsOrderedTestingSequence() throws Exception {
+        mockMvc.perform(post("/tool/result")
+                        .param("entryMode", "result-first")
+                        .param("analyteName", "total coliform")
+                        .param("resultValue", "positive")
+                        .param("unit", "presence/absence")
+                        .param("qualifier", "positive")
+                        .param("sampleDate", "2026-03-01")
+                        .param("sampleSource", "raw well")
+                        .param("labCertified", "yes")
+                        .param("state", "FL")
+                        .param("triggerFlag", "after-flood"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Recommended Tests")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Start with flood-sensitive retesting and source review before you widen the panel or compare treatment classes.")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Step 1")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Post-flood certified bacteria retest")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("FL testing guidance")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Report Context Used")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("After flood")));
+    }
+
+    @Test
+    void resultViewShowsSupportingContextSignalsWhenProvided() throws Exception {
+        mockMvc.perform(post("/tool/result")
+                        .param("entryMode", "result-first")
+                        .param("analyteName", "hardness")
+                        .param("resultValue", "18")
+                        .param("unit", "grains/gal")
+                        .param("qualifier", "none")
+                        .param("sampleDate", "2026-03-01")
+                        .param("sampleSource", "raw well")
+                        .param("labCertified", "yes")
+                        .param("state", "PA")
+                        .param("useScope", "whole-house")
+                        .param("householdSize", "4")
+                        .param("companionLines[0].analyteName", "lead")
+                        .param("companionLines[0].resultValue", "20")
+                        .param("companionLines[0].unit", "ppb")
+                        .param("companionLines[0].qualifier", "none")
+                        .param("companionLines[1].analyteName", "ph")
+                        .param("companionLines[1].resultValue", "6.0")
+                        .param("companionLines[1].unit", "su")
+                        .param("companionLines[1].qualifier", "none"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Report Context Used")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Report Lines Reviewed")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Softener Sizing Preview")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Corrosion split before softener sizing")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("pH")));
+    }
+
+    @Test
+    void hardnessResultCanRenderEligibleSoftenerSizingPreview() throws Exception {
+        mockMvc.perform(post("/tool/result")
+                        .param("entryMode", "result-first")
+                        .param("analyteName", "hardness")
+                        .param("resultValue", "20")
+                        .param("unit", "grains/gal")
+                        .param("qualifier", "none")
+                        .param("sampleDate", "2026-03-01")
+                        .param("sampleSource", "raw well")
+                        .param("labCertified", "yes")
+                        .param("state", "PA")
+                        .param("useScope", "whole-house")
+                        .param("householdSize", "4"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Softener Sizing Preview")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("48k grain class")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("6,000")));
     }
 
     @Test
@@ -95,8 +183,10 @@ class RenderingSmokeTest {
 
         mockMvc.perform(get("/result/saved/" + snapshotId))
                 .andExpect(status().isOk())
+                .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision result")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Open saved view")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Open saved view")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Follow-Up")));
 
         MvcResult pdfResult = mockMvc.perform(get("/result/saved/" + snapshotId + ".pdf"))
                 .andExpect(status().isOk())
@@ -127,6 +217,7 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Request follow-up")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Method, review, and disclosure")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related next reads")));
     }
 

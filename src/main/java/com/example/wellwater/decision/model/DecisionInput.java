@@ -16,6 +16,8 @@ public record DecisionInput(
         String useScope,
         String existingTreatment,
         List<String> existingTreatments,
+        List<String> supportingSignals,
+        List<DecisionReportLine> companionReportLines,
         String symptomFlag,
         String triggerFlag,
         String labName,
@@ -32,6 +34,129 @@ public record DecisionInput(
 ) {
     public DecisionInput {
         existingTreatments = existingTreatments == null ? List.of() : List.copyOf(existingTreatments);
+        supportingSignals = supportingSignals == null ? List.of() : List.copyOf(supportingSignals);
+        companionReportLines = companionReportLines == null ? List.of() : List.copyOf(companionReportLines);
+    }
+
+    public DecisionInput(
+            EntryMode entryMode,
+            String analyteName,
+            String resultValue,
+            String unit,
+            String qualifier,
+            String qualifierValue,
+            String sampleDate,
+            String sampleSource,
+            String labCertified,
+            String state,
+            String useScope,
+            String existingTreatment,
+            List<String> existingTreatments,
+            List<String> supportingSignals,
+            String symptomFlag,
+            String triggerFlag,
+            String labName,
+            String householdSize,
+            String smellType,
+            String stainType,
+            String tasteType,
+            String locationScope,
+            String changeTiming,
+            boolean infantPresent,
+            boolean pregnancyPresent,
+            boolean immunocompromisedPresent,
+            String slugHint
+    ) {
+        this(
+                entryMode,
+                analyteName,
+                resultValue,
+                unit,
+                qualifier,
+                qualifierValue,
+                sampleDate,
+                sampleSource,
+                labCertified,
+                state,
+                useScope,
+                existingTreatment,
+                existingTreatments,
+                supportingSignals,
+                List.of(),
+                symptomFlag,
+                triggerFlag,
+                labName,
+                householdSize,
+                smellType,
+                stainType,
+                tasteType,
+                locationScope,
+                changeTiming,
+                infantPresent,
+                pregnancyPresent,
+                immunocompromisedPresent,
+                slugHint
+        );
+    }
+
+    public DecisionInput(
+            EntryMode entryMode,
+            String analyteName,
+            String resultValue,
+            String unit,
+            String qualifier,
+            String qualifierValue,
+            String sampleDate,
+            String sampleSource,
+            String labCertified,
+            String state,
+            String useScope,
+            String existingTreatment,
+            List<String> existingTreatments,
+            String symptomFlag,
+            String triggerFlag,
+            String labName,
+            String householdSize,
+            String smellType,
+            String stainType,
+            String tasteType,
+            String locationScope,
+            String changeTiming,
+            boolean infantPresent,
+            boolean pregnancyPresent,
+            boolean immunocompromisedPresent,
+            String slugHint
+    ) {
+        this(
+                entryMode,
+                analyteName,
+                resultValue,
+                unit,
+                qualifier,
+                qualifierValue,
+                sampleDate,
+                sampleSource,
+                labCertified,
+                state,
+                useScope,
+                existingTreatment,
+                existingTreatments,
+                List.of(),
+                List.of(),
+                symptomFlag,
+                triggerFlag,
+                labName,
+                householdSize,
+                smellType,
+                stainType,
+                tasteType,
+                locationScope,
+                changeTiming,
+                infantPresent,
+                pregnancyPresent,
+                immunocompromisedPresent,
+                slugHint
+        );
     }
 
     public String normalizedAnalyte() {
@@ -92,6 +217,14 @@ public record DecisionInput(
 
     public List<String> normalizedExistingTreatments() {
         return normalizeList(existingTreatments);
+    }
+
+    public List<String> normalizedSupportingSignals() {
+        return normalizeList(supportingSignals);
+    }
+
+    public List<DecisionReportLine> companionReportLines() {
+        return companionReportLines;
     }
 
     public String normalizedLabName() {

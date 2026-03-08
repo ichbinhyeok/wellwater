@@ -7,20 +7,22 @@
 @param String savedAtLabel
 @param String expiresLabel
 @param boolean sharedView
+@param com.example.wellwater.lead.LeadCaptureContext leadContext
+@param String leadStatus
 
 @template.layout.engine(
-    title = "Decision Result",
+    title = result.browserTitle(),
     robots = "noindex,nofollow",
     description = "Personalized well-water decision output.",
     activeEntryMode = result.entryMode().wireValue(),
     leftPanel = @`
-        <div class="flex-1 flex flex-col justify-center max-w-sm mx-auto w-full">
+        <div class="hidden lg:flex flex-1 flex-col justify-center max-w-sm mx-auto w-full">
             <div class="mb-8">
                 <span class="inline-block p-3 rounded-2xl bg-zinc-100 mb-4 ring-1 ring-zinc-200 shadow-sm">
                     <svg class="w-6 h-6 text-zinc-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </span>
                 <h2 class="text-3xl font-bold text-zinc-900 tracking-tight mb-3">Decision result</h2>
-                <p class="text-zinc-500 leading-relaxed text-sm">Your water quality data has been processed by the decision engine. Review your verdict and actions on the right panel.</p>
+                <p class="text-zinc-500 leading-relaxed text-sm">${result.resultIntroSentence()}</p>
             </div>
 
             <div class="bg-zinc-50 rounded-2xl border border-zinc-200 p-5 mb-8">
@@ -50,32 +52,77 @@
                 Enter new data
             </a>
         </div>
+
+        <div class="lg:hidden w-full space-y-4">
+            <div class="rounded-[26px] border border-zinc-200 bg-white/90 p-5 shadow-subtle">
+                <div class="flex items-start justify-between gap-3 mb-4">
+                    <div>
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${result.branch().name().equals("RED") ? "bg-danger/10 text-danger" : (result.branch().name().equals("GREEN") ? "bg-safe/10 text-safe" : "bg-warn/10 text-warn")} uppercase tracking-wide">
+                            ${result.consumerSupportLabel()}
+                        </span>
+                        <h2 class="text-2xl font-bold text-zinc-900 tracking-tight mt-3">Result ready</h2>
+                    </div>
+                    <span class="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-zinc-500">${result.confidence().label()}</span>
+                </div>
+                <p class="text-sm text-zinc-600 leading-relaxed">${result.resultIntroSentence()}</p>
+                <div class="grid grid-cols-2 gap-3 mt-5">
+                    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Priority</p>
+                        <p class="text-sm font-semibold text-zinc-900">${result.consumerPriorityLabel()}</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Support</p>
+                        <p class="text-sm font-semibold text-zinc-900">${result.consumerSupportLabel()}</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Scope</p>
+                        <p class="text-sm font-semibold text-zinc-900">${result.consumerScopeLabel()}</p>
+                    </div>
+                    <div class="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
+                        <p class="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-1">Topic</p>
+                        <p class="text-sm font-semibold text-zinc-900">${result.primaryTopicLabel()}</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="/tool/${result.entryMode().wireValue()}" class="flex items-center justify-center w-full py-3.5 border border-zinc-300 rounded-xl text-sm font-bold text-zinc-900 hover:bg-zinc-50 hover:border-zinc-400 transition-colors shadow-sm bg-white/90">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                Enter new data
+            </a>
+        </div>
     `,
     rightPanel = @`
-        <!-- Mobile Bottom Sheet Drag Handle -->
-        <div class="lg:hidden w-full flex justify-center pt-3 pb-4 bg-white/95 backdrop-blur-md rounded-t-2xl border-b border-zinc-100 cursor-pointer shadow-sm relative z-20" onclick="toggleBottomSheet()">
-            <div class="w-12 h-1.5 bg-zinc-300 rounded-full"></div>
-        </div>
+        <div class="px-4 sm:px-6 lg:px-0 pb-10 lg:pb-12 h-auto overflow-visible lg:overflow-y-auto no-scrollbar bg-zinc-50 lg:bg-transparent">
 
-        <!-- Mobile Sticky Header -->
-        <div id="mobile-summary" class="lg:hidden px-6 pb-4 bg-white/95 backdrop-blur-md flex items-center justify-between border-b border-zinc-100 transition-opacity duration-300 relative z-20 cursor-pointer" onclick="toggleBottomSheet()">
-            <div>
-                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold ${result.branch().name().equals("RED") ? "bg-danger/10 text-danger" : (result.branch().name().equals("GREEN") ? "bg-safe/10 text-safe" : "bg-warn/10 text-warn")} mb-1 tracking-wide uppercase">
-                    ${result.consumerSupportLabel()}
-                </span>
-                <p class="text-sm font-semibold text-zinc-900 truncate w-48">${result.primaryVerdictLabel()}</p>
+            <div class="lg:hidden pt-4 pb-5">
+                <div class="rounded-[24px] border border-zinc-200 bg-white/88 p-4 shadow-sm">
+                    <div class="flex items-center justify-between gap-3 mb-3">
+                        <div>
+                            <p class="text-[11px] font-bold uppercase tracking-[0.18em] text-zinc-400 mb-1">Analysis report</p>
+                            <p class="text-base font-semibold tracking-tight text-zinc-900">${result.primaryTopicLabel()}</p>
+                        </div>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-[11px] font-semibold text-zinc-600">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            Ready
+                        </span>
+                    </div>
+                    <p class="text-sm text-zinc-600 leading-relaxed">${result.mobileAnalysisSummary()}</p>
+                    <div class="flex flex-wrap gap-2 mt-4">
+                        @if(result.hasRecommendedTestCards() || !result.recommendedTests().isEmpty())
+                            <a href="#recommended-tests" class="inline-flex items-center rounded-full border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold text-zinc-900">Recommended tests</a>
+                        @endif
+                        @if(!result.compareReadinessChecks().isEmpty())
+                            <a href="#compare-readiness" class="inline-flex items-center rounded-full border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold text-zinc-900">Compare gates</a>
+                        @endif
+                        <a href="#method-and-trust" class="inline-flex items-center rounded-full border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold text-zinc-900">Trust surface</a>
+                    </div>
+                </div>
             </div>
-            <button class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-900 shadow-sm border border-zinc-200">
-                <svg class="w-4 h-4 transform transition-transform duration-300 rotate-180" id="chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
-            </button>
-        </div>
-
-        <div class="px-6 lg:px-0 pb-20 lg:pb-12 h-[calc(100vh-80px)] lg:h-auto overflow-y-auto no-scrollbar bg-zinc-50 lg:bg-transparent">
 
             <div class="pt-6 lg:pt-0 pb-6 flex items-end justify-between border-b border-zinc-200/60 mb-8 hidden lg:flex">
                 <div>
                     <h2 class="text-xs font-bold text-zinc-400 uppercase tracking-[0.15em] mb-1">Analysis Report</h2>
-                    <p class="text-xl font-bold text-zinc-900 tracking-tight">Decision result</p>
+                    <p class="text-xl font-bold text-zinc-900 tracking-tight">${result.primaryTopicLabel()}</p>
                 </div>
                 <div class="text-right">
                     <div class="flex items-center gap-2 text-sm text-zinc-500 font-medium">
@@ -91,7 +138,7 @@
             <div class="space-y-6 pt-4 lg:pt-0">
 
                 <!-- Block 1: Primary Verdict -->
-                <div class="bg-white rounded-2xl p-6 lg:p-8 border ${result.branch().name().equals("RED") ? "border-danger/30 ring-danger/10 ring-1" : "border-zinc-200"} shadow-subtle relative overflow-hidden">
+                <div id="analysis-verdict" class="bg-white rounded-2xl p-6 lg:p-8 border ${result.branch().name().equals("RED") ? "border-danger/30 ring-danger/10 ring-1" : "border-zinc-200"} shadow-subtle relative overflow-hidden">
                     @if(result.branch().name().equals("RED"))
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-danger"></div>
                     @elseif(result.branch().name().equals("AMBER"))
@@ -131,7 +178,7 @@
 
                 <!-- Block 2: Action Timeline -->
                 <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
-                    <h4 class="text-sm font-bold text-zinc-900 mb-6 flex items-center uppercase tracking-wider">
+                    <h4 id="action-timeline" class="text-sm font-bold text-zinc-900 mb-6 flex items-center uppercase tracking-wider">
                         <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         Action Timeline
                     </h4>
@@ -175,10 +222,154 @@
                     </div>
                 </div>
 
+                @if(result.hasRecommendedTestCards() || !result.recommendedTests().isEmpty())
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                        <h4 id="recommended-tests" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a4 4 0 00-5.656 0L12 17.2l-1.772-1.772a4 4 0 00-5.656 5.656L12 28.312l7.428-7.228a4 4 0 000-5.656z" transform="translate(0 -6) scale(.8)"></path></svg>
+                            Recommended Tests
+                        </h4>
+                        @if(result.hasRecommendedTestOrderNote())
+                            <p class="text-sm text-zinc-600 leading-relaxed mb-4">${result.recommendedTestOrderNote()}</p>
+                        @endif
+                        <div class="space-y-3">
+                            @if(result.hasRecommendedTestCards())
+                                @for(int i = 0; i < result.recommendedTestCards().size(); i++)
+                                    !{var test = result.recommendedTestCards().get(i);}
+                                    <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                        <div class="flex items-center justify-between gap-3 mb-2">
+                                            <p class="text-sm font-semibold text-zinc-900">${test.testName()}</p>
+                                            <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-zinc-500">Step ${i + 1}</span>
+                                        </div>
+                                        <p class="text-sm text-zinc-700 leading-relaxed mt-2">${test.whyNow()}</p>
+                                        <p class="text-xs text-zinc-500 mt-3"><span class="font-semibold uppercase tracking-wide text-zinc-400">Sample plan</span> ${test.samplePlan()}</p>
+                                        @if(test.hasResourceLink())
+                                            <a href="${test.resourceUrl()}" class="mt-3 inline-flex items-center justify-center rounded-lg border border-zinc-300 bg-white px-3 py-2 text-xs font-semibold text-zinc-900 hover:border-zinc-400 hover:bg-zinc-100 transition-colors">
+                                                ${test.resourceLabel()}
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endfor
+                            @else
+                                @for(var test : result.recommendedTests())
+                                    <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                        <p class="text-sm text-zinc-700 leading-relaxed">${test}</p>
+                                    </div>
+                                @endfor
+                            @endif
+                        </div>
+                    </div>
+                @endif
+
+                @if(!result.compareReadinessChecks().isEmpty())
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                        <h4 id="compare-readiness" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            Before You Compare Or Buy
+                        </h4>
+                        <div class="space-y-3">
+                            @for(var check : result.compareReadinessChecks())
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <p class="text-sm text-zinc-700 leading-relaxed">${check}</p>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+                @endif
+
+                @if(result.hasReportLinesReviewed())
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                        <h4 id="report-lines-reviewed" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-7 4h8m-9-8h10"></path></svg>
+                            Report Lines Reviewed
+                        </h4>
+                        <div class="space-y-3">
+                            @for(var line : result.reportLinesReviewed())
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <div class="flex items-center justify-between gap-3 mb-2">
+                                        <p class="text-sm font-semibold text-zinc-900">${line.analyteLabel()}</p>
+                                        <span class="inline-flex items-center rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-zinc-500">
+                                            ${line.primary() ? "Primary line" : "Supporting line"}
+                                        </span>
+                                    </div>
+                                    <p class="text-sm text-zinc-700">${line.observedValueLabel()}</p>
+                                    <p class="text-xs text-zinc-500 mt-2">${line.interpretationNote()}</p>
+                                </div>
+                            @endfor
+                        </div>
+                    </div>
+                @endif
+
+                @if(!result.consumerSupportingSignals().isEmpty())
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                        <h4 id="report-context-used" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h10m-7 4h7"></path></svg>
+                            Report Context Used
+                        </h4>
+                        <p class="text-sm text-zinc-600 leading-relaxed mb-4">These extra report lines or event clues changed the interpretation so the engine would not overfit a single result.</p>
+                        <div class="flex flex-wrap gap-2">
+                            @for(var signalLabel : result.consumerSupportingSignals())
+                                <span class="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-xs font-semibold text-zinc-700">${signalLabel}</span>
+                            @endfor
+                        </div>
+                    </div>
+                @endif
+
+                @if(result.hasSoftenerSizingPreview())
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                        <h4 id="softener-sizing-preview" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18m-7-7h14"></path></svg>
+                            Softener Sizing Preview
+                        </h4>
+                        <p class="text-sm text-zinc-600 leading-relaxed mb-4">${result.softenerSizingPreview().summary()}</p>
+                        @if(result.softenerSizingPreview().eligible())
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Recommended class</p>
+                                    <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().recommendedClass()}</p>
+                                </div>
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Sizing verdict</p>
+                                    <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().sizingVerdict()}</p>
+                                </div>
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Hardness basis</p>
+                                    <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().hardnessLabel()}</p>
+                                </div>
+                                <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                    <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Daily grain load</p>
+                                    <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().dailyGrainLoadLabel()}</p>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 mb-4">
+                                <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Regeneration pace</p>
+                                <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().regenerationLabel()}</p>
+                            </div>
+                        @else
+                            <div class="rounded-xl border border-warn/20 bg-warn/5 p-4 mb-4">
+                                <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().headline()}</p>
+                                <p class="text-sm text-zinc-600 mt-2">${result.softenerSizingPreview().sizingVerdict()}</p>
+                            </div>
+                        @endif
+                        @if(!result.softenerSizingPreview().notes().isEmpty())
+                            <div class="space-y-3 mb-4">
+                                @for(var note : result.softenerSizingPreview().notes())
+                                    <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                                        <p class="text-sm text-zinc-700 leading-relaxed">${note}</p>
+                                    </div>
+                                @endfor
+                            </div>
+                        @endif
+                        <div class="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Next action</p>
+                            <p class="text-sm font-semibold text-zinc-900">${result.softenerSizingPreview().nextAction()}</p>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Block 3: Scenario Compare -->
                 @if(!result.scenarios().isEmpty())
                     <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm overflow-hidden">
-                        <h4 class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
+                    <h4 id="scenario-compare" class="text-sm font-bold text-zinc-900 mb-5 flex items-center uppercase tracking-wider">
                             <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                             Scenario compare
                         </h4>
@@ -217,7 +408,7 @@
                 @endif
 
                 <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
-                    <h4 class="text-sm font-bold text-zinc-900 mb-3 flex items-center uppercase tracking-wider">
+                    <h4 id="save-and-share" class="text-sm font-bold text-zinc-900 mb-3 flex items-center uppercase tracking-wider">
                         <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-3-3v6m8 2a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h3.586a1 1 0 01.707.293l1.414 1.414A1 1 0 0012.414 7H18a2 2 0 012 2v8z"></path></svg>
                         Save & Share Surface
                     </h4>
@@ -252,10 +443,42 @@
                     </div>
                 </div>
 
+                @if(leadContext != null)
+                    <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm" id="lead-capture">
+                        <h4 id="follow-up" class="text-sm font-bold text-zinc-900 mb-3 flex items-center uppercase tracking-wider">
+                            <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10a3 3 0 100 6 3 3 0 000-6z"></path></svg>
+                            Follow-Up
+                        </h4>
+                        <p class="text-sm text-zinc-600 leading-relaxed">${leadContext.summary()}</p>
+                        @if("success".equals(leadStatus))
+                            <p class="text-sm font-semibold text-safe mt-4">Follow-up request captured. The saved result link kept the diagnostic context attached.</p>
+                        @elseif("invalid".equals(leadStatus))
+                            <p class="text-sm font-semibold text-warn mt-4">Enter a valid email address to submit this follow-up request.</p>
+                        @endif
+                        <form method="post" action="/lead/submit" class="space-y-4 mt-5">
+                            <input type="hidden" name="redirectPath" value="${leadContext.redirectPath()}">
+                            <input type="hidden" name="sourceType" value="${leadContext.sourceType()}">
+                            <input type="hidden" name="sourceFamily" value="${leadContext.sourceFamily()}">
+                            <input type="hidden" name="sourceSlug" value="${leadContext.sourceSlug()}">
+                            <input type="hidden" name="sourceLabel" value="${leadContext.sourceLabel()}">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                <input type="email" name="email" placeholder="you@example.com" required class="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900">
+                                <input type="text" name="state" placeholder="State (optional)" maxlength="12" class="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900">
+                            </div>
+                            <input type="text" name="name" placeholder="Name (optional)" class="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900">
+                            <textarea name="note" rows="4" placeholder="What follow-up do you want on this result?" class="w-full rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900"></textarea>
+                            <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-zinc-900 px-5 py-3 text-sm font-semibold text-white hover:bg-zinc-800 transition-colors">
+                                ${leadContext.submitLabel()}
+                            </button>
+                        </form>
+                    </div>
+                @endif
+
                 <!-- Additional Context -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="bg-white rounded-2xl p-5 border border-zinc-200 shadow-sm">
-                        <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Data Quality</h4>
+                        <h4 id="data-quality" class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Data Quality</h4>
                         <div class="space-y-2 text-sm text-zinc-600">
                             <div class="flex justify-between"><span class="text-zinc-500">Sample freshness</span> <span class="font-medium text-zinc-900">${result.sampleFreshness()}</span></div>
                             <div class="flex justify-between"><span class="text-zinc-500">Completeness</span> <span class="font-medium text-zinc-900">${result.completenessScore()}/100</span></div>
@@ -270,7 +493,7 @@
                     </div>
 
                     <div class="bg-white rounded-2xl p-5 border border-zinc-200 shadow-sm">
-                        <h4 class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Links & Sources</h4>
+                        <h4 id="links-and-sources" class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-3">Links & Sources</h4>
                         <div class="space-y-3 text-sm">
                             <a href="${result.localGuidanceUrl()}" class="flex items-center text-zinc-600 hover:text-zinc-900 transition-colors">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
@@ -281,6 +504,32 @@
                                 Certified lab finder
                             </a>
                         </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 border border-zinc-200 shadow-sm">
+                    <h4 id="method-and-trust" class="text-sm font-bold text-zinc-900 mb-3 flex items-center uppercase tracking-wider">
+                        <svg class="w-4 h-4 mr-2 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 1.657-1.79 3-4 3s-4-1.343-4-3 1.79-3 4-3 4 1.343 4 3zm8 0c0 1.657-1.79 3-4 3s-4-1.343-4-3 1.79-3 4-3 4 1.343 4 3zm-8 7c0 1.657-1.79 3-4 3s-4-1.343-4-3 1.79-3 4-3 4 1.343 4 3zm8 0c0 1.657-1.79 3-4 3s-4-1.343-4-3 1.79-3 4-3 4 1.343 4 3z"></path></svg>
+                        Method And Trust
+                    </h4>
+                    <p class="text-sm text-zinc-600 mb-4">Use the public trust surface when you want to check how evidence, review, storage, and commercial routing are handled on this result path.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <a href="/trust/methodology" class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 hover:border-zinc-300 transition-colors">
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Methodology</p>
+                            <p class="text-sm font-semibold text-zinc-900">See how the decision engine handles evidence and buying gates.</p>
+                        </a>
+                        <a href="/trust/reviewers-and-expertise" class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 hover:border-zinc-300 transition-colors">
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Reviewers</p>
+                            <p class="text-sm font-semibold text-zinc-900">Check who reviews health, nuisance, and claim-check logic.</p>
+                        </a>
+                        <a href="/trust/privacy-and-data-handling" class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 hover:border-zinc-300 transition-colors">
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Privacy</p>
+                            <p class="text-sm font-semibold text-zinc-900">Review how saved results, follow-up requests, and analytics are stored.</p>
+                        </a>
+                        <a href="/trust/commercial-disclosure" class="rounded-xl border border-zinc-200 bg-zinc-50 p-4 hover:border-zinc-300 transition-colors">
+                            <p class="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">Commercial disclosure</p>
+                            <p class="text-sm font-semibold text-zinc-900">See why compare and follow-up routes stay behind testing and scope control.</p>
+                        </a>
                     </div>
                 </div>
 
@@ -309,7 +558,6 @@
 
             </div>
         </div>
-
         <script>
             async function copyShareLink() {
                 const input = document.getElementById('share-link-input');
@@ -331,16 +579,6 @@
                     input.select();
                 }
             }
-
-            // Auto expand bottom sheet on mobile when viewing result
-            document.addEventListener('DOMContentLoaded', () => {
-                if (window.innerWidth <= 1023) {
-                    const sheet = document.querySelector('.mobile-bottom-sheet');
-                    if (sheet) {
-                        setTimeout(() => toggleBottomSheet(), 100);
-                    }
-                }
-            });
         </script>
     `
 )

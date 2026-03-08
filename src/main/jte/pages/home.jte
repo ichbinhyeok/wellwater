@@ -69,7 +69,33 @@
             </div>
         </section>
 
-        <section class="panel">
+        <section class="panel mobile-only">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Quick picks</p>
+                    <h2>Start from the highest-signal paths</h2>
+                </div>
+                <p class="section-copy">On smaller screens, jump straight to the pages and hubs that most often become a real decision.</p>
+            </div>
+            <div class="grid grid-compact">
+                @for (int i = 0; i < priorityPages.size() && i < 4; i++)
+                    !{var page = priorityPages.get(i);}
+                    <a class="card-link" href="/well-water/${page.slug()}">
+                        <span class="card-kicker">${page.family()}</span>
+                        <h3>${page.h1()}</h3>
+                        <p class="card-meta">${page.metaDescription()}</p>
+                    </a>
+                @endfor
+            </div>
+            <div class="chip-row" style="margin-top: 18px;">
+                <a class="chip" href="/well-water/family/contaminants">Contaminants</a>
+                <a class="chip" href="/well-water/family/symptoms">Symptoms</a>
+                <a class="chip" href="/well-water/family/triggers">Triggers</a>
+                <a class="chip" href="/trust">Trust</a>
+            </div>
+        </section>
+
+        <section class="panel desktop-only">
             <div class="section-header">
                 <div>
                     <p class="brand-kicker">Public research</p>
@@ -111,7 +137,7 @@
             </div>
         </section>
 
-        <section class="panel">
+        <section class="panel desktop-only">
             <div class="section-header">
                 <div>
                     <p class="brand-kicker">Priority pages</p>
@@ -120,8 +146,9 @@
                 <p class="section-copy">These pages match the questions people are most likely to search first and should lead naturally into testing, comparison, or the matching tool flow.</p>
             </div>
             <div class="grid">
-                @for (var page : priorityPages)
-                    <a class="card-link" href="/well-water/${page.slug()}">
+                @for (int i = 0; i < priorityPages.size(); i++)
+                    !{var page = priorityPages.get(i);}
+                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="/well-water/${page.slug()}">
                         <span class="card-kicker">${page.family()}</span>
                         <h3>${page.h1()}</h3>
                         <p class="card-meta">${page.metaDescription()}</p>
@@ -139,13 +166,19 @@
                 <p class="section-copy">These pages explain how advice is reviewed, where the source trail comes from, and when testing should stay ahead of product research.</p>
             </div>
             <div class="grid">
-                @for (var page : trustPages)
-                    <a class="card-link" href="/trust/${page.slug()}">
+                @for (int i = 0; i < trustPages.size(); i++)
+                    !{var page = trustPages.get(i);}
+                    <a class="card-link ${i >= 3 ? "mobile-card-hidden" : ""}" href="/trust/${page.slug()}">
                         <span class="card-kicker">${page.eyebrow()}</span>
                         <h3>${page.h1()}</h3>
                         <p class="card-meta">${page.metaDescription()}</p>
                     </a>
                 @endfor
+                <a class="card-link mobile-only" href="/trust">
+                    <span class="card-kicker">Trust hub</span>
+                    <h3>Open the full trust surface</h3>
+                    <p class="card-meta">Review methodology, reviewers, privacy, and disclosure without scrolling through the entire directory.</p>
+                </a>
             </div>
         </section>
     </main>
