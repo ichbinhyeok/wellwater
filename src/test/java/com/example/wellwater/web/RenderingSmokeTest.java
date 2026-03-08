@@ -1,5 +1,6 @@
 package com.example.wellwater.web;
 
+import com.example.wellwater.pseo.PseoCatalogService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,9 @@ class RenderingSmokeTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private PseoCatalogService pseoCatalogService;
+
     @Test
     void homePageRendersRealContent() throws Exception {
         mockMvc.perform(get("/"))
@@ -49,6 +53,9 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,nofollow")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Symbol (Optional)")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("No symbol (Exact number)")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("MPN / 100mL")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Companion Report Lines")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Add report line")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Other Context Flags")))
@@ -221,6 +228,14 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Request follow-up")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Method, review, and disclosure")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related next reads")));
+    }
+
+    @Test
+    void everyPseoDetailPageRendersWithoutServerError() throws Exception {
+        for (var page : pseoCatalogService.allPages()) {
+            mockMvc.perform(get("/well-water/" + page.slug()))
+                    .andExpect(status().isOk());
+        }
     }
 
     @Test

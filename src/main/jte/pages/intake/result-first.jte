@@ -11,7 +11,19 @@
 @param java.util.List<String> locationScopes
 @param java.util.List<String> changeTimings
 
-!{var unitOptions = java.util.List.of("mg/L", "ppm", "ppb", "ug/L", "ppt", "pCi/L", "grains/gal", "su", "cfu/100ml", "presence/absence", "unknown");}
+!{
+    var unitOptions = java.util.List.of("mg/L", "ppm", "ppb", "ug/L", "ppt", "pCi/L", "grains/gal", "su", "cfu/100ml", "mpn/100ml", "presence/absence", "unknown");
+    var unitLabels = new java.util.LinkedHashMap<String, String>();
+    unitLabels.put("cfu/100ml", "cfu / 100mL");
+    unitLabels.put("mpn/100ml", "MPN / 100mL");
+    var qualifierLabels = new java.util.LinkedHashMap<String, String>();
+    qualifierLabels.put("nd", "ND");
+    qualifierLabels.put("less_than", "<");
+    qualifierLabels.put("estimated", "Estimated");
+    qualifierLabels.put("positive", "Detected / Positive");
+    qualifierLabels.put("negative", "Not detected / Negative");
+    qualifierLabels.put("unknown", "Unknown");
+}
 
 @template.layout.engine(
     title = "Result-First Well Water Tool",
@@ -57,7 +69,8 @@
                         <option value="pCi/L" selected="${"pCi/L".equalsIgnoreCase(request.getUnit())}">pCi/L</option>
                         <option value="grains/gal" selected="${"grains/gal".equalsIgnoreCase(request.getUnit())}">grains/gal</option>
                         <option value="su" selected="${"su".equalsIgnoreCase(request.getUnit())}">su</option>
-                        <option value="cfu/100ml" selected="${"cfu/100ml".equalsIgnoreCase(request.getUnit())}">CFU/100mL</option>
+                        <option value="cfu/100ml" selected="${"cfu/100ml".equalsIgnoreCase(request.getUnit())}">cfu / 100mL</option>
+                        <option value="mpn/100ml" selected="${"mpn/100ml".equalsIgnoreCase(request.getUnit())}">MPN / 100mL</option>
                         <option value="presence/absence" selected="${"presence/absence".equalsIgnoreCase(request.getUnit())}">presence/absence</option>
                         <option value="unknown" selected="${"unknown".equalsIgnoreCase(request.getUnit())}">unknown</option>
                     </select>
@@ -67,10 +80,14 @@
             <div class="grid grid-cols-2 gap-3">
                 <!-- Field 3: Qualifier -->
                 <div class="group relative bg-white border border-zinc-200 rounded-2xl p-4 hover:border-zinc-300 focus-within:border-zinc-900 focus-within:ring-1 transition-all">
-                    <label class="text-xs font-semibold text-zinc-500 mb-1 block">Qualifier</label>
+                    <label class="text-xs font-semibold text-zinc-500 mb-1 block">Symbol (Optional)</label>
+                    <span class="block text-xs text-zinc-500 mb-2">e.g., &lt;, &gt;, or ND</span>
                     <select name="qualifier" class="w-full text-sm outline-none bg-transparent text-zinc-900">
+                        <option value="" selected="${request.getQualifier() == null || request.getQualifier().isBlank() || "none".equalsIgnoreCase(request.getQualifier())}">No symbol (Exact number)</option>
                         @for (var qualifier : qualifiers)
-                            <option value="${qualifier}" selected="${qualifier.equalsIgnoreCase(request.getQualifier())}">${qualifier}</option>
+                            @if(!"none".equalsIgnoreCase(qualifier))
+                                <option value="${qualifier}" selected="${qualifier.equalsIgnoreCase(request.getQualifier())}">${qualifierLabels.getOrDefault(qualifier, qualifier)}</option>
+                            @endif
                         @endfor
                     </select>
                 </div>
@@ -226,12 +243,15 @@
                                 <select name="${fieldPrefix}.unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                                     <option value="">Unit</option>
                                     @for (var unitOption : unitOptions)
-                                        <option value="${unitOption}" selected="${unitOption.equalsIgnoreCase(companionLine.getUnit())}">${unitOption.equals("cfu/100ml") ? "CFU/100mL" : unitOption}</option>
+                                        <option value="${unitOption}" selected="${unitOption.equalsIgnoreCase(companionLine.getUnit())}">${unitLabels.getOrDefault(unitOption, unitOption)}</option>
                                     @endfor
                                 </select>
                                 <select name="${fieldPrefix}.qualifier" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                                    <option value="" selected="${companionLine.getQualifier() == null || companionLine.getQualifier().isBlank() || "none".equalsIgnoreCase(companionLine.getQualifier())}">No symbol (Exact number)</option>
                                     @for (var qualifier : qualifiers)
-                                        <option value="${qualifier}" selected="${qualifier.equalsIgnoreCase(companionLine.getQualifier())}">${qualifier}</option>
+                                        @if(!"none".equalsIgnoreCase(qualifier))
+                                            <option value="${qualifier}" selected="${qualifier.equalsIgnoreCase(companionLine.getQualifier())}">${qualifierLabels.getOrDefault(qualifier, qualifier)}</option>
+                                        @endif
                                     @endfor
                                 </select>
                                 <input name="${fieldPrefix}.qualifierValue" value="${companionLine.getQualifierValue()}" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
@@ -298,12 +318,15 @@
                     <select name="companionLines[__INDEX__].unit" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
                         <option value="">Unit</option>
                         @for (var unitOption : unitOptions)
-                            <option value="${unitOption}">${unitOption.equals("cfu/100ml") ? "CFU/100mL" : unitOption}</option>
+                            <option value="${unitOption}">${unitLabels.getOrDefault(unitOption, unitOption)}</option>
                         @endfor
                     </select>
                     <select name="companionLines[__INDEX__].qualifier" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">
+                        <option value="" selected="true">No symbol (Exact number)</option>
                         @for (var qualifier : qualifiers)
-                            <option value="${qualifier}" selected="${"none".equalsIgnoreCase(qualifier)}">${qualifier}</option>
+                            @if(!"none".equalsIgnoreCase(qualifier))
+                                <option value="${qualifier}">${qualifierLabels.getOrDefault(qualifier, qualifier)}</option>
+                            @endif
                         @endfor
                     </select>
                     <input name="companionLines[__INDEX__].qualifierValue" placeholder="Qualifier value" class="rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900">

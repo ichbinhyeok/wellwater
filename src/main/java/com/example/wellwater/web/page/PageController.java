@@ -1,10 +1,13 @@
 package com.example.wellwater.web.page;
 
+import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.lead.LeadCaptureContext;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,25 +19,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @Controller
 public class PageController {
 
+    private static final Logger log = LoggerFactory.getLogger(PageController.class);
+
     private final PseoCatalogService pseoCatalogService;
     private final PseoExperienceService pseoExperienceService;
     private final SeoMetadataService seoMetadataService;
     private final TrustPageService trustPageService;
+    private final AnalyticsEventService analyticsEventService;
 
     public PageController(
             PseoCatalogService pseoCatalogService,
             PseoExperienceService pseoExperienceService,
             SeoMetadataService seoMetadataService,
-            TrustPageService trustPageService
+            TrustPageService trustPageService,
+            AnalyticsEventService analyticsEventService
     ) {
         this.pseoCatalogService = pseoCatalogService;
         this.pseoExperienceService = pseoExperienceService;
         this.seoMetadataService = seoMetadataService;
         this.trustPageService = trustPageService;
+        this.analyticsEventService = analyticsEventService;
     }
 
     @GetMapping("/")
     public String home(Model model) {
+        trackPublicPageView("home", "", "", "/", "indexable");
         model.addAttribute("familyCounts", pseoCatalogService.familyCounts());
         model.addAttribute("totalPageCount", pseoCatalogService.allPages().size());
         model.addAttribute("priorityPages", pseoExperienceService.priorityPages(16));
@@ -59,6 +68,7 @@ public class PageController {
             model.addAttribute("path", "/well-water/family/" + family);
             return "pages/not-found";
         }
+        trackPublicPageView("family", family, "", "/well-water/family/" + family, "indexable");
         model.addAttribute("family", family);
         model.addAttribute("pages", pages);
         var familyView = pseoExperienceService.familyView(family, pages);
@@ -97,6 +107,13 @@ public class PageController {
             model.addAttribute("path", "/well-water/" + slug);
             return "pages/not-found";
         }
+        trackPublicPageView(
+                "detail",
+                maybePageView.get().page().slug(),
+                maybePageView.get().page().tier(),
+                "/well-water/" + maybePageView.get().page().slug(),
+                maybePageView.get().page().family()
+        );
         model.addAttribute("pageView", maybePageView.get());
         model.addAttribute("page", maybePageView.get().page());
         model.addAttribute("seo", seoMetadataService.detail(maybePageView.get()));
@@ -122,6 +139,7 @@ public class PageController {
 
     @GetMapping("/trust")
     public String trustHub(Model model) {
+        trackPublicPageView("trust-hub", "trust", "", "/trust", "indexable");
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("seo", seoMetadataService.trustHub(
                 "Trust And Method | Private Well Water Guide",
@@ -138,10 +156,30 @@ public class PageController {
             model.addAttribute("path", "/trust/" + slug);
             return "pages/not-found";
         }
+        trackPublicPageView("trust-page", maybePage.get().slug(), "", "/trust/" + maybePage.get().slug(), "indexable");
         model.addAttribute("page", maybePage.get());
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("seo", seoMetadataService.trustPage(maybePage.get()));
         return "pages/trust/view";
+    }
+
+    @GetMapping(value = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String robots(HttpServletRequest request) {
+        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
+                .replacePath(null)
+                .build()
+                .toUriString();
+        return """
+                User-agent: *
+                Allow: /
+                Disallow: /admin
+                Disallow: /lead/
+                Disallow: /result/
+                Disallow: /tool/
+
+                Sitemap: %s/sitemap.xml
+                """.formatted(baseUrl);
     }
 
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE)
@@ -162,5 +200,23 @@ public class PageController {
             return "invalid";
         }
         return "";
+    }
+
+    private void trackPublicPageView(String entryMode, String slug, String tier, String targetUrl, String note) {
+        try {
+            analyticsEventService.logEvent(
+                    "public_page_view",
+                    entryMode,
+                    null,
+                    slug,
+                    tier,
+                    null,
+                    null,
+                    targetUrl,
+                    note
+            );
+        } catch (RuntimeException e) {
+            log.warn("Skipping public_page_view analytics for {} because event logging failed", targetUrl, e);
+        }
     }
 }

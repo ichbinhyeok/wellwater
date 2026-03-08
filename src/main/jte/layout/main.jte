@@ -4,6 +4,10 @@
 @param String canonicalUrl
 @param java.util.List<com.example.wellwater.web.page.SeoBreadcrumb> breadcrumbs
 @param java.util.List<String> structuredDataBlocks
+@param String openGraphType
+@param String socialImageUrl
+@param String googleSiteVerification
+@param String googleAnalyticsId
 @param gg.jte.Content content
 
 <!doctype html>
@@ -13,10 +17,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="${robots}">
     <meta name="description" content="${description}">
+    <meta property="og:site_name" content="Private Well Water Guide">
+    <meta property="og:type" content="${openGraphType}">
+    <meta property="og:title" content="${title}">
+    <meta property="og:description" content="${description}">
+    @if (canonicalUrl != null && !canonicalUrl.isBlank())
+        <meta property="og:url" content="${canonicalUrl}">
+    @endif
+    @if (socialImageUrl != null && !socialImageUrl.isBlank())
+        <meta property="og:image" content="${socialImageUrl}">
+        <meta name="twitter:image" content="${socialImageUrl}">
+    @endif
+    <meta name="twitter:card" content="${socialImageUrl != null && !socialImageUrl.isBlank() ? "summary_large_image" : "summary"}">
+    <meta name="twitter:title" content="${title}">
+    <meta name="twitter:description" content="${description}">
+    @if (canonicalUrl != null && !canonicalUrl.isBlank())
+        <meta name="twitter:url" content="${canonicalUrl}">
+    @endif
+    @if (googleSiteVerification != null && !googleSiteVerification.isBlank())
+        <meta name="google-site-verification" content="${googleSiteVerification}">
+    @endif
     @if (canonicalUrl != null && !canonicalUrl.isBlank())
         <link rel="canonical" href="${canonicalUrl}">
     @endif
     <title>${title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    @if (googleAnalyticsId != null && !googleAnalyticsId.isBlank())
+        <script async src="https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+            gtag('config', '${googleAnalyticsId}', { 'anonymize_ip': true });
+        </script>
+    @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
@@ -649,11 +683,28 @@
                 border-radius: 28px;
                 align-items: start;
                 flex-direction: column;
+                gap: 10px;
+                margin-bottom: 22px;
+                padding: 14px 16px;
             }
 
             .site-nav {
                 width: 100%;
                 justify-content: flex-start;
+                flex-wrap: nowrap;
+                gap: 8px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .site-nav::-webkit-scrollbar {
+                display: none;
+            }
+
+            .nav-link {
+                flex: 0 0 auto;
             }
 
             .hero {
@@ -699,6 +750,31 @@
 
             .metric {
                 padding: 12px 14px;
+            }
+
+            .site-header {
+                gap: 8px;
+                margin-bottom: 18px;
+                padding: 12px 14px;
+            }
+
+            .brand {
+                gap: 10px;
+            }
+
+            .brand-mark {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+            }
+
+            .site-nav {
+                margin-top: -2px;
+            }
+
+            .nav-link {
+                padding: 9px 12px;
+                font-size: 0.88rem;
             }
 
             .mobile-only {

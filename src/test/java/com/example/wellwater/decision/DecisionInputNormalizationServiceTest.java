@@ -173,4 +173,41 @@ class DecisionInputNormalizationServiceTest {
         assertTrue(normalized.thresholdSummary().contains("EPA SMCL"));
         assertTrue(normalized.thresholdSummary().contains("8.500"));
     }
+
+    @Test
+    void microbialUnitsAcceptMpnPer100ml() {
+        DecisionInput input = new DecisionInput(
+                EntryMode.RESULT_FIRST,
+                "total coliform",
+                "12",
+                "mpn/100ml",
+                "",
+                "",
+                "2026-03-01",
+                "raw well",
+                "yes",
+                "PA",
+                "drinking-only",
+                "",
+                List.of(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                false,
+                false,
+                false,
+                ""
+        );
+
+        var normalized = service.normalize(input);
+
+        assertEquals("presence/absence", normalized.canonicalUnit());
+        assertTrue(normalized.unitSupported());
+    }
 }

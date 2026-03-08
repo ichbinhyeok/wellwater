@@ -1,5 +1,6 @@
 package com.example.wellwater.web.page;
 
+import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
@@ -14,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpServletRequest;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +26,7 @@ class PageControllerTest {
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
     private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://example.com", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
+    private final AnalyticsEventService analyticsEventService = new AnalyticsEventService("./build/test-analytics/page-controller-events.csv");
     private final PageController controller = new PageController(
             catalogService,
             new PseoExperienceService(
@@ -34,7 +37,8 @@ class PageControllerTest {
                     new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
             ),
             seoMetadataService,
-            trustPageService
+            trustPageService,
+            analyticsEventService
     );
 
     @Test
@@ -89,6 +93,21 @@ class PageControllerTest {
     }
 
     @Test
+    void robotsDisallowNonIndexableAreasAndPointToSitemap() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setScheme("https");
+        request.setServerName("example.com");
+        request.setServerPort(443);
+        request.setRequestURI("/robots.txt");
+
+        String robots = controller.robots(request);
+
+        assertTrue(robots.contains("Disallow: /admin"));
+        assertTrue(robots.contains("Disallow: /tool/"));
+        assertTrue(robots.contains("Sitemap: https://example.com/sitemap.xml"));
+    }
+
+    @Test
     void detailAddsPageViewModelWhenSlugExists() {
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
@@ -110,6 +129,52 @@ class PageControllerTest {
         String viewName = controller.detail("iron-filter-vs-softener", null, model, response);
 
         assertEquals("redirect:/well-water/softener-vs-iron-filter", viewName);
+    }
+
+    @Test
+    void detailStillRendersWhenAnalyticsLoggingThrows() {
+        AnalyticsEventService failingAnalytics = new AnalyticsEventService("./build/test-analytics/page-controller-events.csv") {
+            @Override
+            public synchronized void logEvent(
+                    String eventName,
+                    String entryMode,
+                    String sessionId,
+                    String slug,
+                    String tier,
+                    String branch,
+                    String ctaType,
+                    String targetUrl,
+                    String note
+            ) {
+                throw new IllegalStateException("analytics write failed");
+            }
+        };
+
+        PageController controllerWithFailingAnalytics = new PageController(
+                catalogService,
+                new PseoExperienceService(
+                        catalogService,
+                        citationRegistryService,
+                        new PseoDecisionDocService(),
+                        new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
+                        new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
+                ),
+                seoMetadataService,
+                trustPageService,
+                failingAnalytics
+        );
+
+        Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        String viewName = assertDoesNotThrow(
+                () -> controllerWithFailingAnalytics.detail("rotten-egg-smell", null, model, response)
+        );
+
+        assertEquals("pages/pseo/detail", viewName);
+        assertEquals(200, response.getStatus());
+        assertNotNull(model.getAttribute("pageView"));
+        assertNotNull(model.getAttribute("seo"));
     }
 
     @Test
