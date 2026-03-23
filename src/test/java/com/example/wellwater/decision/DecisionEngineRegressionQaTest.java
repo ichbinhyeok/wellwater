@@ -14,12 +14,17 @@ import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DecisionEngineRegressionQaTest {
+
+    private static final Clock FIXED_CLOCK = Clock.fixed(Instant.parse("2026-03-23T00:00:00Z"), ZoneOffset.UTC);
 
     private final DecisionRegistryService registry = new DecisionRegistryService(
             "./data/registry/contaminant_registry.csv",
@@ -29,7 +34,7 @@ class DecisionEngineRegressionQaTest {
 
     private final DecisionEngineService service = new DecisionEngineService(
             registry,
-            new DecisionInputNormalizationService(registry),
+            new DecisionInputNormalizationService(registry, FIXED_CLOCK),
             new CostRegistryService("./data/registry/cost_registry.csv"),
             new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
     );
@@ -43,7 +48,7 @@ class DecisionEngineRegressionQaTest {
                 "mg/L",
                 "none",
                 "",
-                "2026-02-20",
+                "2026-03-10",
                 "raw well",
                 "yes",
                 "TX",

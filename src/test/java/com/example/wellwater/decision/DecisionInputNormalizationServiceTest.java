@@ -6,6 +6,9 @@ import com.example.wellwater.decision.normalize.DecisionInputNormalizationServic
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import org.junit.jupiter.api.Test;
 
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,13 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DecisionInputNormalizationServiceTest {
 
+    private static final Clock FIXED_CLOCK = Clock.fixed(Instant.parse("2026-03-23T00:00:00Z"), ZoneOffset.UTC);
+
     private final DecisionRegistryService registry = new DecisionRegistryService(
             "./data/registry/contaminant_registry.csv",
             "./data/registry/symptom_registry.csv",
             "./data/registry/trigger_registry.csv"
     );
 
-    private final DecisionInputNormalizationService service = new DecisionInputNormalizationService(registry);
+    private final DecisionInputNormalizationService service = new DecisionInputNormalizationService(registry, FIXED_CLOCK);
 
     @Test
     void derivesSymptomFromSecondaryContext() {

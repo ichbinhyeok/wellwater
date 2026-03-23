@@ -16,6 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.nio.file.Path;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,6 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ToolControllerTest {
+
+    private static final Clock FIXED_CLOCK = Clock.fixed(Instant.parse("2026-03-23T00:00:00Z"), ZoneOffset.UTC);
 
     @TempDir
     Path tempDir;
@@ -35,7 +40,7 @@ class ToolControllerTest {
         );
         return new DecisionEngineService(
                 registryService,
-                new DecisionInputNormalizationService(registryService),
+                new DecisionInputNormalizationService(registryService, FIXED_CLOCK),
                 new CostRegistryService("./data/registry/cost_registry.csv"),
                 new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
         );

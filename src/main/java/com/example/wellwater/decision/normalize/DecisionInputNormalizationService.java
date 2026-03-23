@@ -4,8 +4,10 @@ import com.example.wellwater.decision.model.DecisionInput;
 import com.example.wellwater.decision.model.EntryMode;
 import com.example.wellwater.decision.registry.DecisionRegistryService;
 import com.example.wellwater.decision.registry.RuleSignal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -21,9 +23,16 @@ public class DecisionInputNormalizationService {
     private static final Pattern THRESHOLD_PATTERN = Pattern.compile("^(.+?)(>=|<=|>|<)\\s*([-+]?\\d*\\.?\\d+)\\s*([^\\s]+)$");
 
     private final DecisionRegistryService registryService;
+    private final Clock clock;
 
+    @Autowired
     public DecisionInputNormalizationService(DecisionRegistryService registryService) {
+        this(registryService, Clock.systemDefaultZone());
+    }
+
+    public DecisionInputNormalizationService(DecisionRegistryService registryService, Clock clock) {
         this.registryService = registryService;
+        this.clock = clock;
     }
 
     public DecisionNormalizedInput normalize(DecisionInput input) {
@@ -169,7 +178,7 @@ public class DecisionInputNormalizationService {
         }
         try {
             LocalDate parsed = LocalDate.parse(sampleDate);
-            long days = ChronoUnit.DAYS.between(parsed, LocalDate.now());
+            long days = ChronoUnit.DAYS.between(parsed, LocalDate.now(clock));
             if (days < 0) {
                 return SampleFreshness.UNKNOWN;
             }
