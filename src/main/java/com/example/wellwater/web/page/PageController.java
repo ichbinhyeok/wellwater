@@ -4,7 +4,6 @@ import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.lead.LeadCaptureContext;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoExperienceService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class PageController {
@@ -210,11 +208,8 @@ public class PageController {
 
     @GetMapping(value = "/robots.txt", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String robots(HttpServletRequest request) {
-        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-                .replacePath(null)
-                .build()
-                .toUriString();
+    public String robots() {
+        String baseUrl = seoMetadataService.absolute("");
         return """
                 User-agent: *
                 Allow: /
@@ -229,11 +224,8 @@ public class PageController {
 
     @GetMapping(value = "/sitemap.xml", produces = MediaType.APPLICATION_XML_VALUE)
     @ResponseBody
-    public String sitemap(HttpServletRequest request) {
-        String baseUrl = ServletUriComponentsBuilder.fromRequestUri(request)
-                .replacePath(null)
-                .build()
-                .toUriString();
+    public String sitemap() {
+        String baseUrl = seoMetadataService.absolute("");
         return pseoCatalogService.sitemapXml(baseUrl, trustPageService.sitemapPaths());
     }
 

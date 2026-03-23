@@ -76,7 +76,7 @@ class PseoExperienceServiceTest {
     @Test
     void catalogNowSupportsExpandedRegionalPagesAndAuthorityCoverage() {
         assertEquals(22, catalogService.byFamily("regional").size());
-        assertEquals(19, catalogService.byFamily("authority").size());
+        assertEquals(22, catalogService.byFamily("authority").size());
         assertTrue(catalogService.findBySlug("ro-vs-adsorptive-media-for-arsenic").isPresent());
         assertTrue(catalogService.findBySlug("radon-aeration-vs-gac").isPresent());
         assertTrue(catalogService.findBySlug("private-well-sampling-mistakes-that-break-results").isPresent());
@@ -85,6 +85,9 @@ class PseoExperienceServiceTest {
         assertTrue(catalogService.findBySlug("iron-filter-vs-softener").isPresent());
         assertTrue(catalogService.findBySlug("north-carolina-private-well-water-faqs").isPresent());
         assertTrue(catalogService.findBySlug("oregon-private-well-testing-recommendations").isPresent());
+        assertTrue(catalogService.findBySlug("new-hampshire-arsenic-testing-order").isPresent());
+        assertTrue(catalogService.findBySlug("metallic-taste-plumbing-vs-source-water").isPresent());
+        assertTrue(catalogService.findBySlug("oregon-private-well-homebuyer-testing").isPresent());
     }
 
     @Test
@@ -247,6 +250,51 @@ class PseoExperienceServiceTest {
             assertFalse(detailView.decisionDoc().faqs().isEmpty(), slug);
             assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
         }
+    }
+
+    @Test
+    void newAuthoritySupportPagesExposeDecisionDocsAndClusterCompanions() {
+        List<String> slugs = List.of(
+                "new-hampshire-arsenic-testing-order",
+                "metallic-taste-plumbing-vs-source-water",
+                "oregon-private-well-homebuyer-testing"
+        );
+
+        for (String slug : slugs) {
+            PseoDetailView detailView = experienceService.detailView(slug).orElseThrow();
+            assertTrue(detailView.decisionDoc() != null, slug);
+            assertFalse(detailView.decisionDoc().decisionSplits().isEmpty(), slug);
+            assertTrue(detailView.citations().size() >= 2, slug);
+            assertFalse(detailView.relatedSections().isEmpty(), slug);
+        }
+
+        assertTrue(experienceService.detailView("new-hampshire-arsenic-testing-order").orElseThrow()
+                .relatedSections().stream()
+                .flatMap(section -> section.pages().stream())
+                .anyMatch(page -> List.of(
+                        "new-hampshire-arsenic-well-water",
+                        "arsenic",
+                        "arsenic-bedrock-testing-checklist"
+                ).contains(page.slug())));
+        assertTrue(experienceService.detailView("metallic-taste-plumbing-vs-source-water").orElseThrow()
+                .relatedSections().stream()
+                .flatMap(section -> section.pages().stream())
+                .anyMatch(page -> List.of(
+                        "metallic-taste",
+                        "ph",
+                        "copper",
+                        "low-ph-copper-corrosion-testing-order",
+                        "acid-neutralizer-vs-soda-ash"
+                ).contains(page.slug())));
+        assertTrue(experienceService.detailView("oregon-private-well-homebuyer-testing").orElseThrow()
+                .relatedSections().stream()
+                .flatMap(section -> section.pages().stream())
+                .anyMatch(page -> List.of(
+                        "oregon-private-well-testing-recommendations",
+                        "home-purchase-test",
+                        "private-well-home-sale-testing-by-state",
+                        "home-sale-private-well-testing-checklist"
+                ).contains(page.slug())));
     }
 
     @Test

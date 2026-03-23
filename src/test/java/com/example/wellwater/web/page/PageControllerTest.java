@@ -92,26 +92,14 @@ class PageControllerTest {
 
     @Test
     void sitemapContainsWellWaterUrl() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setScheme("https");
-        request.setServerName("example.com");
-        request.setServerPort(443);
-        request.setRequestURI("/sitemap.xml");
-
-        String xml = controller.sitemap(request);
+        String xml = controller.sitemap();
         assertTrue(xml.contains("/well-water/"));
         assertTrue(xml.contains("/trust/methodology"));
     }
 
     @Test
     void robotsDisallowNonIndexableAreasAndPointToSitemap() {
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setScheme("https");
-        request.setServerName("example.com");
-        request.setServerPort(443);
-        request.setRequestURI("/robots.txt");
-
-        String robots = controller.robots(request);
+        String robots = controller.robots();
 
         assertTrue(robots.contains("Disallow: /admin"));
         assertTrue(robots.contains("Disallow: /tool/"));

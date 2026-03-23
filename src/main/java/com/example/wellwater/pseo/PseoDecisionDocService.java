@@ -701,6 +701,36 @@ public class PseoDecisionDocService {
                             item("What should I do before comparing arsenic treatment?", "Use the New Hampshire guidance and a certified lab path first.")
                     )
             )),
+            Map.entry("new-hampshire-arsenic-testing-order", winnerDoc(
+                    "A New Hampshire arsenic testing-order page should settle scope before it settles treatment.",
+                    "This authority page is strongest when it explains whether a New Hampshire arsenic concern stays arsenic-only or widens into a bedrock-aware panel before any product path becomes the default.",
+                    List.of(
+                            "Start with New Hampshire arsenic guidance and a certified lab path before the page compares treatment categories.",
+                            "Check whether bedrock context or older evidence means uranium, radon, or broader follow-up still belongs in scope.",
+                            "Keep safer drinking-water logic and evidence quality ahead of whole-house shopping."
+                    ),
+                    List.of(
+                            "People often treat the first arsenic concern like a treatment decision instead of a testing-order decision.",
+                            "A New Hampshire authority page gets weaker when it ignores bedrock context and acts like a national generic arsenic page.",
+                            "The page loses value when one number is treated like the whole scope is already settled."
+                    ),
+                    "Retest or widen the panel after stale results, after treatment change, or whenever bedrock context makes the original scope too narrow to defend.",
+                    splits(
+                            split("Arsenic concern is active but the panel is still narrow", "Keep the page focused on testing order, certified confirmation, and scope discipline before treatment narrowing starts."),
+                            split("Bedrock context suggests broader risk", "Use the page to widen the panel before the household shops from one arsenic result."),
+                            split("Treatment shopping is starting from incomplete evidence", "Pull the page back to New Hampshire guidance, lab fit, and what still belongs in scope.")
+                    ),
+                    List.of(
+                            "Escalate if the page is treating New Hampshire arsenic like a one-number shopping trigger.",
+                            "Escalate if bedrock context is still open but the treatment path is already being narrowed.",
+                            "Escalate if stale or weak evidence is being used like a current verdict."
+                    ),
+                    faq(
+                            item("Why is a New Hampshire arsenic testing-order page useful?", "Because the main decision is often what belongs in the panel before it is which treatment category to compare."),
+                            item("Should I test only arsenic first in New Hampshire?", "Not always. Bedrock context can justify a wider follow-up panel."),
+                            item("What should happen before I compare arsenic treatment?", "Use New Hampshire guidance, a certified lab path, and a defensible testing scope first.")
+                    )
+            )),
             Map.entry("florida-rotten-egg-smell-well-water", winnerDoc(
                     "Florida sulfur-smell pages should separate hot-water-only odor from whole-house nuisance patterns before they behave like filter pages.",
                     "This regional page works when it uses Florida odor and staining guidance to map the pattern first, then moves into testing and compare logic only after the smell behaves like a system-wide issue.",
@@ -909,6 +939,36 @@ public class PseoDecisionDocService {
                             item("Is private well testing required when selling a house?", "It depends on the state, lender, and transfer context, which is why this page separates state requirements from generic advice."),
                             item("What well water tests are required for a home sale?", "Start with the state or lender requirement, then check whether geology, family risk, or property history means more testing belongs in scope."),
                             item("Is a passing transfer well test enough to buy the house?", "Not automatically. A transfer panel can satisfy the sale and still leave long-term household questions unanswered.")
+                    )
+            )),
+            Map.entry("oregon-private-well-homebuyer-testing", winnerDoc(
+                    "Oregon homebuyer well testing should stay a transaction-scope page first, not a complete owner-plan page.",
+                    "This authority page is strongest when it separates Oregon transaction timing and buyer-seller context from the broader household testing plan that may still be needed after closing.",
+                    List.of(
+                            "Start with Oregon transaction testing timing and use a certified lab path before broadening the plan.",
+                            "Separate what the homebuyer panel answers from what ongoing owner testing may still need to cover.",
+                            "Keep treatment comparison downstream from sale evidence, scope gaps, and household-risk follow-up."
+                    ),
+                    List.of(
+                            "People often treat a homebuyer panel like a lifetime private-well answer.",
+                            "An Oregon authority page gets weaker when it mixes transfer timing with routine annual testing without separating the goals.",
+                            "The page loses value when closing pressure turns a narrow panel into stronger evidence than it really is."
+                    ),
+                    "Retest after closing or after any scope gap becomes obvious, especially when the transfer panel was narrow or the household risk picture is broader than the sale moment.",
+                    splits(
+                            split("A sale or transfer deadline is driving the page", "Keep the page anchored to transaction evidence first, then separate what still belongs in the longer-term household plan."),
+                            split("Household risk is broader than the homebuyer panel", "Use the page to widen the follow-up testing plan instead of treating the sale panel like the whole answer."),
+                            split("Treatment shopping starts from the transfer result alone", "Pull the page back to Oregon timing rules, certified-lab discipline, and household-scope gaps.")
+                    ),
+                    List.of(
+                            "Escalate if the homebuyer panel is being treated like a full long-term owner plan.",
+                            "Escalate if closing pressure is weakening the sample path or scope discipline.",
+                            "Escalate if treatment comparison starts before transaction testing and household follow-up are clearly separated."
+                    ),
+                    faq(
+                            item("What does an Oregon private well homebuyer test need to answer first?", "It should answer the transaction-scope question first before it pretends to answer every long-term owner question."),
+                            item("Is a homebuyer panel enough for long-term well planning?", "Not always. Household risk and routine owner testing may still widen the follow-up plan."),
+                            item("When should treatment comparison happen on this page?", "After Oregon timing rules, certified testing, and the difference between sale evidence and owner planning are clear.")
                     )
             )),
             Map.entry("test-kit-vs-certified-lab", winnerDoc(
@@ -1827,6 +1887,36 @@ public class PseoDecisionDocService {
                             item("What should I test first when low pH and copper corrosion are both possible?", "Start with current pH and the plumbing-context evidence that separates first-draw exposure from broader source-water conclusions."),
                             item("Why does first-draw versus flushed testing matter here?", "Because it helps the page decide whether the main problem is plumbing interaction, broader source-water scope, or both."),
                             item("Should I buy a neutralizer before the corrosion sequence is clear?", "No. The page is stronger when the testing order is settled before it becomes a treatment decision.")
+                    )
+            )),
+            Map.entry("metallic-taste-plumbing-vs-source-water", winnerDoc(
+                    "Metallic taste needs a source-versus-plumbing split before it needs a treatment category.",
+                    "This authority page is strongest when it shows why metallic taste can come from corrosion, fixture pattern, or broader source-water issues and why that split should be settled before any equipment decision hardens.",
+                    List.of(
+                            "Check whether the metallic taste is fixture-specific, recent, or paired with low pH, blue-green stains, or plumbing work.",
+                            "Use certified follow-up and corrosion logic before the page treats metallic taste like a settled source-water problem.",
+                            "Compare low-pH correction or broader treatment paths only after plumbing-versus-source scope is stronger."
+                    ),
+                    List.of(
+                            "People often treat metallic taste like one contaminant verdict when plumbing interaction is still unresolved.",
+                            "A metallic-taste authority page gets weaker when it ignores fixture pattern and recent repair context.",
+                            "The page loses value when it jumps from taste complaint to whole-house shopping without separating corrosion clues."
+                    ),
+                    "Retest after plumbing work, corrosion correction, or any change that should alter whether the metallic taste behaves like a source-water issue or a plumbing issue.",
+                    splits(
+                            split("Metallic taste is tied to low pH or blue-green staining", "Keep the page in corrosion sequence and metals follow-up before equipment narrowing."),
+                            split("The taste is fixture-specific or started after plumbing work", "Bias the page toward plumbing interaction and post-change verification before whole-house assumptions."),
+                            split("The taste appears across the house with no clear plumbing trigger", "Widen the page toward certified testing and source-versus-plumbing separation before shopping.")
+                    ),
+                    List.of(
+                            "Escalate if low pH, copper, lead, or visible corrosion clues are being treated like side notes.",
+                            "Escalate if a recent plumbing change may have created the symptom pattern.",
+                            "Escalate if treatment comparison starts before the page has separated source-water and plumbing explanations."
+                    ),
+                    faq(
+                            item("How do I tell whether metallic taste is from plumbing or source water?", "Start with fixture pattern, recent plumbing changes, low pH, and corrosion clues before you assume it is a source-water problem."),
+                            item("Should I buy treatment right away for metallic taste?", "Not before the page separates plumbing interaction from broader water-quality scope."),
+                            item("What makes this page different from a basic metallic-taste symptom page?", "It focuses on the plumbing-versus-source split that determines what the next test and treatment decisions should be.")
                     )
             )),
             Map.entry("nitrate-baby-pregnancy-well-water-checklist", winnerDoc(
