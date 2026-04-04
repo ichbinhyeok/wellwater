@@ -489,7 +489,6 @@
             display: grid;
             gap: 12px;
             min-width: 0;
-            min-height: 100%;
             padding: 22px;
             border-radius: var(--radius-md);
             border: 1px solid rgba(20, 34, 24, 0.08);
@@ -533,6 +532,8 @@
         }
 
         .card-link h3,
+        .section-header h2,
+        .section-header h3,
         .card-meta,
         .meta-value {
             overflow-wrap: anywhere;
@@ -618,10 +619,14 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
+            max-width: 100%;
             padding: 14px 18px;
             border-radius: 999px;
             font-weight: 800;
             letter-spacing: -0.02em;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
             transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
         }
 
