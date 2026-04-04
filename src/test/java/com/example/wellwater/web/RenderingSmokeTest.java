@@ -37,12 +37,12 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Private well testing decisions")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("The site now leads with four search-intent clusters")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Four reliable ways to narrow the problem")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision workflow")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a testing decision instead of a premature purchase")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("New Jersey PWTA Private Well Testing What To Know")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Winner state clusters with official lab and guidance handoff")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("State pages with official guidance and lab handoff")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("New Hampshire Arsenic in Well Water What To Do")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Home sale testing by state")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Compare pages")))
@@ -284,7 +284,7 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,follow")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("RO vs Adsorptive Media for Arsenic in Well Water")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("This page stays public but is intentionally noindexed")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Compare after scope")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related regional reads")));
     }
 

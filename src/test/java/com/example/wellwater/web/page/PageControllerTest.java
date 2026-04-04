@@ -79,7 +79,7 @@ class PageControllerTest {
         assertNotNull(familyView);
         assertEquals(3, familyView.starterPages().size());
         SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
-        assertEquals("noindex,follow", seo.robotsDirective());
+        assertEquals("index,follow", seo.robotsDirective());
     }
 
     @Test
@@ -99,6 +99,10 @@ class PageControllerTest {
         assertTrue(xml.contains("/trust/methodology"));
         assertTrue(xml.contains("/well-water/new-jersey-pwta-private-well-testing"));
         assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
+        assertTrue(xml.contains("/well-water/hardness"));
+        assertTrue(xml.contains("/well-water/rotten-egg-smell"));
+        assertTrue(xml.contains("/well-water/family/contaminants"));
+        assertTrue(xml.contains("/well-water/family/symptoms"));
         assertTrue(xml.contains("/well-water/family/regional"));
         assertTrue(xml.contains("/well-water/family/authority"));
         assertFalse(xml.contains("/well-water/uv-vs-ro"));
@@ -126,6 +130,19 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("page"));
         assertNotNull(model.getAttribute("pageView"));
         assertNotNull(model.getAttribute("leadContext"));
+        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
+        assertEquals("index,follow", seo.robotsDirective());
+    }
+
+    @Test
+    void recoveredPagesCanStayIndexableWhileComparePagesStayNoindexed() {
+        Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        String viewName = controller.detail("hardness", null, model, response);
+
+        assertEquals("pages/pseo/detail", viewName);
+        assertEquals(200, response.getStatus());
         SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
         assertEquals("index,follow", seo.robotsDirective());
     }

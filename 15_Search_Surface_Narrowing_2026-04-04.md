@@ -72,7 +72,7 @@ Current core set:
 ### Support
 
 Still indexable, but secondary.
-These pages exist to reinforce the core wedge, not to act like equal-weight acquisition clusters.
+These pages exist to reinforce the core direction, not to act like equal-weight acquisition clusters.
 
 Examples:
 - `after-heavy-rain`
@@ -83,6 +83,10 @@ Examples:
 - `arsenic-bedrock-testing-checklist`
 - `mail-in-lab-vs-local-certified-lab`
 - `private-well-testing-schedule-by-household`
+- `hardness`
+- `iron`
+- `rotten-egg-smell`
+- `cloudy-water`
 - `connecticut-low-ph-blue-green-stains`
 - `pennsylvania-private-well-radon`
 - `new-york-pfas-private-wells`
@@ -95,7 +99,7 @@ These pages can still support internal linking and user navigation without actin
 Typical hold pages:
 - long-tail contaminants with weak current signal
 - broad state owner guides with no clear winner evidence yet
-- symptom pages that do not clearly reinforce a current state/testing wedge
+- symptom pages that still look too thin or too duplicative to earn their own search slot
 
 ### Conversion
 
@@ -115,6 +119,8 @@ Examples:
 ## Family policy
 
 ### Keep indexable
+- `contaminants`
+- `symptoms`
 - `regional`
 - `authority`
 - `triggers`
@@ -122,13 +128,11 @@ Examples:
 These are the families that best match the current wedge.
 
 ### Keep public but noindex
-- `contaminants`
-- `symptoms`
 - `compares`
 
 Reason:
-- contaminants and symptoms still matter, but their family hubs make the site look broader than it should right now
-- compares are better as internal conversion surfaces than as public acquisition hubs
+- contaminants and symptoms still matter because Google is already testing result and symptom entry pages
+- compares are better as late-stage treatment research than as public acquisition hubs
 
 ## What changed in code
 
@@ -150,7 +154,7 @@ The implementation now does four things:
 - home sale and transaction testing
 - state-specific testing paths
 - testing-order articles
-- a few result-interpretation support pages
+- result-interpretation guides that lead naturally into testing or verification
 
 ## Why noindex instead of deleting
 
@@ -180,8 +184,9 @@ After deploy, measure:
 - whether `http` duplicate impressions decline
 - whether the core regional pages move closer to page 2
 - whether home-sale and state-testing pages gain more query breadth
+- whether `symptoms` and `contaminants` hubs regain or preserve impressions without broadening compare traffic
 - whether noindexed compare pages disappear from Search over time
-- whether the core wedge starts earning clicks before broader families are reopened
+- whether the core direction starts earning clicks before broader families are reopened
 
 ## Re-expansion rule
 

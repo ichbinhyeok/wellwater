@@ -25,26 +25,14 @@
                     <strong>What to figure out first</strong>
                     <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${pageView.riskSummary()}</p>
                     <div class="chip-row">
-                        <span class="chip">${pageView.page().family()}</span>
-                        <span class="chip">${pageView.page().isIndexable() ? "Search landing page" : "Internal support surface"}</span>
+                        <span class="chip">${pageView.archetypeLabel()}</span>
+                        <span class="chip">${pageView.intentLabel()}</span>
                         <span class="chip">Test before treatment</span>
                         <span class="chip">Compare after scope</span>
                     </div>
                 </aside>
             </div>
         </section>
-
-        @if(!pageView.page().isIndexable())
-            <section class="panel panel-accent">
-                <div class="section-header">
-                    <div>
-                        <p class="brand-kicker">Search posture</p>
-                        <h2>This page stays public but is intentionally noindexed</h2>
-                    </div>
-                    <p class="section-copy">It still matters for users who arrive from a core page or the tool, but it is not acting as a primary acquisition asset while the site narrows around state-specific testing and home-sale intent.</p>
-                </div>
-            </section>
-        @endif
 
         <section class="panel panel-accent">
             <div class="section-header">
@@ -236,7 +224,7 @@
                             <p class="brand-kicker">Need a personalized next step?</p>
                             <h2>Use the matching tool</h2>
                         </div>
-                        <p class="section-copy">Personalized results are rendered as noindex pages after the tool collects context.</p>
+                        <p class="section-copy">Personalized tool outputs stay separate from the public guide so the follow-up can reflect your own results, timing, and household context.</p>
                     </div>
                     <div class="cta-row">
                         <a class="button-link" href="${pageView.entryHint().href()}">${pageView.entryHint().label()}</a>
@@ -290,7 +278,7 @@
                         </div>
                     </div>
                     <a class="card-link" href="${pageView.page().moneyCtaUrl()}">
-                        <span class="card-kicker">Internal compare path</span>
+                        <span class="card-kicker">Treatment compare</span>
                         <h3>${pageView.page().moneyCtaLabel()}</h3>
                         <p class="card-meta">${pageView.page().disclosure()}</p>
                     </a>
@@ -382,7 +370,7 @@
                         <a class="card-link" href="/trust/methodology">
                             <span class="card-kicker">Methodology</span>
                             <h3>How the engine separates testing, interpretation, and compare paths</h3>
-                            <p class="card-meta">Review the public evidence hierarchy and why personalized outputs stay noindex.</p>
+                            <p class="card-meta">Review the evidence hierarchy and how personalized outputs stay separate from the public guide flow.</p>
                         </a>
                         <a class="card-link" href="/trust/reviewers-and-expertise">
                             <span class="card-kicker">Reviewers</span>
@@ -422,10 +410,10 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Internal link graph</p>
+                    <p class="brand-kicker">Related reads</p>
                     <h2>Related next reads</h2>
                 </div>
-                <p class="section-copy">This is where acquisition pages become a graph instead of a flat pile of long-tail pages.</p>
+                <p class="section-copy">Use these pages to keep narrowing the issue instead of bouncing between unrelated symptoms, contaminants, and treatment categories.</p>
             </div>
             <div class="stack" style="gap: 18px;">
                 @for (var section : pageView.relatedSections())

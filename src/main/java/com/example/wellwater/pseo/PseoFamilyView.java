@@ -6,7 +6,7 @@ public record PseoFamilyView(
         String familyKey,
         String heroTitle,
         String heroLead,
-        String operatorNote,
+        String heroNote,
         String primaryToolLabel,
         String primaryToolHref,
         List<PseoPage> starterPages,

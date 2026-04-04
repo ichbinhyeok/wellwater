@@ -13,8 +13,8 @@ Role meanings:
 
 Current snapshot:
 - `CORE`: `21`
-- `SUPPORT`: `23`
-- `HOLD`: `50`
+- `SUPPORT`: `39`
+- `HOLD`: `34`
 - `CONVERSION`: `13`
 
 ## Core
@@ -51,6 +51,14 @@ Current snapshot:
 - `authority` `sulfur-smell-hot-water-vs-whole-house`
 - `authority` `texas-private-well-sampling-chain-of-custody`
 - `compares` `mail-in-lab-vs-local-certified-lab`
+- `contaminants` `e-coli`
+- `contaminants` `hardness`
+- `contaminants` `iron`
+- `contaminants` `lead`
+- `contaminants` `manganese`
+- `contaminants` `pfas`
+- `contaminants` `radon`
+- `contaminants` `uranium`
 - `regional` `connecticut-low-ph-blue-green-stains`
 - `regional` `florida-rotten-egg-smell-well-water`
 - `regional` `iowa-nitrate-baby-well-water`
@@ -60,7 +68,15 @@ Current snapshot:
 - `regional` `new-york-pfas-private-wells`
 - `regional` `pennsylvania-private-well-radon`
 - `regional` `vermont-new-well-arsenic-uranium-testing`
+- `regional` `virginia-private-well-testing-program`
+- `regional` `washington-private-well-water-testing`
 - `regional` `wisconsin-nitrate-pregnancy-well-water`
+- `symptoms` `black-stains`
+- `symptoms` `blue-green-stains`
+- `symptoms` `cloudy-water`
+- `symptoms` `orange-stains`
+- `symptoms` `rotten-egg-smell`
+- `symptoms` `sulfur-smell-hot-water`
 - `triggers` `after-heavy-rain`
 - `triggers` `after-repair`
 - `triggers` `new-baby-at-home`
@@ -78,20 +94,12 @@ Current snapshot:
 - `contaminants` `chloride`
 - `contaminants` `chromium`
 - `contaminants` `copper`
-- `contaminants` `e-coli`
 - `contaminants` `fluoride`
-- `contaminants` `hardness`
-- `contaminants` `iron`
-- `contaminants` `lead`
-- `contaminants` `manganese`
 - `contaminants` `nitrite`
-- `contaminants` `pfas`
-- `contaminants` `radon`
 - `contaminants` `selenium`
 - `contaminants` `sodium`
 - `contaminants` `sulfate`
 - `contaminants` `tds`
-- `contaminants` `uranium`
 - `regional` `california-private-well-owner-guide`
 - `regional` `georgia-private-well-water-guidance`
 - `regional` `indiana-well-water-quality-testing`
@@ -99,21 +107,13 @@ Current snapshot:
 - `regional` `north-carolina-private-well-water-faqs`
 - `regional` `south-carolina-well-water-quality-testing`
 - `regional` `texas-private-well-sampling-testing`
-- `regional` `virginia-private-well-testing-program`
-- `regional` `washington-private-well-water-testing`
 - `symptoms` `bitter-taste`
-- `symptoms` `black-stains`
-- `symptoms` `blue-green-stains`
-- `symptoms` `cloudy-water`
 - `symptoms` `low-water-pressure`
 - `symptoms` `musty-odor`
-- `symptoms` `orange-stains`
 - `symptoms` `pink-stains`
-- `symptoms` `rotten-egg-smell`
 - `symptoms` `salty-taste`
 - `symptoms` `scale-buildup`
 - `symptoms` `slimy-residue`
-- `symptoms` `sulfur-smell-hot-water`
 - `triggers` `after-boil-water-advisory`
 - `triggers` `after-long-vacancy`
 - `triggers` `after-power-outage`

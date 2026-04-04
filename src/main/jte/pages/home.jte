@@ -14,15 +14,15 @@
                 <div class="hero-copy">
                     <span class="eyebrow">Private well testing decisions</span>
                     <h1>Decide what to test next before a home purchase, state rule, or suspicious result turns into an expensive guess.</h1>
-                    <p class="hero-lead">The strongest wedge is not generic treatment shopping. It is state-aware testing, home-sale timing, report interpretation, and the next safe verification step when a private well owner knows something is off.</p>
+                    <p class="hero-lead">Start with state-specific testing guidance, home-sale timing, report interpretation, and the next safe verification step before equipment shopping takes over.</p>
                     <div class="hero-actions">
                         <a class="button-link" href="/well-water/private-well-home-sale-testing-by-state">Start With Home Sale Or State Rules</a>
                         <a class="button-link-secondary" href="/tool/result-first">Start From Lab Results</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>What this search surface is trying to win</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">The public layer is now centered on testing decisions first. Compare pages still exist, but they work better as internal conversion surfaces after the testing path is stable.</p>
+                    <strong>Where to start</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Most people need one of four things first: local rules, home-sale timing, help reading a report, or a way to verify whether a symptom points to plumbing, source water, or both.</p>
                     <div class="hero-metrics">
                         <div class="metric">
                             <strong>State</strong>
@@ -48,10 +48,10 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Core wedge</p>
-                    <h2>The site now leads with four search-intent clusters</h2>
+                    <p class="brand-kicker">Start points</p>
+                    <h2>Four reliable ways to narrow the problem</h2>
                 </div>
-                <p class="section-copy">This is the narrow public core that should earn rankings first. Everything else can still exist, but not every page has to act like a primary acquisition asset.</p>
+                <p class="section-copy">These are the pages most likely to answer the first question clearly enough that you can choose the next test, not just browse treatment categories.</p>
             </div>
             <div class="grid">
                 <a class="card-link card-link-accent" href="/well-water/private-well-home-sale-testing-by-state">
@@ -114,7 +114,7 @@
                     <p class="brand-kicker">Start here</p>
                     <h2>Choose the signal you already have</h2>
                 </div>
-                <p class="section-copy">The tool still supports report-first, symptom-first, and trigger-first entry. The difference is that the public search layer now pushes hardest on state, testing-order, and transaction intent.</p>
+                <p class="section-copy">You can still enter through lab results, symptoms, or a recent change. The difference is that the public guides now keep testing and verification ahead of treatment shopping.</p>
             </div>
             <div class="grid">
                 <a class="card-link card-link-accent" href="/tool/result-first">
@@ -141,7 +141,7 @@
                     <p class="brand-kicker">Decision workflow</p>
                     <h2>How the engine moves you toward a testing decision instead of a premature purchase</h2>
                 </div>
-                <p class="section-copy">This product is strongest when it shortens the path from search intent to the next verified action, not when it tries to look like a broad filter-review directory.</p>
+                <p class="section-copy">The goal is to shorten the path from a confusing clue to the next verified action, especially when a lab result, state rule, or home-sale timeline changes what matters first.</p>
             </div>
             <div class="grid grid-compact">
                 <article class="card-link card-link-accent">
@@ -198,9 +198,9 @@
                 <div class="section-header">
                     <div>
                         <p class="brand-kicker">State-specific paths</p>
-                        <h2>Winner state clusters with official lab and guidance handoff</h2>
+                        <h2>State pages with official guidance and lab handoff</h2>
                     </div>
-                    <p class="section-copy">These are the state pages most worth pushing right now because they change the next step in a way Google can recognize and a user can monetize through testing or follow-up.</p>
+                    <p class="section-copy">These state pages are most useful when local rules, geology, or certified-lab routing change what you should do next.</p>
                 </div>
                 <div class="grid">
                     @for (var page : featuredRegionalPages)
@@ -217,41 +217,41 @@
         <section class="panel desktop-only">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Supporting surfaces</p>
-                    <h2>Browse the narrower public core, then move into support research</h2>
+                    <p class="brand-kicker">More ways to narrow the issue</p>
+                    <h2>Move from state rules and test scope into deeper research</h2>
                 </div>
-                <p class="section-copy">The public site should look focused first. Broader interpretation and compare pages still exist, but they should behave like support layers, not equal-weight front doors.</p>
+                <p class="section-copy">Start with the clearest decision pages, then move into deeper interpretation or treatment research once you know the likely problem and scope.</p>
             </div>
             <div class="grid grid-compact">
                 <a class="card-link" href="/well-water/private-well-home-sale-testing-by-state">
-                    <span class="card-kicker">Core page</span>
+                    <span class="card-kicker">Home sale guide</span>
                     <h3>Home sale testing by state</h3>
                     <p class="card-meta">Lead with transaction timing, required panels, and where a state checklist is still too thin.</p>
                 </a>
                 <a class="card-link" href="/well-water/family/regional">
-                    <span class="card-kicker">Core hub</span>
+                    <span class="card-kicker">State guide hub</span>
                     <h3>State-specific guides</h3>
                     <p class="card-meta">${familyCounts.get("regional")} pages where geology, rules, and certified-lab paths change the answer.</p>
                 </a>
                 <a class="card-link" href="/well-water/family/authority">
-                    <span class="card-kicker">Core hub</span>
+                    <span class="card-kicker">Testing guide hub</span>
                     <h3>Testing-order articles</h3>
                     <p class="card-meta">${familyCounts.get("authority")} articles covering sampling, lab-reading, and checklist logic before product research.</p>
                 </a>
                 <a class="card-link" href="/well-water/family/triggers">
-                    <span class="card-kicker">Core hub</span>
+                    <span class="card-kicker">Retest guide hub</span>
                     <h3>Trigger and retest guides</h3>
                     <p class="card-meta">${familyCounts.get("triggers")} pages for home purchase, flood response, repairs, and retest timing.</p>
                 </a>
                 <a class="card-link" href="/well-water/arsenic">
-                    <span class="card-kicker">Support page</span>
+                    <span class="card-kicker">Result guide</span>
                     <h3>Named result interpretation</h3>
-                    <p class="card-meta">Keep a few interpretation leaders public where they reinforce a testing-order cluster instead of broadening the whole brand.</p>
+                    <p class="card-meta">Use result guides to clarify what a contaminant or symptom means before you compare products.</p>
                 </a>
                 <a class="card-link" href="/well-water/family/compares">
-                    <span class="card-kicker">Internal support</span>
+                    <span class="card-kicker">Treatment compare</span>
                     <h3>Compare pages</h3>
-                    <p class="card-meta">${familyCounts.get("compares")} internal compare pages still exist, but they now behave like a constrained conversion surface instead of a broad public cluster.</p>
+                    <p class="card-meta">${familyCounts.get("compares")} treatment comparison pages help once you have a recent result and a clearer sense of household scope.</p>
                 </a>
             </div>
         </section>

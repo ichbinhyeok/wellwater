@@ -6,7 +6,7 @@ import java.util.Set;
 
 public final class PseoSearchStrategy {
 
-    private static final Set<String> INDEXABLE_FAMILY_HUBS = Set.of("regional", "authority", "triggers");
+    private static final Set<String> INDEXABLE_FAMILY_HUBS = Set.of("contaminants", "symptoms", "regional", "authority", "triggers");
 
     private static final List<String> CORE_SEARCH_SLUG_ORDER = List.of(
             "new-jersey-pwta-private-well-testing",
@@ -60,6 +60,25 @@ public final class PseoSearchStrategy {
             "vermont-new-well-arsenic-uranium-testing"
     );
 
+    private static final Set<String> RECOVERY_SUPPORT_SLUGS = Set.of(
+            "e-coli",
+            "hardness",
+            "iron",
+            "manganese",
+            "lead",
+            "pfas",
+            "radon",
+            "uranium",
+            "rotten-egg-smell",
+            "orange-stains",
+            "black-stains",
+            "cloudy-water",
+            "blue-green-stains",
+            "sulfur-smell-hot-water",
+            "virginia-private-well-testing-program",
+            "washington-private-well-water-testing"
+    );
+
     private static final List<String> FEATURED_REGIONAL_SLUGS = List.of(
             "new-jersey-pwta-private-well-testing",
             "new-hampshire-arsenic-well-water",
@@ -78,6 +97,9 @@ public final class PseoSearchStrategy {
             return PseoSearchRole.CORE;
         }
         if (SUPPORT_SEARCH_SLUGS.contains(page.slug())) {
+            return PseoSearchRole.SUPPORT;
+        }
+        if (RECOVERY_SUPPORT_SLUGS.contains(page.slug())) {
             return PseoSearchRole.SUPPORT;
         }
         if ("compares".equals(page.family())) {
@@ -117,6 +139,7 @@ public final class PseoSearchStrategy {
     public static List<String> coreAndSupportSlugOrder() {
         LinkedHashSet<String> ordered = new LinkedHashSet<>(CORE_SEARCH_SLUG_ORDER);
         ordered.addAll(SUPPORT_SEARCH_SLUGS);
+        ordered.addAll(RECOVERY_SUPPORT_SLUGS);
         return List.copyOf(ordered);
     }
 }

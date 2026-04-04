@@ -49,9 +49,11 @@ class SeoMetadataServiceTest {
     void comparePagesAndBroadFamilyHubsCanBeNoindexed() {
         SeoMetadata compareMetadata = seoMetadataService.detail(experienceService.detailView("ro-vs-adsorptive-media-for-arsenic").orElseThrow());
         SeoMetadata familyMetadata = seoMetadataService.family("compares", experienceService.familyView("compares", catalogService.byFamily("compares")));
+        SeoMetadata contaminantsMetadata = seoMetadataService.family("contaminants", experienceService.familyView("contaminants", catalogService.byFamily("contaminants")));
 
         assertEquals("noindex,follow", compareMetadata.robotsDirective());
         assertEquals("noindex,follow", familyMetadata.robotsDirective());
+        assertEquals("index,follow", contaminantsMetadata.robotsDirective());
     }
 
     @Test

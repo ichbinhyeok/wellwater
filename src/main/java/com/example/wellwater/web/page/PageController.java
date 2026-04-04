@@ -81,18 +81,19 @@ public class PageController {
             model.addAttribute("path", "/well-water/family/" + family);
             return "pages/not-found";
         }
-        trackPublicPageView("family", family, "", "/well-water/family/" + family, "indexable");
         model.addAttribute("family", family);
         model.addAttribute("pages", pages);
         var familyView = pseoExperienceService.familyView(family, pages);
         model.addAttribute("familyView", familyView);
-        model.addAttribute("seo", seoMetadataService.family(family, familyView));
+        var seo = seoMetadataService.family(family, familyView);
+        trackPublicPageView("family", family, "", "/well-water/family/" + family, seo.robotsDirective());
+        model.addAttribute("seo", seo);
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
         model.addAttribute("leadContext", null);
         if ("regional".equals(family) || "authority".equals(family)) {
             model.addAttribute("leadContext", new LeadCaptureContext(
-                    "Want follow-up on this " + family + " cluster?",
-                    "Leave an email and the page you were reading. This closes the gap between organic research and a direct follow-up queue.",
+                    "Want follow-up on this " + family + " topic?",
+                    "Leave an email and the page you were reading if you want help turning this guidance into a concrete next step.",
                     "Request follow-up",
                     "/well-water/family/" + family,
                     "pseo-family",

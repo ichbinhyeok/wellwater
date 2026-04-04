@@ -20,12 +20,12 @@
                 </div>
                 <aside class="hero-note">
                     <strong>${pages.size()} pages in this family</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${familyView.operatorNote()}</p>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${familyView.heroNote()}</p>
                     <div class="chip-row">
-                        @if("noindex,follow".equals(seo.robotsDirective()))
-                            <span class="chip">Internal support hub</span>
-                            <span class="chip">Navigation first</span>
-                            <span class="chip">Not a primary search wedge</span>
+                        @if("compares".equals(family))
+                            <span class="chip">Treatment options</span>
+                            <span class="chip">After testing</span>
+                            <span class="chip">Scope matters</span>
                         @else
                             <span class="chip">Common searches</span>
                             <span class="chip">Testing path</span>
@@ -91,9 +91,9 @@
                     <p class="brand-kicker">Browse pages</p>
                     <h2>Practical guides in this family</h2>
                 </div>
-                <p class="section-copy">${"noindex,follow".equals(seo.robotsDirective())
-                        ? "This hub is still useful for navigation and internal linking, but it is intentionally noindexed so the public search surface stays tighter."
-                        : "Each page should answer what this is, what to verify next, and when not to buy yet."}</p>
+                <p class="section-copy">${"compares".equals(family)
+                        ? "Use comparison pages after you confirm the likely problem and the part of the house you are trying to protect."
+                        : "Each page should explain what the clue means, what to verify next, and when not to buy yet."}</p>
             </div>
             <div class="grid">
                 @for (var page : pages)
@@ -132,7 +132,7 @@
                         <input type="text" name="name" placeholder="Name (optional)" class="form-field">
                         <input type="text" name="state" placeholder="State (optional)" maxlength="12" class="form-field">
                     </div>
-                    <textarea name="note" rows="4" placeholder="What follow-up do you want from this cluster?" class="form-textarea"></textarea>
+                    <textarea name="note" rows="4" placeholder="What follow-up do you want from this topic?" class="form-textarea"></textarea>
                     <button type="submit" class="button-link" style="grid-column: 1 / -1; justify-content: center;">${leadContext.submitLabel()}</button>
                 </form>
             </section>

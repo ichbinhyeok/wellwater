@@ -87,7 +87,7 @@
                             <h2>Decision engine and authority pages</h2>
                         </div>
                     </div>
-                    <p class="card-meta">These trust pages exist to support the public acquisition layer and the tool, not to replace either one.</p>
+                    <p class="card-meta">Use trust pages alongside the main guides and the decision tool when you want to understand how evidence, review, and safety limits are handled.</p>
                     <div class="cta-row" style="margin-top: 16px;">
                         <a class="button-link" href="/tool/result-first">Open Tool</a>
                     </div>

@@ -71,8 +71,8 @@ class PseoExperienceServiceTest {
     void regionalFamilyViewHighlightsOfficialStateCoverage() {
         PseoFamilyView familyView = experienceService.familyView("regional", catalogService.byFamily("regional"));
 
-        assertTrue(familyView.operatorNote().contains("official guidance"));
-        assertTrue(familyView.operatorNote().contains("states"));
+        assertTrue(familyView.heroNote().contains("official guidance"));
+        assertTrue(familyView.heroNote().contains("states"));
     }
 
     @Test
@@ -211,18 +211,19 @@ class PseoExperienceServiceTest {
         assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("mail-in-lab-vs-local-certified-lab").orElseThrow().searchRole());
         assertEquals(PseoSearchRole.CORE, catalogService.findBySlug("new-jersey-pwta-private-well-testing").orElseThrow().searchRole());
         assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("private-well-testing-schedule-by-household").orElseThrow().searchRole());
-        assertEquals(PseoSearchRole.HOLD, catalogService.findBySlug("hardness").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("hardness").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("rotten-egg-smell").orElseThrow().searchRole());
         assertEquals(PseoSearchRole.CONVERSION, catalogService.findBySlug("uv-vs-ro").orElseThrow().searchRole());
     }
 
     @Test
-    void searchSurfaceRoleSnapshotStaysNarrow() {
+    void searchSurfaceRoleSnapshotStaysFocusedButPreservesRecoveryPages() {
         Map<PseoSearchRole, Long> counts = catalogService.allPages().stream()
                 .collect(Collectors.groupingBy(PseoPage::searchRole, () -> new EnumMap<>(PseoSearchRole.class), Collectors.counting()));
 
         assertEquals(21L, counts.get(PseoSearchRole.CORE));
-        assertEquals(23L, counts.get(PseoSearchRole.SUPPORT));
-        assertEquals(50L, counts.get(PseoSearchRole.HOLD));
+        assertEquals(39L, counts.get(PseoSearchRole.SUPPORT));
+        assertEquals(34L, counts.get(PseoSearchRole.HOLD));
         assertEquals(13L, counts.get(PseoSearchRole.CONVERSION));
     }
 

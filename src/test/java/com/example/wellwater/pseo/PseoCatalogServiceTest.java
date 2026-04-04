@@ -33,6 +33,7 @@ class PseoCatalogServiceTest {
         assertTrue(service.findBySlug("nitrate").orElseThrow().isIndexable());
         assertFalse(service.findBySlug("uv-vs-ro").orElseThrow().isIndexable());
         String sitemap = service.sitemapXml("https://example.com");
+        assertTrue(sitemap.contains("/well-water/family/contaminants"));
         assertTrue(sitemap.contains("/well-water/nitrate"));
         assertFalse(sitemap.contains("/well-water/uv-vs-ro"));
         assertFalse(sitemap.contains("/well-water/family/compares"));
