@@ -5,7 +5,7 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 
-@template.layout.main(title = familyView.heroTitle(), robots = "index,follow", description = familyView.heroLead(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
+@template.layout.main(title = familyView.heroTitle(), robots = seo.robotsDirective(), description = familyView.heroLead(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
@@ -22,9 +22,15 @@
                     <strong>${pages.size()} pages in this family</strong>
                     <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${familyView.operatorNote()}</p>
                     <div class="chip-row">
-                        <span class="chip">Common searches</span>
-                        <span class="chip">Testing path</span>
-                        <span class="chip">Next-step guidance</span>
+                        @if("noindex,follow".equals(seo.robotsDirective()))
+                            <span class="chip">Internal support hub</span>
+                            <span class="chip">Navigation first</span>
+                            <span class="chip">Not a primary search wedge</span>
+                        @else
+                            <span class="chip">Common searches</span>
+                            <span class="chip">Testing path</span>
+                            <span class="chip">Next-step guidance</span>
+                        @endif
                     </div>
                 </aside>
             </div>
@@ -85,7 +91,9 @@
                     <p class="brand-kicker">Browse pages</p>
                     <h2>Practical guides in this family</h2>
                 </div>
-                <p class="section-copy">Each page should answer what this is, what to verify next, and when not to buy yet.</p>
+                <p class="section-copy">${"noindex,follow".equals(seo.robotsDirective())
+                        ? "This hub is still useful for navigation and internal linking, but it is intentionally noindexed so the public search surface stays tighter."
+                        : "Each page should answer what this is, what to verify next, and when not to buy yet."}</p>
             </div>
             <div class="grid">
                 @for (var page : pages)

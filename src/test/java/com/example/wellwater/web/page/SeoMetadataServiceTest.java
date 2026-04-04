@@ -30,6 +30,7 @@ class SeoMetadataServiceTest {
         SeoMetadata metadata = seoMetadataService.detail(experienceService.detailView("new-hampshire-arsenic-well-water").orElseThrow());
 
         assertEquals("https://waterverdict.example/well-water/new-hampshire-arsenic-well-water", metadata.canonicalUrl());
+        assertEquals("index,follow", metadata.robotsDirective());
         assertEquals(3, metadata.breadcrumbs().size());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Article\"")));
@@ -39,8 +40,18 @@ class SeoMetadataServiceTest {
     void decisionDocPagesEmitFaqStructuredData() {
         SeoMetadata metadata = seoMetadataService.detail(experienceService.detailView("nitrate").orElseThrow());
 
+        assertEquals("index,follow", metadata.robotsDirective());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"FAQPage\"")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Question\"")));
+    }
+
+    @Test
+    void comparePagesAndBroadFamilyHubsCanBeNoindexed() {
+        SeoMetadata compareMetadata = seoMetadataService.detail(experienceService.detailView("ro-vs-adsorptive-media-for-arsenic").orElseThrow());
+        SeoMetadata familyMetadata = seoMetadataService.family("compares", experienceService.familyView("compares", catalogService.byFamily("compares")));
+
+        assertEquals("noindex,follow", compareMetadata.robotsDirective());
+        assertEquals("noindex,follow", familyMetadata.robotsDirective());
     }
 
     @Test
@@ -48,6 +59,7 @@ class SeoMetadataServiceTest {
         SeoMetadata metadata = seoMetadataService.trustPage(trustPageService.findBySlug("methodology").orElseThrow());
 
         assertEquals("https://waterverdict.example/trust/methodology", metadata.canonicalUrl());
+        assertEquals("index,follow", metadata.robotsDirective());
         assertEquals(3, metadata.breadcrumbs().size());
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"AboutPage\"")));

@@ -36,14 +36,16 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private well testing decisions")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("The site now leads with four search-intent clusters")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision workflow")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a safer next step")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a testing decision instead of a premature purchase")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Rotten Egg Smell in Well Water")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Featured regional guides with official lab and guidance handoff")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("North Carolina Private Well Water FAQ and Testing Path")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Regional Guides")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Authority Articles")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("New Jersey PWTA Private Well Testing What To Know")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Winner state clusters with official lab and guidance handoff")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("New Hampshire Arsenic in Well Water What To Do")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Home sale testing by state")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Compare pages")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust surface")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("application/ld+json")))
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("@content()"))));
@@ -280,7 +282,9 @@ class RenderingSmokeTest {
     void clusterComparePageRenders() throws Exception {
         mockMvc.perform(get("/well-water/ro-vs-adsorptive-media-for-arsenic"))
                 .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,follow")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("RO vs Adsorptive Media for Arsenic in Well Water")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("This page stays public but is intentionally noindexed")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related regional reads")));
     }
 
@@ -288,7 +292,7 @@ class RenderingSmokeTest {
     void authorityFamilyPageRendersLeadCaptureSurface() throws Exception {
         mockMvc.perform(get("/well-water/family/authority"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Well water testing and decision articles")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Testing-order and sampling articles")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Start with these pages in this family")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("What this hub should help you avoid")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")));

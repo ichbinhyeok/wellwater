@@ -62,8 +62,8 @@ public class PageController {
                 "Water Verdict home"
         ));
         model.addAttribute("seo", seoMetadataService.home(
-                "Water Verdict | Results, Symptoms, and Next Steps",
-                "Use test results, water symptoms, or recent changes to decide what to verify next for a private well."
+                "Water Verdict | Private Well Testing Decisions",
+                "Decide what to test next for a private well, especially during home purchase, state-specific testing, and suspicious result follow-up."
         ));
         return "pages/home";
     }

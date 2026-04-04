@@ -142,10 +142,14 @@ public class PseoCatalogService {
 
         appendUrl(xml, normalizedBase + "/");
         for (String family : FAMILY_ORDER) {
-            appendUrl(xml, normalizedBase + "/well-water/family/" + family);
+            if (PseoSearchStrategy.isFamilyHubIndexable(family)) {
+                appendUrl(xml, normalizedBase + "/well-water/family/" + family);
+            }
         }
         for (PseoPage page : allPages()) {
-            appendUrl(xml, normalizedBase + "/well-water/" + page.slug());
+            if (page.isIndexable()) {
+                appendUrl(xml, normalizedBase + "/well-water/" + page.slug());
+            }
         }
         for (String path : extraPaths) {
             if (path == null || path.isBlank()) {
@@ -266,7 +270,8 @@ public class PseoCatalogService {
     }
 
     private Comparator<PseoPage> pageOrdering() {
-        return Comparator.comparingInt(PseoPage::tierRank)
+        return Comparator.comparingInt((PseoPage page) -> page.searchRole().sortRank())
+                .thenComparingInt(PseoPage::tierRank)
                 .thenComparing(PseoPage::slug);
     }
 

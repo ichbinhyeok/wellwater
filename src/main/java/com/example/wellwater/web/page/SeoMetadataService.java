@@ -3,6 +3,7 @@ package com.example.wellwater.web.page;
 import com.example.wellwater.pseo.PseoDetailView;
 import com.example.wellwater.pseo.PseoFaqItem;
 import com.example.wellwater.pseo.PseoFamilyView;
+import com.example.wellwater.pseo.PseoSearchStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class SeoMetadataService {
         String canonicalUrl = absolute("/");
         return new SeoMetadata(
                 canonicalUrl,
+                "index,follow",
                 List.of(),
                 List.of(webSiteJson(canonicalUrl, title, description)),
                 "website",
@@ -52,6 +54,7 @@ public class SeoMetadataService {
         );
         return new SeoMetadata(
                 canonicalUrl,
+                PseoSearchStrategy.robotsForFamily(familyKey),
                 breadcrumbs,
                 List.of(
                         collectionPageJson(canonicalUrl, familyView.heroTitle(), familyView.heroLead()),
@@ -72,6 +75,7 @@ public class SeoMetadataService {
         );
         return new SeoMetadata(
                 canonicalUrl,
+                "index,follow",
                 breadcrumbs,
                 List.of(
                         collectionPageJson(canonicalUrl, title, description),
@@ -93,6 +97,7 @@ public class SeoMetadataService {
         );
         return new SeoMetadata(
                 canonicalUrl,
+                "index,follow",
                 breadcrumbs,
                 List.of(
                         staticPageJson("AboutPage", canonicalUrl, page.h1(), page.metaDescription(), page.updatedAt()),
@@ -122,6 +127,7 @@ public class SeoMetadataService {
 
         return new SeoMetadata(
                 canonicalUrl,
+                PseoSearchStrategy.robotsForPage(pageView.page()),
                 breadcrumbs,
                 List.copyOf(blocks),
                 pageView.page().family().equals("authority") || pageView.page().family().equals("regional") ? "article" : "website",

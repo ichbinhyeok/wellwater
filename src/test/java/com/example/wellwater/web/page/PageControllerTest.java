@@ -11,7 +11,6 @@ import com.example.wellwater.pseo.RegionalContextRegistryService;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
@@ -19,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -62,7 +62,7 @@ class PageControllerTest {
                 (List<com.example.wellwater.pseo.PseoPage>) model.getAttribute("featuredRegionalPages");
         assertNotNull(featuredRegionalPages);
         assertEquals(4, featuredRegionalPages.size());
-        assertEquals("north-carolina-private-well-water-faqs", featuredRegionalPages.get(0).slug());
+        assertEquals("new-jersey-pwta-private-well-testing", featuredRegionalPages.get(0).slug());
     }
 
     @Test
@@ -78,6 +78,8 @@ class PageControllerTest {
         PseoFamilyView familyView = (PseoFamilyView) model.getAttribute("familyView");
         assertNotNull(familyView);
         assertEquals(3, familyView.starterPages().size());
+        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
+        assertEquals("noindex,follow", seo.robotsDirective());
     }
 
     @Test
@@ -95,6 +97,12 @@ class PageControllerTest {
         String xml = controller.sitemap();
         assertTrue(xml.contains("/well-water/"));
         assertTrue(xml.contains("/trust/methodology"));
+        assertTrue(xml.contains("/well-water/new-jersey-pwta-private-well-testing"));
+        assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
+        assertTrue(xml.contains("/well-water/family/regional"));
+        assertTrue(xml.contains("/well-water/family/authority"));
+        assertFalse(xml.contains("/well-water/uv-vs-ro"));
+        assertFalse(xml.contains("/well-water/family/compares"));
     }
 
     @Test
@@ -118,6 +126,21 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("page"));
         assertNotNull(model.getAttribute("pageView"));
         assertNotNull(model.getAttribute("leadContext"));
+        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
+        assertEquals("index,follow", seo.robotsDirective());
+    }
+
+    @Test
+    void compareDetailPagesStayPublicButNoindexed() {
+        Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        String viewName = controller.detail("uv-vs-ro", null, model, response);
+
+        assertEquals("pages/pseo/detail", viewName);
+        assertEquals(200, response.getStatus());
+        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
+        assertEquals("noindex,follow", seo.robotsDirective());
     }
 
     @Test

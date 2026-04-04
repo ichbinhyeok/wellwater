@@ -3,7 +3,9 @@ package com.example.wellwater.pseo;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
 import org.junit.jupiter.api.Test;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,7 +43,7 @@ class PseoExperienceServiceTest {
     void familyViewUsesHumanReadableHeroCopy() {
         PseoFamilyView familyView = experienceService.familyView("symptoms", catalogService.byFamily("symptoms"));
 
-        assertEquals("Well water smell, stain, and taste guides", familyView.heroTitle());
+        assertEquals("Symptom clues that need testing context", familyView.heroTitle());
         assertEquals("/tool/symptom-first", familyView.primaryToolHref());
         assertEquals(3, familyView.starterPages().size());
         assertEquals(3, familyView.commonMistakes().size());
@@ -62,7 +64,7 @@ class PseoExperienceServiceTest {
         assertTrue(detailView.riskSummary().contains("New Hampshire"));
         assertTrue(detailView.doNotBuyYet().contains("New Hampshire"));
         assertTrue(detailView.quickAnswers().stream().anyMatch(answer -> answer.title().equals("What NH changes")));
-        assertEquals("Well water testing and decision articles", familyView.heroTitle());
+        assertEquals("Testing-order and sampling articles", familyView.heroTitle());
     }
 
     @Test
@@ -168,9 +170,9 @@ class PseoExperienceServiceTest {
         List<PseoPage> priorityPages = experienceService.priorityPages(6);
 
         assertEquals(6, priorityPages.size());
-        assertEquals("rotten-egg-smell", priorityPages.get(0).slug());
-        assertEquals("nitrate", priorityPages.get(1).slug());
-        assertEquals("coliform", priorityPages.get(2).slug());
+        assertEquals("new-jersey-pwta-private-well-testing", priorityPages.get(0).slug());
+        assertEquals("private-well-home-sale-testing-by-state", priorityPages.get(1).slug());
+        assertEquals("home-purchase-test", priorityPages.get(2).slug());
     }
 
     @Test
@@ -180,10 +182,10 @@ class PseoExperienceServiceTest {
                 .collect(Collectors.toList());
 
         assertEquals(List.of(
-                "north-carolina-private-well-water-faqs",
-                "virginia-private-well-testing-program",
+                "new-jersey-pwta-private-well-testing",
+                "new-hampshire-arsenic-well-water",
                 "oregon-private-well-testing-recommendations",
-                "washington-private-well-water-testing"
+                "connecticut-low-ph-blue-green-stains"
         ), slugs);
     }
 
@@ -196,11 +198,32 @@ class PseoExperienceServiceTest {
 
         assertEquals(4, familyView.starterPages().size());
         assertEquals(List.of(
-                "north-carolina-private-well-water-faqs",
-                "virginia-private-well-testing-program",
+                "new-jersey-pwta-private-well-testing",
+                "new-hampshire-arsenic-well-water",
                 "oregon-private-well-testing-recommendations",
-                "washington-private-well-water-testing"
+                "connecticut-low-ph-blue-green-stains"
         ), slugs);
+    }
+
+    @Test
+    void broadSupportAndComparePagesCanNowBeHeldBackFromSearch() {
+        assertEquals(PseoSearchRole.CORE, catalogService.findBySlug("test-kit-vs-certified-lab").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("mail-in-lab-vs-local-certified-lab").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.CORE, catalogService.findBySlug("new-jersey-pwta-private-well-testing").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.SUPPORT, catalogService.findBySlug("private-well-testing-schedule-by-household").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.HOLD, catalogService.findBySlug("hardness").orElseThrow().searchRole());
+        assertEquals(PseoSearchRole.CONVERSION, catalogService.findBySlug("uv-vs-ro").orElseThrow().searchRole());
+    }
+
+    @Test
+    void searchSurfaceRoleSnapshotStaysNarrow() {
+        Map<PseoSearchRole, Long> counts = catalogService.allPages().stream()
+                .collect(Collectors.groupingBy(PseoPage::searchRole, () -> new EnumMap<>(PseoSearchRole.class), Collectors.counting()));
+
+        assertEquals(21L, counts.get(PseoSearchRole.CORE));
+        assertEquals(23L, counts.get(PseoSearchRole.SUPPORT));
+        assertEquals(50L, counts.get(PseoSearchRole.HOLD));
+        assertEquals(13L, counts.get(PseoSearchRole.CONVERSION));
     }
 
     @Test

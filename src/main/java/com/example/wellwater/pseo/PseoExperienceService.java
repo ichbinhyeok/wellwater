@@ -34,44 +34,15 @@ public class PseoExperienceService {
     private static final Set<String> STOP_WORDS = Set.of(
             "in", "well", "water", "for", "and", "the", "to", "what", "how", "from", "with", "after", "vs", "guide", "next", "steps", "first"
     );
-    private static final List<String> HOME_PRIORITY_SLUGS = List.of(
-            "rotten-egg-smell",
-            "nitrate",
-            "coliform",
-            "cloudy-water",
-            "home-purchase-test",
-            "new-jersey-pwta-private-well-testing",
-            "arsenic",
-            "new-hampshire-arsenic-well-water",
-            "florida-rotten-egg-smell-well-water",
-            "private-well-home-sale-testing-by-state",
-            "after-flood",
-            "metallic-taste",
-            "orange-stains",
-            "pfas",
-            "sulfur-smell-hot-water",
-            "blue-green-stains",
-            "ph",
-            "e-coli",
-            "after-heavy-rain",
-            "radon",
-            "how-to-read-a-well-water-lab-report",
-            "new-baby-at-home",
-            "test-kit-vs-certified-lab"
-    );
-    private static final List<String> FEATURED_REGIONAL_SLUGS = List.of(
-            "north-carolina-private-well-water-faqs",
-            "virginia-private-well-testing-program",
-            "oregon-private-well-testing-recommendations",
-            "washington-private-well-water-testing"
-    );
+    private static final List<String> HOME_PRIORITY_SLUGS = PseoSearchStrategy.homePrioritySlugOrder();
+    private static final List<String> FEATURED_REGIONAL_SLUGS = PseoSearchStrategy.featuredRegionalSlugOrder();
     private static final Map<String, List<String>> FAMILY_STARTER_SLUGS = Map.of(
-            "contaminants", List.of("nitrate", "coliform", "arsenic"),
-            "symptoms", List.of("rotten-egg-smell", "cloudy-water", "orange-stains"),
-            "compares", List.of("test-kit-vs-certified-lab", "whole-house-vs-under-sink-ro", "uv-vs-chlorination"),
-            "triggers", List.of("after-flood", "home-purchase-test", "after-heavy-rain"),
+            "contaminants", List.of("arsenic", "nitrate", "coliform"),
+            "symptoms", List.of("metallic-taste", "blue-green-stains", "cloudy-water"),
+            "compares", List.of("test-kit-vs-certified-lab", "mail-in-lab-vs-local-certified-lab", "whole-house-vs-under-sink-ro"),
+            "triggers", List.of("home-purchase-test", "after-flood", "retest-after-treatment"),
             "regional", FEATURED_REGIONAL_SLUGS,
-            "authority", List.of("how-to-read-a-well-water-lab-report", "private-well-home-sale-testing-by-state", "private-well-testing-schedule-by-household")
+            "authority", List.of("private-well-home-sale-testing-by-state", "how-to-read-a-well-water-lab-report", "private-well-sampling-mistakes-that-break-results")
     );
     private static final Map<String, Set<String>> CLUSTER_COMPANIONS = Map.ofEntries(
             Map.entry("metallic-taste", Set.of("ph", "copper", "blue-green-stains", "lead", "after-repair", "acid-neutralizer-vs-soda-ash", "low-ph-copper-corrosion-testing-order", "metallic-taste-plumbing-vs-source-water", "test-kit-vs-certified-lab")),
@@ -148,6 +119,7 @@ public class PseoExperienceService {
         addBySlugOrder(ordered, bySlug, HOME_PRIORITY_SLUGS, limit);
         if (ordered.size() < limit) {
             addUnique(ordered, allPages.stream()
+                    .filter(PseoPage::isIndexable)
                     .filter(page -> "A".equals(page.normalizedTier()))
                     .filter(page -> decisionDocService.findBySlug(page.slug()).isPresent())
                     .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
@@ -155,6 +127,7 @@ public class PseoExperienceService {
         }
         if (ordered.size() < limit) {
             addUnique(ordered, allPages.stream()
+                    .filter(PseoPage::isIndexable)
                     .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
                     .toList(), limit);
         }
@@ -172,6 +145,7 @@ public class PseoExperienceService {
         addBySlugOrder(ordered, bySlug, FEATURED_REGIONAL_SLUGS, FEATURED_REGIONAL_SLUGS.size());
         if (ordered.size() < FEATURED_REGIONAL_SLUGS.size()) {
             addUnique(ordered, regionalPages.stream()
+                    .filter(PseoPage::isIndexable)
                     .filter(page -> "A".equals(page.normalizedTier()))
                     .sorted(Comparator.comparingInt(PseoPage::tierRank).thenComparing(PseoPage::slug))
                     .toList(), FEATURED_REGIONAL_SLUGS.size());
@@ -187,9 +161,9 @@ public class PseoExperienceService {
         return switch (family) {
             case "contaminants" -> new PseoFamilyView(
                     family,
-                    "Well water test result guides",
-                    "Start here when your report names nitrate, arsenic, coliform, PFAS, radon, or another contaminant and you need the next safe step.",
-                    size + " pages for interpreting results, deciding what to retest, and avoiding premature treatment purchases.",
+                    "Private well result interpretation guides",
+                    "Start here when a report names arsenic, nitrate, coliform, or a similar analyte and you need a tighter testing order before treatment shopping.",
+                    size + " pages for result interpretation, retest order, and deciding when a named contaminant should widen the test scope.",
                     "Start From Lab Results",
                     "/tool/result-first",
                     starterPages,
@@ -198,9 +172,9 @@ public class PseoExperienceService {
             );
             case "symptoms" -> new PseoFamilyView(
                     family,
-                    "Well water smell, stain, and taste guides",
-                    "Use these pages when you notice rotten egg odor, orange stains, metallic taste, cloudy water, or another clue before you have lab results.",
-                    size + " pages focused on likely causes, what to test next, and when a symptom is not enough to justify treatment.",
+                    "Symptom clues that need testing context",
+                    "Use these pages when a metallic taste, stain, or cloudy-water complaint needs a smarter testing path before it becomes a whole-house equipment guess.",
+                    size + " pages focused on separating plumbing, source-water, and timing clues before you shop.",
                     "Start From Symptoms",
                     "/tool/symptom-first",
                     starterPages,
@@ -209,9 +183,9 @@ public class PseoExperienceService {
             );
             case "compares" -> new PseoFamilyView(
                     family,
-                    "Well water treatment comparison guides",
-                    "These pages compare treatment categories only after the problem is narrow enough to talk about scope, certification, and fit.",
-                    size + " pages comparing treatment paths without pretending every well problem has the same fix.",
+                    "Internal compare and conversion guides",
+                    "These pages exist to narrow a decision after the testing path is already stable. They are not the primary search-entry surface.",
+                    size + " pages comparing treatment paths only after the problem class and household scope are already clearer.",
                     "Start From Lab Results",
                     "/tool/result-first",
                     starterPages,
@@ -220,9 +194,9 @@ public class PseoExperienceService {
             );
             case "triggers" -> new PseoFamilyView(
                     family,
-                    "Well water change and event guides",
-                    "Use these pages after flooding, repairs, wildfire, a home purchase, or another change that resets what your old data means.",
-                    size + " pages for response order, retest timing, and when to escalate before shopping.",
+                    "Home purchase and retest trigger guides",
+                    "Use these pages after a home purchase, flooding, repairs, or another change that resets what your old data means.",
+                    size + " pages for testing order, transaction timing, retest windows, and when to escalate before shopping.",
                     "Start From Recent Trigger",
                     "/tool/trigger-first",
                     starterPages,
@@ -231,21 +205,21 @@ public class PseoExperienceService {
             );
             case "regional" -> new PseoFamilyView(
                     family,
-                    "State-specific private well guides",
-                    "These pages cover places where state rules, geology, bedrock, or local testing pathways change the right answer.",
-                    size + " pages built for local search intent, with official guidance and lab routing now mapped across "
+                    "State-specific private well testing guides",
+                    "These pages cover states where testing rules, transfer panels, geology, or lab pathways change the right next step.",
+                    size + " pages built for local testing intent, with official guidance and lab routing now mapped across "
                             + stateResourceRegistryService.supportedStateCount() + " states.",
-                    "Start With Your State Context",
-                    "/tool/result-first",
+                    "Start With State Context",
+                    "/well-water/private-well-home-sale-testing-by-state",
                     starterPages,
                     commonMistakes,
                     beforeToolChecks
             );
             case "authority" -> new PseoFamilyView(
                     family,
-                    "Well water testing and decision articles",
-                    "Support articles for reading reports, planning test scope, checking claims, and avoiding expensive mistakes before you buy.",
-                    size + " articles that strengthen trust, method, and the pages people visit before a treatment decision.",
+                    "Testing-order and sampling articles",
+                    "Support articles for reading reports, planning test scope, checking home-sale panels, and avoiding expensive sampling mistakes before you buy.",
+                    size + " articles that strengthen the state-aware testing wedge before any compare page takes over.",
                     "Open Decision Tool",
                     "/tool/result-first",
                     starterPages,

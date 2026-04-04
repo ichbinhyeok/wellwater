@@ -3,7 +3,7 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 
-@template.layout.main(title = pageView.page().title(), robots = "index,follow", description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
+@template.layout.main(title = pageView.page().title(), robots = seo.robotsDirective(), description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
@@ -26,12 +26,25 @@
                     <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${pageView.riskSummary()}</p>
                     <div class="chip-row">
                         <span class="chip">${pageView.page().family()}</span>
+                        <span class="chip">${pageView.page().isIndexable() ? "Search landing page" : "Internal support surface"}</span>
                         <span class="chip">Test before treatment</span>
                         <span class="chip">Compare after scope</span>
                     </div>
                 </aside>
             </div>
         </section>
+
+        @if(!pageView.page().isIndexable())
+            <section class="panel panel-accent">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Search posture</p>
+                        <h2>This page stays public but is intentionally noindexed</h2>
+                    </div>
+                    <p class="section-copy">It still matters for users who arrive from a core page or the tool, but it is not acting as a primary acquisition asset while the site narrows around state-specific testing and home-sale intent.</p>
+                </div>
+            </section>
+        @endif
 
         <section class="panel panel-accent">
             <div class="section-header">

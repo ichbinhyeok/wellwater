@@ -22,6 +22,14 @@ public record PseoPage(
         String fetchedAt,
         String tier
 ) {
+    public PseoSearchRole searchRole() {
+        return PseoSearchStrategy.roleFor(this);
+    }
+
+    public boolean isIndexable() {
+        return searchRole().isIndexable();
+    }
+
     public String normalizedTier() {
         if (tier == null || tier.isBlank()) {
             return "B";
