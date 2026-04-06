@@ -2,6 +2,7 @@
 @param com.example.wellwater.web.page.SeoMetadata seo
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
+@param com.example.wellwater.web.page.PublicTrackingLinkService trackingLinks
 
 @template.layout.main(title = pageView.page().title(), robots = seo.robotsDirective(), description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
@@ -17,8 +18,8 @@
                         <span class="chip">${pageView.intentLabel()}</span>
                     </div>
                     <div class="hero-actions">
-                        <a class="button-link" href="${pageView.entryHint().href()}">${pageView.entryHint().label()}</a>
-                        <a class="button-link-secondary" href="${pageView.page().primaryCtaUrl()}">${pageView.page().primaryCtaLabel()}</a>
+                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">${pageView.entryHint().label()}</a>
+                        <a class="button-link-secondary" href="${trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl())}">${pageView.page().primaryCtaLabel()}</a>
                     </div>
                 </div>
                 <aside class="hero-note">
@@ -227,7 +228,7 @@
                         <p class="section-copy">Personalized tool outputs stay separate from the public guide so the follow-up can reflect your own results, timing, and household context.</p>
                     </div>
                     <div class="cta-row">
-                        <a class="button-link" href="${pageView.entryHint().href()}">${pageView.entryHint().label()}</a>
+                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">${pageView.entryHint().label()}</a>
                     </div>
                     <div class="prose" style="margin-top: 16px;">
                         <p>${pageView.entryHint().reason()}</p>
@@ -263,7 +264,7 @@
                             <h2>Primary action path</h2>
                         </div>
                     </div>
-                    <a class="card-link card-link-accent" href="${pageView.page().primaryCtaUrl()}">
+                    <a class="card-link card-link-accent" href="${trackingLinks.detail(pageView.page(), "detail_primary_action_path", pageView.page().primaryCtaUrl())}">
                         <span class="card-kicker">Primary</span>
                         <h3>${pageView.page().primaryCtaLabel()}</h3>
                         <p class="card-meta">Use this when you need the direct next action outside the tool.</p>
@@ -277,7 +278,7 @@
                             <h2>Compare paths before vendor links</h2>
                         </div>
                     </div>
-                    <a class="card-link" href="${pageView.page().moneyCtaUrl()}">
+                    <a class="card-link" href="${trackingLinks.detail(pageView.page(), "detail_compare_cta", pageView.page().moneyCtaUrl())}">
                         <span class="card-kicker">Treatment compare</span>
                         <h3>${pageView.page().moneyCtaLabel()}</h3>
                         <p class="card-meta">${pageView.page().disclosure()}</p>
@@ -426,7 +427,7 @@
                         </div>
                         <div class="grid">
                             @for (var relatedPage : section.pages())
-                                <a class="card-link" href="/well-water/${relatedPage.slug()}">
+                                <a class="card-link" href="${trackingLinks.detail(pageView.page(), "detail_support_link", "/well-water/" + relatedPage.slug())}">
                                     <span class="card-kicker">${relatedPage.family()}</span>
                                     <h3>${relatedPage.h1()}</h3>
                                     <p class="card-meta">${relatedPage.metaDescription()}</p>

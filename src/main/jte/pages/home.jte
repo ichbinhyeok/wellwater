@@ -6,6 +6,7 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 @param com.example.wellwater.web.page.SeoMetadata seo
+@param com.example.wellwater.web.page.PublicTrackingLinkService trackingLinks
 
 @template.layout.main(title = "Water Verdict | Private Well Testing Decisions", robots = seo.robotsDirective(), description = "Decide what to test next for a private well, especially during home purchase, state-specific testing, and suspicious result follow-up.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
@@ -16,8 +17,8 @@
                     <h1>Decide what to test next before a home purchase, state rule, or suspicious result turns into an expensive guess.</h1>
                     <p class="hero-lead">Start with state-specific testing guidance, home-sale timing, report interpretation, and the next safe verification step before equipment shopping takes over.</p>
                     <div class="hero-actions">
-                        <a class="button-link" href="/well-water/private-well-home-sale-testing-by-state">Start With Home Sale Or State Rules</a>
-                        <a class="button-link-secondary" href="/tool/result-first">Start From Lab Results</a>
+                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/well-water/private-well-home-sale-testing-by-state")}">Start With Home Sale Or State Rules</a>
+                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/tool/result-first")}">Start From Lab Results</a>
                     </div>
                 </div>
                 <aside class="hero-note">
@@ -54,22 +55,22 @@
                 <p class="section-copy">These are the pages most likely to answer the first question clearly enough that you can choose the next test, not just browse treatment categories.</p>
             </div>
             <div class="grid">
-                <a class="card-link card-link-accent" href="/well-water/private-well-home-sale-testing-by-state">
+                <a class="card-link card-link-accent" href="${trackingLinks.home("home_start_path", "/well-water/private-well-home-sale-testing-by-state")}">
                     <span class="card-kicker">Transaction intent</span>
                     <h3>Home purchase and transfer testing</h3>
                     <p class="card-meta">Use state requirements, lender timing, and checklist logic to decide what a transfer panel does not answer.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/regional">
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/family/regional")}">
                     <span class="card-kicker">Regional intent</span>
                     <h3>State-specific testing paths</h3>
                     <p class="card-meta">Focus on states where geology, certified-lab routing, or rules change the right next step.</p>
                 </a>
-                <a class="card-link" href="/well-water/how-to-read-a-well-water-lab-report">
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/how-to-read-a-well-water-lab-report")}">
                     <span class="card-kicker">Interpretation intent</span>
                     <h3>Read the report before you compare products</h3>
                     <p class="card-meta">Sharpen test scope, sample quality, and household risk before equipment research takes over.</p>
                 </a>
-                <a class="card-link" href="/well-water/metallic-taste">
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/metallic-taste")}">
                     <span class="card-kicker">Result support</span>
                     <h3>Interpret arsenic, nitrate, corrosion, and suspicious clues</h3>
                     <p class="card-meta">Keep interpretation pages alive where they reinforce the testing path instead of broadening into a generic encyclopedia.</p>
@@ -117,17 +118,17 @@
                 <p class="section-copy">You can still enter through lab results, symptoms, or a recent change. The difference is that the public guides now keep testing and verification ahead of treatment shopping.</p>
             </div>
             <div class="grid">
-                <a class="card-link card-link-accent" href="/tool/result-first">
+                <a class="card-link card-link-accent" href="${trackingLinks.home("home_signal_path", "/tool/result-first")}">
                     <span class="card-kicker">Result-first</span>
                     <h3>Lab Results</h3>
                     <p class="card-meta">Enter one analyte from a recent report and move straight into verification logic, scope, and next actions.</p>
                 </a>
-                <a class="card-link" href="/tool/symptom-first">
+                <a class="card-link" href="${trackingLinks.home("home_signal_path", "/tool/symptom-first")}">
                     <span class="card-kicker">Symptom-first</span>
                     <h3>Symptoms</h3>
                     <p class="card-meta">Start from smell, stain, taste, cloudiness, or another visible pattern when you do not have clean lab data yet.</p>
                 </a>
-                <a class="card-link" href="/tool/trigger-first">
+                <a class="card-link" href="${trackingLinks.home("home_signal_path", "/tool/trigger-first")}">
                     <span class="card-kicker">Trigger-first</span>
                     <h3>Recent Changes</h3>
                     <p class="card-meta">Use flooding, repairs, treatment changes, or wildfire context to decide whether to retest, inspect, or escalate.</p>
@@ -178,7 +179,7 @@
             <div class="grid">
                 @for (int i = 0; i < priorityPages.size(); i++)
                     !{var page = priorityPages.get(i);}
-                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="/well-water/${page.slug()}">
+                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="${trackingLinks.home("home_priority_page", "/well-water/" + page.slug())}">
                         <span class="card-kicker">${page.family()}</span>
                         <h3>${page.h1()}</h3>
                         <p class="card-meta">${page.metaDescription()}</p>
@@ -204,7 +205,7 @@
                 </div>
                 <div class="grid">
                     @for (var page : featuredRegionalPages)
-                        <a class="card-link card-link-accent" href="/well-water/${page.slug()}">
+                        <a class="card-link card-link-accent" href="${trackingLinks.home("home_featured_regional", "/well-water/" + page.slug())}">
                             <span class="card-kicker">${page.family()}</span>
                             <h3>${page.h1()}</h3>
                             <p class="card-meta">${page.metaDescription()}</p>
@@ -223,35 +224,35 @@
                 <p class="section-copy">Start with the clearest decision pages, then move into deeper interpretation or treatment research once you know the likely problem and scope.</p>
             </div>
             <div class="grid grid-compact">
-                <a class="card-link" href="/well-water/private-well-home-sale-testing-by-state">
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/private-well-home-sale-testing-by-state")}">
                     <span class="card-kicker">Home sale guide</span>
                     <h3>Home sale testing by state</h3>
                     <p class="card-meta">Lead with transaction timing, required panels, and where a state checklist is still too thin.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/regional">
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/regional")}">
                     <span class="card-kicker">State guide hub</span>
                     <h3>State-specific guides</h3>
                     <p class="card-meta">${familyCounts.get("regional")} pages where geology, rules, and certified-lab paths change the answer.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/authority">
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/authority")}">
                     <span class="card-kicker">Testing guide hub</span>
                     <h3>Testing-order articles</h3>
                     <p class="card-meta">${familyCounts.get("authority")} articles covering sampling, lab-reading, and checklist logic before product research.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/triggers">
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/triggers")}">
                     <span class="card-kicker">Retest guide hub</span>
                     <h3>Trigger and retest guides</h3>
                     <p class="card-meta">${familyCounts.get("triggers")} pages for home purchase, flood response, repairs, and retest timing.</p>
                 </a>
-                <a class="card-link" href="/well-water/arsenic">
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/arsenic")}">
                     <span class="card-kicker">Result guide</span>
                     <h3>Named result interpretation</h3>
                     <p class="card-meta">Use result guides to clarify what a contaminant or symptom means before you compare products.</p>
                 </a>
-                <a class="card-link" href="/well-water/family/compares">
-                    <span class="card-kicker">Treatment compare</span>
-                    <h3>Compare pages</h3>
-                    <p class="card-meta">${familyCounts.get("compares")} treatment comparison pages help once you have a recent result and a clearer sense of household scope.</p>
+                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/metallic-taste-plumbing-vs-source-water")}">
+                    <span class="card-kicker">Suspicious clue follow-up</span>
+                    <h3>Plumbing vs source-water splits</h3>
+                    <p class="card-meta">Use a proven corrosion cluster to separate fixture clues from source-water risk before you open treatment comparisons.</p>
                 </a>
             </div>
         </section>

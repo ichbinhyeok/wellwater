@@ -548,6 +548,7 @@ public class PseoExperienceService {
                     .filter(candidate -> !candidate.slug().equals(page.slug()))
                     .filter(candidate -> candidate.family().equals(family))
                     .sorted(Comparator.comparingInt((PseoPage candidate) -> relatedScore(page, candidate, riskLens)).reversed()
+                            .thenComparingInt(candidate -> candidate.searchRole().sortRank())
                             .thenComparingInt(PseoPage::tierRank)
                             .thenComparing(PseoPage::slug))
                     .limit(2)
@@ -565,12 +566,12 @@ public class PseoExperienceService {
 
     private List<String> preferredFamilies(String family) {
         return switch (family) {
-            case "contaminants" -> List.of("symptoms", "compares", "triggers", "regional", "authority");
-            case "symptoms" -> List.of("contaminants", "compares", "triggers", "regional", "authority");
+            case "contaminants" -> List.of("symptoms", "triggers", "regional", "authority", "compares");
+            case "symptoms" -> List.of("contaminants", "triggers", "regional", "authority", "compares");
             case "compares" -> List.of("contaminants", "symptoms", "triggers", "authority", "regional");
-            case "triggers" -> List.of("contaminants", "symptoms", "compares", "regional", "authority");
-            case "regional" -> List.of("contaminants", "symptoms", "authority", "compares");
-            case "authority" -> List.of("regional", "contaminants", "compares", "triggers");
+            case "triggers" -> List.of("contaminants", "regional", "authority", "symptoms", "compares");
+            case "regional" -> List.of("authority", "contaminants", "symptoms", "compares");
+            case "authority" -> List.of("regional", "contaminants", "triggers", "compares");
             default -> List.of("contaminants", "symptoms", "compares", "regional");
         };
     }

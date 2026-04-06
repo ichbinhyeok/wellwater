@@ -650,6 +650,34 @@ Target follow-up window:
 - first deployment verification: `2026-04-04` to `2026-04-06`
 - Search Console follow-up window: `2026-04-11` to `2026-04-15`
 
+## Implementation Note: 2026-04-06
+
+### Changes shipped
+
+- tightened the homepage hierarchy again so compare exploration is no longer shown as an equal-weight deeper-research card
+- added tracked internal redirect links for:
+- homepage primary and secondary CTAs
+- homepage start-path and signal-path cards
+- detail-page tool transitions
+- detail-page primary action clicks
+- detail-page compare transitions
+- detail-page related support-link clicks
+- changed public page-view logging so `tier` now records the public search role (`core`, `support`, `hold`, `conversion`, `family-hub`, `home`, `trust`) and `branch` records the visible surface or family
+- reduced broad-family leakage in related reads by preferring stronger search roles and pushing compare families later in the related-family order
+
+### Contradiction resolved
+
+- the repo already had a narrow search policy, but measurement still described pages mostly by legacy family or tier conventions
+- after this change, the same role system that controls indexability is also visible in click and page-view analytics
+- the homepage also now matches the intended wedge more closely by routing deeper research toward state, interpretation, triggers, and suspicious-result follow-up before treatment comparison
+
+### Measure next
+
+- which `home_primary_cta`, `home_secondary_cta`, `home_start_path`, and `home_signal_path` targets get the most clicks
+- whether `detail_tool_cta` beats `detail_compare_cta` on winner pages
+- whether `detail_support_link` traffic still reaches `HOLD` pages in a meaningful amount
+- whether winner pages send visitors into verification paths before compare paths
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

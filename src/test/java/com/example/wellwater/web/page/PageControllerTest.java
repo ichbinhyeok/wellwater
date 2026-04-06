@@ -9,11 +9,14 @@ import com.example.wellwater.pseo.PseoExperienceService;
 import com.example.wellwater.pseo.PseoFamilyView;
 import com.example.wellwater.pseo.RegionalContextRegistryService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -24,27 +27,38 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class PageControllerTest {
 
+    @TempDir
+    Path tempDir;
+
     private final PseoCatalogService catalogService = new PseoCatalogService("./data/pseo/pages.csv");
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
     private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://example.com", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
-    private final AnalyticsEventService analyticsEventService = new AnalyticsEventService("./build/test-analytics/page-controller-events.csv");
-    private final PageController controller = new PageController(
-            catalogService,
-            new PseoExperienceService(
-                    catalogService,
-                    citationRegistryService,
-                    new PseoDecisionDocService(),
-                    new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
-                    new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
-            ),
-            seoMetadataService,
-            trustPageService,
-            analyticsEventService
-    );
+
+    private PseoExperienceService newExperienceService() {
+        return new PseoExperienceService(
+                catalogService,
+                citationRegistryService,
+                new PseoDecisionDocService(),
+                new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
+                new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
+        );
+    }
+
+    private PageController newController(Path analyticsPath) {
+        return new PageController(
+                catalogService,
+                newExperienceService(),
+                seoMetadataService,
+                trustPageService,
+                new AnalyticsEventService(analyticsPath.toString()),
+                new PublicTrackingLinkService()
+        );
+    }
 
     @Test
     void homeRendersWithJteTemplate() {
+        PageController controller = newController(tempDir.resolve("events-home.csv"));
         Model model = new ExtendedModelMap();
         String viewName = controller.home(null, model);
 
@@ -67,6 +81,7 @@ class PageControllerTest {
 
     @Test
     void familyRendersListViewWhenDataExists() {
+        PageController controller = newController(tempDir.resolve("events-family.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
         String viewName = controller.family("contaminants", null, model, response);
@@ -84,6 +99,7 @@ class PageControllerTest {
 
     @Test
     void detailRendersNotFoundWhenSlugMissing() {
+        PageController controller = newController(tempDir.resolve("events-not-found.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
         String viewName = controller.detail("missing-slug", null, model, response);
@@ -94,6 +110,7 @@ class PageControllerTest {
 
     @Test
     void sitemapContainsWellWaterUrl() {
+        PageController controller = newController(tempDir.resolve("events-sitemap.csv"));
         String xml = controller.sitemap();
         assertTrue(xml.contains("/well-water/"));
         assertTrue(xml.contains("/trust/methodology"));
@@ -111,6 +128,7 @@ class PageControllerTest {
 
     @Test
     void robotsDisallowNonIndexableAreasAndPointToSitemap() {
+        PageController controller = newController(tempDir.resolve("events-robots.csv"));
         String robots = controller.robots();
 
         assertTrue(robots.contains("Disallow: /admin"));
@@ -120,6 +138,7 @@ class PageControllerTest {
 
     @Test
     void detailAddsPageViewModelWhenSlugExists() {
+        PageController controller = newController(tempDir.resolve("events-detail.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -136,6 +155,7 @@ class PageControllerTest {
 
     @Test
     void recoveredPagesCanStayIndexableWhileComparePagesStayNoindexed() {
+        PageController controller = newController(tempDir.resolve("events-recovered.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -149,6 +169,7 @@ class PageControllerTest {
 
     @Test
     void compareDetailPagesStayPublicButNoindexed() {
+        PageController controller = newController(tempDir.resolve("events-compare.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -162,6 +183,7 @@ class PageControllerTest {
 
     @Test
     void detailRedirectsLegacyAliasSlugToCanonicalPage() {
+        PageController controller = newController(tempDir.resolve("events-redirect.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -191,16 +213,11 @@ class PageControllerTest {
 
         PageController controllerWithFailingAnalytics = new PageController(
                 catalogService,
-                new PseoExperienceService(
-                        catalogService,
-                        citationRegistryService,
-                        new PseoDecisionDocService(),
-                        new RegionalContextRegistryService("./data/registry/regional_context_registry.csv"),
-                        new StateResourceRegistryService("./data/registry/state_resource_registry.csv")
-                ),
+                newExperienceService(),
                 seoMetadataService,
                 trustPageService,
-                failingAnalytics
+                failingAnalytics,
+                new PublicTrackingLinkService()
         );
 
         Model model = new ExtendedModelMap();
@@ -218,6 +235,7 @@ class PageControllerTest {
 
     @Test
     void trustHubRendersWithPages() {
+        PageController controller = newController(tempDir.resolve("events-trust-hub.csv"));
         Model model = new ExtendedModelMap();
 
         String viewName = controller.trustHub(null, model);
@@ -231,6 +249,7 @@ class PageControllerTest {
 
     @Test
     void trustPageRendersWhenSlugExists() {
+        PageController controller = newController(tempDir.resolve("events-trust-page.csv"));
         Model model = new ExtendedModelMap();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
@@ -242,5 +261,21 @@ class PageControllerTest {
         assertNotNull(model.getAttribute("leadContext"));
         assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
+    }
+
+    @Test
+    void detailPageViewAnalyticsUseSearchRoleAndFamilySurface() throws Exception {
+        Path analyticsPath = tempDir.resolve("events-role.csv");
+        PageController controller = newController(analyticsPath);
+        Model model = new ExtendedModelMap();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        controller.detail("nitrate", null, model, response);
+
+        String csv = Files.readString(analyticsPath);
+        assertTrue(csv.contains("public_page_view"));
+        assertTrue(csv.contains(",nitrate,core,contaminants,"));
+        assertTrue(csv.contains("/well-water/nitrate"));
+        assertTrue(csv.contains("index,follow"));
     }
 }
