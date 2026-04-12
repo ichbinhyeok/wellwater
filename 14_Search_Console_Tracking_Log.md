@@ -678,6 +678,227 @@ Target follow-up window:
 - whether `detail_support_link` traffic still reaches `HOLD` pages in a meaningful amount
 - whether winner pages send visitors into verification paths before compare paths
 
+## Entry: 2026-04-12
+
+### Scope
+
+- Property reviewed: `sc-domain:waterverdict.com`
+- Comparison window reviewed:
+- current: `2026-03-13` to `2026-04-09`
+- previous: `2026-02-13` to `2026-03-12`
+- Review context:
+- this review was performed after the `2026-04-04` narrowing and the `2026-04-06` tracking alignment changes
+- live production verification and GitHub Actions deploy status were checked alongside Search Console
+
+### Data
+
+#### Search Performance
+
+- Current 28-day window:
+- clicks: `0`
+- impressions: `790`
+- average position: `40.1`
+- Previous 28-day window:
+- clicks: `0`
+- impressions: `39`
+- average position: `22.4`
+- Delta vs previous window:
+- impressions: `+751` (`+1925.6%`)
+- clicks: unchanged at `0`
+- average position: worsened by `17.7`
+- Delta vs prior tracked window on `2026-04-01`:
+- impressions: `495` -> `790`
+- average position: `42.9` -> `40.1`
+
+Interpretation:
+- Google is testing the site far more broadly than before
+- this is still an impressions-first phase, not a clicks phase
+- ranking breadth expanded faster than ranking quality
+
+#### Daily Pattern
+
+- the largest single-day spike was `2026-04-05`
+- that day recorded `105` impressions and average position `5.84`
+- the spike was spread across many pages rather than one durable winner
+
+Interpretation:
+- this looked like a broad test burst, not a stable breakthrough
+- the site was sampled across multiple surfaces, but the ranking did not hold at that level afterward
+
+#### Query Pattern
+
+Top query clusters in the current window:
+- `arsenic in well water new hampshire` -> `122` impressions, position `54.9`
+- `arsenic water test new hampshire` -> `113` impressions, position `57.8`
+- New Jersey PWTA variants combined on the main page -> about `124` impressions across many query forms
+- metallic-taste variants on the main page -> about `83` impressions, mostly positions in the `60s` to `80s`
+- `judith is buying a home with a well...` -> `3` impressions, position `8.0`
+
+Interpretation:
+- the market signal is still strongest around:
+- New Hampshire arsenic
+- New Jersey PWTA and sale-path intent
+- metallic taste / corrosion diagnosis
+- this is not a "topic failure" read
+- it is a "Google has found the wedge, but the pages still rank too low to win clicks" read
+
+#### Page Pattern
+
+Top pages in the current window:
+- `https://waterverdict.com/well-water/new-hampshire-arsenic-well-water` -> `308` impressions, position `45.2`
+- `https://waterverdict.com/well-water/metallic-taste` -> `143` impressions, position `48.4`
+- `https://waterverdict.com/well-water/home-purchase-test` -> `69` impressions, position `4.5`
+- `https://waterverdict.com/` -> `67` impressions, position `2.6`
+- `http://waterverdict.com/well-water/new-jersey-pwta-private-well-testing` -> `55` impressions, position `13.8`
+- `https://waterverdict.com/well-water/cloudy-water` -> `40` impressions, position `24.1`
+- `http://waterverdict.com/well-water/oregon-private-well-testing-recommendations` -> `30` impressions, position `7.6`
+
+Interpretation:
+- core traction is still concentrated in a small number of decision pages
+- broad informational pages still appear in testing bursts, but they are not yet the main acquisition engine
+- `home-purchase-test` remains the strongest page-quality signal even at low impression volume
+
+#### Device Pattern
+
+- desktop: `581` impressions, average position `36.2`
+- mobile: `207` impressions, average position `51.1`
+- tablet: `2` impressions, average position `44.5`
+
+Interpretation:
+- mobile remains materially weaker than desktop
+- mobile underperformance still matters, but it is not the main reason clicks remain at zero
+- the main issue is still overall ranking depth
+
+#### Protocol / Inspection Findings
+
+Live checks on `2026-04-12`:
+- `http://waterverdict.com/well-water/new-jersey-pwta-private-well-testing` -> `301` to `https://...`
+- `http://waterverdict.com/well-water/metallic-taste` -> `301` to `https://...`
+- live edge behavior is now consistent with HTTPS
+
+Search Console still shows residual protocol split:
+- HTTP pages still earned `144` impressions in the current window
+- HTTP share of total impressions: about `18.2%`
+- this is worse than the roughly `13.1%` share recorded on `2026-04-01`
+- inspected HTTP URLs were still shown as indexed with `google canonical = http` and `user canonical = https`
+- those HTTP crawls were old, mostly around `2026-03-09` to `2026-03-14`
+
+Interpretation:
+- the live redirect is correct
+- Search Console protocol consolidation is still lagging
+- the technical issue is no longer "missing redirect"
+- it is "old HTTP selections are still consuming impressions in Google"
+
+#### Support Page / Sitemap Findings
+
+Inspected support URLs:
+- `new-hampshire-arsenic-testing-order` -> Search Console `URL is unknown to Google`, live `404`
+- `metallic-taste-plumbing-vs-source-water` -> Search Console `URL is unknown to Google`, live `404`
+- `oregon-private-well-homebuyer-testing` -> Search Console `URL is unknown to Google`, live `404`
+- `private-well-home-sale-testing-by-state` -> live `200`, present in sitemap, but still `URL is unknown to Google`
+
+Sitemap status in Search Console:
+- sitemap: `https://waterverdict.com/sitemap.xml`
+- last submitted: `2026-04-04`
+- last downloaded: `2026-04-04`
+- warnings: `0`
+- errors: `0`
+- submitted pages: `120`
+- indexed pages summary: `0`
+
+Interpretation:
+- the support-page problem is not an indexing lag only
+- three intended support pages are not actually present on production
+- the sitemap summary is still too stale or too coarse to use as the source of truth
+
+### Changes Shipped
+
+- no new repo-side search changes were shipped during this review
+- operational finding recorded during review:
+- production deploys after `2026-04-01` did not complete successfully
+
+#### Deployment Finding
+
+GitHub Actions deploy status:
+- `2026-04-01` run `23850750651` -> failed
+- `2026-04-04` runs `23979081537`, `23980024462`, `23980570955` -> failed
+- `2026-04-06` run `24026794704` -> failed
+
+Failure mode:
+- the deploy job passed tests
+- the job failed during `Sync content data to OCI`
+- remote command `rm -rf ~/deploy/waterverdict/data` hit `Permission denied` on files inside the mounted data directory
+
+Interpretation:
+- repository state moved ahead
+- production content data did not
+- the missing support pages on production are explained by deploy failure first, not by Search Console first
+
+### Verification
+
+Commands run on `2026-04-12`:
+
+```powershell
+gh run list --workflow deploy.yml --limit 10
+gh run view 24026794704 --log-failed
+gh run view 23850750651 --log-failed
+./gradlew --no-daemon test --tests com.example.wellwater.decision.DecisionEngineServiceTest.nitrateWithInfantRoutesToImmediateRed
+```
+
+Live checks performed:
+- `curl` checks against `sitemap.xml`, target support URLs, and known HTTP duplicates
+
+Result:
+- the targeted local test passed
+- recent deploy workflow runs were confirmed failed
+- live support pages were confirmed missing where Search Console also reported "unknown"
+
+### Insights
+
+#### Primary Read
+
+- impressions are up sharply, so Google interest is increasing
+- clicks remain at zero because most meaningful query clusters still sit too low
+- the growth story is still "discovery expanding", not "conversion starting"
+
+#### Most Important Constraint
+
+- the biggest blocker is no longer content selection alone
+- the biggest blocker is deployment drift between repository and production
+- as long as production stays behind, Search Console interpretation of support-page strategy will stay partially invalid
+
+#### What The Data Does And Does Not Mean
+
+- it does mean:
+- New Hampshire arsenic is the strongest current acquisition wedge
+- New Jersey PWTA is gaining breadth
+- metallic taste has discovery but weak ranking quality
+- it does not mean:
+- the topic strategy failed
+- the site needs a broad topic rewrite
+- support content strategy failed on its own
+
+#### Current Priority Order
+
+1. fix the OCI deploy/data-permission issue so production can actually receive current `data/`
+2. confirm the three missing support pages return `200` on production
+3. let Google recrawl the HTTPS versions and monitor whether HTTP share falls
+4. re-check whether `private-well-home-sale-testing-by-state` moves from "unknown" to indexed
+5. only after deploy parity is restored, judge whether the narrowed search surface is working as intended
+
+### Next Check
+
+Target follow-up window:
+- deployment verification: immediately after the next successful deploy
+- Search Console recheck: `2026-04-19` to `2026-04-23`
+
+Exact questions to answer next time:
+1. did production finally ship the current `data/pseo/pages.csv` state?
+2. do `new-hampshire-arsenic-testing-order`, `metallic-taste-plumbing-vs-source-water`, and `oregon-private-well-homebuyer-testing` return `200` on production?
+3. did HTTP impression share fall below the `18.2%` seen in this review?
+4. did `new-hampshire-arsenic-well-water` or `new-jersey-pwta-private-well-testing` move materially closer to page 2?
+5. did `private-well-home-sale-testing-by-state` move from "unknown" into indexed status?
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

@@ -109,14 +109,24 @@ jobs:
         env:
           OCI_USERNAME: ${{ secrets.OCI_USERNAME }}
         run: |
-          tar -czf /tmp/waterverdict-data.tgz data
-          scp -P "${OCI_PORT}" -i ~/.ssh/oci_key /tmp/waterverdict-data.tgz "${OCI_USERNAME}@${OCI_HOST_CLEAN}:/tmp/waterverdict-data.tgz"
+          tar -czf /tmp/waterverdict-seed-data.tgz data/pseo data/registry
+          scp -P "${OCI_PORT}" -i ~/.ssh/oci_key /tmp/waterverdict-seed-data.tgz "${OCI_USERNAME}@${OCI_HOST_CLEAN}:/tmp/waterverdict-seed-data.tgz"
           ssh -T -p "${OCI_PORT}" -i ~/.ssh/oci_key "${OCI_USERNAME}@${OCI_HOST_CLEAN}" <<'EOF'
           set -eu
           mkdir -p ~/deploy/waterverdict
-          rm -rf ~/deploy/waterverdict/data
-          tar -xzf /tmp/waterverdict-data.tgz -C ~/deploy/waterverdict
-          rm -f /tmp/waterverdict-data.tgz
+          cd ~/deploy/waterverdict
+
+          if [ -f docker-compose.yml ]; then
+            docker compose down || true
+          fi
+
+          REMOTE_UID="$(id -u)"
+          REMOTE_GID="$(id -g)"
+
+          docker run --rm -v "$PWD:/target" alpine:3.22 sh -c "mkdir -p /target/data && chown -R ${REMOTE_UID}:${REMOTE_GID} /target/data && rm -rf /target/data/pseo /target/data/registry && mkdir -p /target/data/pseo /target/data/registry && chown -R ${REMOTE_UID}:${REMOTE_GID} /target/data"
+
+          tar -xzf /tmp/waterverdict-seed-data.tgz -C "$PWD"
+          rm -f /tmp/waterverdict-seed-data.tgz
           EOF
 
       - name: Deploy to OCI
