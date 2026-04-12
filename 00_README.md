@@ -118,6 +118,8 @@ Use these files as the current source of truth:
 - `12_PSEO_MVP_Playbook.md`
 - `13_Current_SEO_Implementation_Notes.md`
 - `14_Search_Console_Tracking_Log.md`
+- `17_Search_Focus_Revision_2026-04-12.md`
+- `18_Search_ReExpansion_Triggers_2026-04-12.md`
 
 Session-specific handoff files have been removed so the active documentation set stays clean.
 

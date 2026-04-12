@@ -456,7 +456,7 @@ public class PseoExperienceService {
 
     private int familyStarterLimit(String family) {
         if ("regional".equals(family)) {
-            return 4;
+            return FEATURED_REGIONAL_SLUGS.size();
         }
         return 3;
     }

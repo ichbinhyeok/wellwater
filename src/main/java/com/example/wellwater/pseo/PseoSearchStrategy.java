@@ -6,7 +6,7 @@ import java.util.Set;
 
 public final class PseoSearchStrategy {
 
-    private static final Set<String> INDEXABLE_FAMILY_HUBS = Set.of("contaminants", "symptoms", "regional", "authority", "triggers");
+    private static final Set<String> INDEXABLE_FAMILY_HUBS = Set.of("regional", "authority", "triggers");
 
     private static final List<String> CORE_SEARCH_SLUG_ORDER = List.of(
             "new-jersey-pwta-private-well-testing",
@@ -15,26 +15,26 @@ public final class PseoSearchStrategy {
             "home-sale-private-well-testing-checklist",
             "new-hampshire-arsenic-well-water",
             "new-hampshire-arsenic-testing-order",
-            "arsenic",
             "oregon-private-well-testing-recommendations",
             "oregon-private-well-homebuyer-testing",
-            "metallic-taste",
-            "metallic-taste-plumbing-vs-source-water",
-            "ph",
-            "low-ph-copper-corrosion-testing-order",
             "how-to-read-a-well-water-lab-report",
             "test-kit-vs-certified-lab",
             "private-well-sampling-mistakes-that-break-results",
-            "new-jersey-pwta-vs-full-household-panel",
-            "nitrate",
-            "nitrate-baby-pregnancy-well-water-checklist",
-            "after-flood",
-            "coliform"
+            "new-jersey-pwta-vs-full-household-panel"
     );
 
     private static final Set<String> CORE_SEARCH_SLUGS = Set.copyOf(CORE_SEARCH_SLUG_ORDER);
 
     private static final Set<String> SUPPORT_SEARCH_SLUGS = Set.of(
+            "arsenic",
+            "nitrate",
+            "coliform",
+            "after-flood",
+            "metallic-taste",
+            "metallic-taste-plumbing-vs-source-water",
+            "ph",
+            "low-ph-copper-corrosion-testing-order",
+            "nitrate-baby-pregnancy-well-water-checklist",
             "after-heavy-rain",
             "after-repair",
             "retest-after-treatment",
@@ -82,8 +82,7 @@ public final class PseoSearchStrategy {
     private static final List<String> FEATURED_REGIONAL_SLUGS = List.of(
             "new-jersey-pwta-private-well-testing",
             "new-hampshire-arsenic-well-water",
-            "oregon-private-well-testing-recommendations",
-            "connecticut-low-ph-blue-green-stains"
+            "oregon-private-well-testing-recommendations"
     );
 
     private PseoSearchStrategy() {

@@ -184,24 +184,22 @@ class PseoExperienceServiceTest {
         assertEquals(List.of(
                 "new-jersey-pwta-private-well-testing",
                 "new-hampshire-arsenic-well-water",
-                "oregon-private-well-testing-recommendations",
-                "connecticut-low-ph-blue-green-stains"
+                "oregon-private-well-testing-recommendations"
         ), slugs);
     }
 
     @Test
-    void regionalFamilyViewNowStartsWithFourATierStatePages() {
+    void regionalFamilyViewNowStartsWithThreeFocusStatePages() {
         PseoFamilyView familyView = experienceService.familyView("regional", catalogService.byFamily("regional"));
         List<String> slugs = familyView.starterPages().stream()
                 .map(PseoPage::slug)
                 .collect(Collectors.toList());
 
-        assertEquals(4, familyView.starterPages().size());
+        assertEquals(3, familyView.starterPages().size());
         assertEquals(List.of(
                 "new-jersey-pwta-private-well-testing",
                 "new-hampshire-arsenic-well-water",
-                "oregon-private-well-testing-recommendations",
-                "connecticut-low-ph-blue-green-stains"
+                "oregon-private-well-testing-recommendations"
         ), slugs);
     }
 
@@ -221,8 +219,8 @@ class PseoExperienceServiceTest {
         Map<PseoSearchRole, Long> counts = catalogService.allPages().stream()
                 .collect(Collectors.groupingBy(PseoPage::searchRole, () -> new EnumMap<>(PseoSearchRole.class), Collectors.counting()));
 
-        assertEquals(21L, counts.get(PseoSearchRole.CORE));
-        assertEquals(39L, counts.get(PseoSearchRole.SUPPORT));
+        assertEquals(12L, counts.get(PseoSearchRole.CORE));
+        assertEquals(48L, counts.get(PseoSearchRole.SUPPORT));
         assertEquals(34L, counts.get(PseoSearchRole.HOLD));
         assertEquals(13L, counts.get(PseoSearchRole.CONVERSION));
     }

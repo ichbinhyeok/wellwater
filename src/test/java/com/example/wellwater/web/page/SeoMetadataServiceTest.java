@@ -53,7 +53,7 @@ class SeoMetadataServiceTest {
 
         assertEquals("noindex,follow", compareMetadata.robotsDirective());
         assertEquals("noindex,follow", familyMetadata.robotsDirective());
-        assertEquals("index,follow", contaminantsMetadata.robotsDirective());
+        assertEquals("noindex,follow", contaminantsMetadata.robotsDirective());
     }
 
     @Test

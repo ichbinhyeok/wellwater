@@ -75,7 +75,7 @@ class PageControllerTest {
         List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages =
                 (List<com.example.wellwater.pseo.PseoPage>) model.getAttribute("featuredRegionalPages");
         assertNotNull(featuredRegionalPages);
-        assertEquals(4, featuredRegionalPages.size());
+        assertEquals(3, featuredRegionalPages.size());
         assertEquals("new-jersey-pwta-private-well-testing", featuredRegionalPages.get(0).slug());
     }
 
@@ -94,7 +94,7 @@ class PageControllerTest {
         assertNotNull(familyView);
         assertEquals(3, familyView.starterPages().size());
         SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
-        assertEquals("index,follow", seo.robotsDirective());
+        assertEquals("noindex,follow", seo.robotsDirective());
     }
 
     @Test
@@ -118,10 +118,11 @@ class PageControllerTest {
         assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
         assertTrue(xml.contains("/well-water/hardness"));
         assertTrue(xml.contains("/well-water/rotten-egg-smell"));
-        assertTrue(xml.contains("/well-water/family/contaminants"));
-        assertTrue(xml.contains("/well-water/family/symptoms"));
         assertTrue(xml.contains("/well-water/family/regional"));
         assertTrue(xml.contains("/well-water/family/authority"));
+        assertTrue(xml.contains("/well-water/family/triggers"));
+        assertFalse(xml.contains("/well-water/family/contaminants"));
+        assertFalse(xml.contains("/well-water/family/symptoms"));
         assertFalse(xml.contains("/well-water/uv-vs-ro"));
         assertFalse(xml.contains("/well-water/family/compares"));
     }
@@ -274,7 +275,7 @@ class PageControllerTest {
 
         String csv = Files.readString(analyticsPath);
         assertTrue(csv.contains("public_page_view"));
-        assertTrue(csv.contains(",nitrate,core,contaminants,"));
+        assertTrue(csv.contains(",nitrate,support,contaminants,"));
         assertTrue(csv.contains("/well-water/nitrate"));
         assertTrue(csv.contains("index,follow"));
     }
