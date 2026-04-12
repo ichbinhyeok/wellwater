@@ -899,6 +899,40 @@ Exact questions to answer next time:
 4. did `new-hampshire-arsenic-well-water` or `new-jersey-pwta-private-well-testing` move materially closer to page 2?
 5. did `private-well-home-sale-testing-by-state` move from "unknown" into indexed status?
 
+## Implementation Note: 2026-04-12
+
+### Deploy remediation shipped
+
+- file changed:
+- `.github/workflows/deploy.yml`
+
+What changed:
+- deploy sync now ships only `data/pseo` and `data/registry`
+- runtime directories such as `data/analytics`, `data/leads`, and `data/results` are no longer replaced during deploy
+- the remote sync step now stops the running container, normalizes ownership of the bind-mounted `data/` directory through Docker, and then refreshes only the seed-data directories
+
+Why this matters:
+- the earlier deploy strategy tried to replace the full mounted `data/` directory
+- that both failed on root-owned runtime files and carried unnecessary risk of wiping live operational data
+- the new deploy path matches the actual app design: static seed data should update, runtime data should persist
+
+### Verification after fix
+
+- commit pushed: `1c23d8a`
+- GitHub Actions deploy run: `24303455892`
+- deploy result: `success`
+
+Live production verification after the successful deploy:
+- `https://waterverdict.com/well-water/new-hampshire-arsenic-testing-order` -> `200`
+- `https://waterverdict.com/well-water/metallic-taste-plumbing-vs-source-water` -> `200`
+- `https://waterverdict.com/well-water/oregon-private-well-homebuyer-testing` -> `200`
+- `https://waterverdict.com/well-water/private-well-home-sale-testing-by-state` -> `200`
+- `https://waterverdict.com/sitemap.xml` now includes all four target URLs
+
+Interpretation:
+- the repository and production are back in sync for the tracked support pages
+- future Search Console analysis can now evaluate the narrowed support strategy on real live URLs instead of stale deploy state
+
 ## Reusable Entry Template
 
 Copy this block for the next review.
