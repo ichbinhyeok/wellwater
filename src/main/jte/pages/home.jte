@@ -13,33 +13,35 @@
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Private well testing decisions</span>
-                    <h1>Decide what to test next before a home purchase, state rule, or suspicious result turns into an expensive guess.</h1>
-                    <p class="hero-lead">Start with state-specific testing guidance, home-sale timing, report interpretation, and the next safe verification step before equipment shopping takes over.</p>
+                    <span class="eyebrow">Private well decision tool</span>
+                    <h1>Check your well water before you buy anything.</h1>
+                    <p class="hero-lead">Start from one clue you already have: a lab result, a smell or stain, a recent change, or a state or home-sale requirement. The goal is to decide the next test before product shopping takes over.</p>
+                    <div class="chip-row" style="margin-top: 18px;">
+                        <span class="chip">Lab result</span>
+                        <span class="chip">Smell or stain</span>
+                        <span class="chip">Recent change</span>
+                        <span class="chip">State or home sale</span>
+                    </div>
                     <div class="hero-actions">
-                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/well-water/private-well-home-sale-testing-by-state")}">Start With Home Sale Or State Rules</a>
-                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/tool/result-first")}">Start From Lab Results</a>
+                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/tool/result-first")}">Open The Tool</a>
+                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/well-water/private-well-home-sale-testing-by-state")}">Start With State Or Home Sale</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>Where to start</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">Most people need one of four things first: local rules, home-sale timing, help reading a report, or a way to verify whether a symptom points to plumbing, source water, or both.</p>
+                    <strong>Start in 10 seconds</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">You do not need to read the whole site first. Pick the closest starting point, get oriented, and only then go deeper.</p>
                     <div class="hero-metrics">
                         <div class="metric">
-                            <strong>State</strong>
-                            <span>specific guidance</span>
+                            <strong>1</strong>
+                            <span>Pick the clue you already have</span>
                         </div>
                         <div class="metric">
-                            <strong>Home sale</strong>
-                            <span>and transfer timing</span>
+                            <strong>2</strong>
+                            <span>Get the next safe step</span>
                         </div>
                         <div class="metric">
-                            <strong>Result</strong>
-                            <span>interpretation support</span>
-                        </div>
-                        <div class="metric">
-                            <strong>Testing</strong>
-                            <span>order before shopping</span>
+                            <strong>3</strong>
+                            <span>Read more only if you need it</span>
                         </div>
                     </div>
                 </aside>
@@ -49,89 +51,31 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Start points</p>
-                    <h2>Four reliable ways to narrow the problem</h2>
-                </div>
-                <p class="section-copy">These are the pages most likely to answer the first question clearly enough that you can choose the next test, not just browse treatment categories.</p>
-            </div>
-            <div class="grid">
-                <a class="card-link card-link-accent" href="${trackingLinks.home("home_start_path", "/well-water/private-well-home-sale-testing-by-state")}">
-                    <span class="card-kicker">Transaction intent</span>
-                    <h3>Home purchase and transfer testing</h3>
-                    <p class="card-meta">Use state requirements, lender timing, and checklist logic to decide what a transfer panel does not answer.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/family/regional")}">
-                    <span class="card-kicker">Regional intent</span>
-                    <h3>State-specific testing paths</h3>
-                    <p class="card-meta">Focus on states where geology, certified-lab routing, or rules change the right next step.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/how-to-read-a-well-water-lab-report")}">
-                    <span class="card-kicker">Interpretation intent</span>
-                    <h3>Read the report before you compare products</h3>
-                    <p class="card-meta">Sharpen test scope, sample quality, and household risk before equipment research takes over.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/metallic-taste")}">
-                    <span class="card-kicker">Result support</span>
-                    <h3>Interpret arsenic, nitrate, corrosion, and suspicious clues</h3>
-                    <p class="card-meta">Keep interpretation pages alive where they reinforce the testing path instead of broadening into a generic encyclopedia.</p>
-                </a>
-            </div>
-        </section>
-
-        @if(leadContext != null)
-            <section class="panel panel-accent" id="lead-capture">
-                <div class="section-header">
-                    <div>
-                        <p class="brand-kicker">Early follow-up</p>
-                        <h2>${leadContext.heading()}</h2>
-                    </div>
-                    <p class="section-copy">${leadContext.summary()}</p>
-                </div>
-                @if("success".equals(leadStatus))
-                    <p class="section-copy" style="color: #0f766e; font-weight: 700;">Follow-up request captured. Check <code>/admin</code> for the new row.</p>
-                @elseif("invalid".equals(leadStatus))
-                    <p class="section-copy" style="color: #c66a2b; font-weight: 700;">Enter a valid email address to submit this follow-up request.</p>
-                @endif
-                <form method="post" action="/lead/submit" class="form-grid" style="margin-top: 18px;">
-                    <input type="hidden" name="redirectPath" value="${leadContext.redirectPath()}">
-                    <input type="hidden" name="sourceType" value="${leadContext.sourceType()}">
-                    <input type="hidden" name="sourceFamily" value="${leadContext.sourceFamily()}">
-                    <input type="hidden" name="sourceSlug" value="${leadContext.sourceSlug()}">
-                    <input type="hidden" name="sourceLabel" value="${leadContext.sourceLabel()}">
-                    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
-                    <div class="form-grid two">
-                        <input type="email" name="email" placeholder="you@example.com" required class="form-field">
-                        <input type="text" name="state" placeholder="State (optional)" maxlength="12" class="form-field">
-                    </div>
-                    <textarea name="note" rows="4" placeholder="What seems off? Example: sulfur smell, stains, home purchase, or a result you do not trust yet." class="form-textarea"></textarea>
-                    <button type="submit" class="button-link" style="justify-content: center;">${leadContext.submitLabel()}</button>
-                </form>
-            </section>
-        @endif
-
-        <section class="panel panel-accent">
-            <div class="section-header">
-                <div>
                     <p class="brand-kicker">Start here</p>
-                    <h2>Choose the signal you already have</h2>
+                    <h2>Pick the closest starting point</h2>
                 </div>
-                <p class="section-copy">You can still enter through lab results, symptoms, or a recent change. The difference is that the public guides now keep testing and verification ahead of treatment shopping.</p>
+                <p class="section-copy">First choose the signal you already have. The longer reading can wait until after the problem is narrowed.</p>
             </div>
             <div class="grid">
-                <a class="card-link card-link-accent" href="${trackingLinks.home("home_signal_path", "/tool/result-first")}">
-                    <span class="card-kicker">Result-first</span>
-                    <h3>Lab Results</h3>
-                    <p class="card-meta">Enter one analyte from a recent report and move straight into verification logic, scope, and next actions.</p>
+                <a class="card-link card-link-accent" href="${trackingLinks.home("home_start_path", "/tool/result-first")}">
+                    <span class="card-kicker">Tool</span>
+                    <h3>I have a lab result</h3>
+                    <p class="card-meta">Enter one analyte from a report and get the next test, scope, and verification path.</p>
                 </a>
-                <a class="card-link" href="${trackingLinks.home("home_signal_path", "/tool/symptom-first")}">
-                    <span class="card-kicker">Symptom-first</span>
-                    <h3>Symptoms</h3>
-                    <p class="card-meta">Start from smell, stain, taste, cloudiness, or another visible pattern when you do not have clean lab data yet.</p>
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/tool/symptom-first")}">
+                    <span class="card-kicker">Tool</span>
+                    <h3>I have a smell, stain, or taste problem</h3>
+                    <p class="card-meta">Start from what you can see or smell when the data is weak or missing.</p>
                 </a>
-                <a class="card-link" href="${trackingLinks.home("home_signal_path", "/tool/trigger-first")}">
-                    <span class="card-kicker">Trigger-first</span>
-                    <h3>Recent Changes</h3>
-                    <p class="card-meta">Use flooding, repairs, treatment changes, or wildfire context to decide whether to retest, inspect, or escalate.</p>
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/tool/trigger-first")}">
+                    <span class="card-kicker">Tool</span>
+                    <h3>I have a recent change</h3>
+                    <p class="card-meta">Use a flood, repair, treatment change, or sudden shift to decide whether to retest or escalate.</p>
+                </a>
+                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/private-well-home-sale-testing-by-state")}">
+                    <span class="card-kicker">Guide</span>
+                    <h3>I need state or home-sale guidance</h3>
+                    <p class="card-meta">Start here when rules, transfer timing, or state context shape what should happen first.</p>
                 </a>
             </div>
         </section>
@@ -139,31 +83,31 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Decision workflow</p>
-                    <h2>How the engine moves you toward a testing decision instead of a premature purchase</h2>
+                    <p class="brand-kicker">What happens next</p>
+                    <h2>Use the tool first, then read deeper only if you need it</h2>
                 </div>
-                <p class="section-copy">The goal is to shorten the path from a confusing clue to the next verified action, especially when a lab result, state rule, or home-sale timeline changes what matters first.</p>
+                <p class="section-copy">The site is supposed to work in two layers: first get oriented, then open the longer reading only when the next step is still unclear.</p>
             </div>
             <div class="grid grid-compact">
                 <article class="card-link card-link-accent">
-                    <span class="card-kicker">Interpret</span>
-                    <h3>Read the clue in context</h3>
-                    <p class="card-meta">A single analyte, smell, or event should not behave like a full household verdict until timing, sample point, and support signals are clear.</p>
+                    <span class="card-kicker">Start</span>
+                    <h3>Pick the closest input</h3>
+                    <p class="card-meta">Lab result, symptom, recent change, or state and home-sale context.</p>
                 </article>
                 <article class="card-link">
-                    <span class="card-kicker">Test</span>
-                    <h3>Choose the next verified test</h3>
-                    <p class="card-meta">The engine should route toward certified testing, baseline confirmation, or state guidance before equipment research gets ahead of the evidence.</p>
+                    <span class="card-kicker">Orient</span>
+                    <h3>Get the next safe step</h3>
+                    <p class="card-meta">The tool should narrow scope before treatment research gets ahead of the evidence.</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Read</span>
+                    <h3>Open the public guide if needed</h3>
+                    <p class="card-meta">Use the article layer only when you want the reasoning, source trail, or a deeper branch explanation.</p>
                 </article>
                 <article class="card-link">
                     <span class="card-kicker">Compare</span>
-                    <h3>Open only the right category</h3>
-                    <p class="card-meta">Compare pages are useful only after the problem class is stable. Health paths stay verification-first. Nuisance paths can open equipment classes earlier.</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Trust</span>
-                    <h3>Keep the paper trail visible</h3>
-                    <p class="card-meta">Methodology, reviewers, disclosure, and data handling should stay close to the decision surface so a user can see why the routing works.</p>
+                    <h3>Shop only after scope is clear</h3>
+                    <p class="card-meta">Compare paths and follow-up CTAs should stay downstream from verification, not replace it.</p>
                 </article>
             </div>
         </section>
@@ -171,19 +115,21 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">High-signal starting points</p>
-                    <h2>Start from the pages that can become real testing or follow-up decisions fastest</h2>
+                    <p class="brand-kicker">Browse if you want more context</p>
+                    <h2>High-signal pages worth reading after you know your starting point</h2>
                 </div>
-                <p class="section-copy">These pages reflect the narrower public core: home purchase, state-specific testing, report interpretation, and a few support pages that sharpen the next test order.</p>
+                <p class="section-copy">This is the longer reading layer. It should support the tool, not force you to learn the whole site before you can act.</p>
             </div>
             <div class="grid">
                 @for (int i = 0; i < priorityPages.size(); i++)
                     !{var page = priorityPages.get(i);}
-                    <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="${trackingLinks.home("home_priority_page", "/well-water/" + page.slug())}">
-                        <span class="card-kicker">${page.family()}</span>
-                        <h3>${page.h1()}</h3>
-                        <p class="card-meta">${page.metaDescription()}</p>
-                    </a>
+                    @if (i < 8)
+                        <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="${trackingLinks.home("home_priority_page", "/well-water/" + page.slug())}">
+                            <span class="card-kicker">${page.family()}</span>
+                            <h3>${page.h1()}</h3>
+                            <p class="card-meta">${page.metaDescription()}</p>
+                        </a>
+                    @endif
                 @endfor
             </div>
             <div class="chip-row mobile-only" style="margin-top: 18px;">
@@ -218,10 +164,10 @@
         <section class="panel desktop-only">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">More ways to narrow the issue</p>
-                    <h2>Move from state rules and test scope into deeper research</h2>
+                    <p class="brand-kicker">Deeper browsing</p>
+                    <h2>Open these only when the first pass was not enough</h2>
                 </div>
-                <p class="section-copy">Start with the clearest decision pages, then move into deeper interpretation or treatment research once you know the likely problem and scope.</p>
+                <p class="section-copy">These hubs are useful for people who already know the broad direction and want the longer reading path.</p>
             </div>
             <div class="grid grid-compact">
                 <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/private-well-home-sale-testing-by-state")}">
@@ -281,5 +227,36 @@
                 </a>
             </div>
         </section>
+
+        @if(leadContext != null)
+            <section class="panel" id="lead-capture">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Still unsure?</p>
+                        <h2>${leadContext.heading()}</h2>
+                    </div>
+                    <p class="section-copy">${leadContext.summary()}</p>
+                </div>
+                @if("success".equals(leadStatus))
+                    <p class="section-copy" style="color: #0f766e; font-weight: 700;">Follow-up request captured. Check <code>/admin</code> for the new row.</p>
+                @elseif("invalid".equals(leadStatus))
+                    <p class="section-copy" style="color: #c66a2b; font-weight: 700;">Enter a valid email address to submit this follow-up request.</p>
+                @endif
+                <form method="post" action="/lead/submit" class="form-grid" style="margin-top: 18px;">
+                    <input type="hidden" name="redirectPath" value="${leadContext.redirectPath()}">
+                    <input type="hidden" name="sourceType" value="${leadContext.sourceType()}">
+                    <input type="hidden" name="sourceFamily" value="${leadContext.sourceFamily()}">
+                    <input type="hidden" name="sourceSlug" value="${leadContext.sourceSlug()}">
+                    <input type="hidden" name="sourceLabel" value="${leadContext.sourceLabel()}">
+                    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
+                    <div class="form-grid two">
+                        <input type="email" name="email" placeholder="you@example.com" required class="form-field">
+                        <input type="text" name="state" placeholder="State (optional)" maxlength="12" class="form-field">
+                    </div>
+                    <textarea name="note" rows="4" placeholder="What seems off? Example: sulfur smell, stains, home purchase, or a result you do not trust yet." class="form-textarea"></textarea>
+                    <button type="submit" class="button-link" style="justify-content: center;">${leadContext.submitLabel()}</button>
+                </form>
+            </section>
+        @endif
     </main>
 `)

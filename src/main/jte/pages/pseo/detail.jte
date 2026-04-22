@@ -18,18 +18,17 @@
                         <span class="chip">${pageView.intentLabel()}</span>
                     </div>
                     <div class="hero-actions">
-                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">${pageView.entryHint().label()}</a>
+                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">Get My Next Step</a>
                         <a class="button-link-secondary" href="${trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl())}">${pageView.page().primaryCtaLabel()}</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>What to figure out first</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${pageView.riskSummary()}</p>
+                    <strong>Use this page in two layers</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">If you want a personalized answer, start with the tool first. Use the rest of this page only if you want the public explanation and source trail.</p>
                     <div class="chip-row">
-                        <span class="chip">${pageView.archetypeLabel()}</span>
-                        <span class="chip">${pageView.intentLabel()}</span>
+                        <span class="chip">Tool first</span>
+                        <span class="chip">Public guide second</span>
                         <span class="chip">Test before treatment</span>
-                        <span class="chip">Compare after scope</span>
                     </div>
                 </aside>
             </div>
@@ -38,10 +37,38 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">First questions</p>
-                    <h2>What it usually means, what to do today, and what to test next</h2>
+                    <p class="brand-kicker">Quick start</p>
+                    <h2>Understand the page fast, then decide if you need the deeper reading</h2>
                 </div>
-                <p class="section-copy">These are the answers most people want before they trust a treatment recommendation.</p>
+                <p class="section-copy">This top section is the short version. The longer explanation below is there when you want the public reasoning, not because you should have to read everything first.</p>
+            </div>
+            <div class="grid">
+                <article class="card-link card-link-accent">
+                    <span class="card-kicker">What this page is saying</span>
+                    <p class="card-meta">${pageView.riskSummary()}</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Do this first</span>
+                    <p class="card-meta">${pageView.page().actionNow()}</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Use the tool when</span>
+                    <p class="card-meta">${pageView.entryHint().reason()}</p>
+                </article>
+            </div>
+            <div class="cta-row">
+                <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">Get My Next Step</a>
+                <a class="button-link-secondary" href="${trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl())}">${pageView.page().primaryCtaLabel()}</a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Read more if needed</p>
+                    <h2>What it usually means, who should act faster, and what not to buy first</h2>
+                </div>
+                <p class="section-copy">These are the public guide answers for people who want the reasoning before they move on.</p>
             </div>
             <div class="grid">
                 @for (var answer : pageView.quickAnswers())
@@ -219,21 +246,6 @@
                     @endif
                 @endif
 
-                <section class="panel">
-                    <div class="section-header">
-                        <div>
-                            <p class="brand-kicker">Need a personalized next step?</p>
-                            <h2>Use the matching tool</h2>
-                        </div>
-                        <p class="section-copy">Personalized tool outputs stay separate from the public guide so the follow-up can reflect your own results, timing, and household context.</p>
-                    </div>
-                    <div class="cta-row">
-                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">${pageView.entryHint().label()}</a>
-                    </div>
-                    <div class="prose" style="margin-top: 16px;">
-                        <p>${pageView.entryHint().reason()}</p>
-                    </div>
-                </section>
             </div>
 
             <aside class="detail-stack">

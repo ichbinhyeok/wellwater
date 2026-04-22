@@ -145,34 +145,34 @@
             z-index: 1;
             width: var(--page-width);
             margin: 0 auto;
-            padding: 24px 0 64px;
+            padding: 18px 0 64px;
         }
 
         .site-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 18px;
-            margin-bottom: 30px;
-            padding: 16px 18px;
+            gap: 14px;
+            margin-bottom: 24px;
+            padding: 10px 14px;
             background: rgba(255, 255, 255, 0.54);
             border: 1px solid rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(18px);
             border-radius: 999px;
-            box-shadow: 0 12px 34px rgba(25, 41, 28, 0.06);
+            box-shadow: 0 10px 28px rgba(25, 41, 28, 0.06);
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             min-width: 0;
         }
 
         .brand-mark {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
+            width: 40px;
+            height: 40px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -185,16 +185,16 @@
         }
 
         .brand-kicker {
-            margin: 0 0 2px;
-            font-size: 0.72rem;
-            letter-spacing: 0.16em;
+            margin: 0 0 1px;
+            font-size: 0.64rem;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--muted-strong);
         }
 
         .brand-title {
             margin: 0;
-            font-size: 1rem;
+            font-size: 0.96rem;
             font-weight: 800;
             letter-spacing: -0.03em;
         }
@@ -202,16 +202,16 @@
         .site-nav {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             flex-wrap: wrap;
             justify-content: flex-end;
         }
 
         .nav-link {
-            padding: 10px 14px;
+            padding: 8px 12px;
             border-radius: 999px;
             color: var(--muted-strong);
-            font-size: 0.92rem;
+            font-size: 0.88rem;
             font-weight: 700;
             transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
         }
@@ -713,25 +713,25 @@
 
             .shell {
                 width: min(100vw - 28px, 1180px);
-                padding-top: 18px;
+                padding-top: 14px;
             }
 
             .site-header {
                 border-radius: 28px;
                 align-items: start;
                 flex-direction: column;
-                gap: 10px;
-                margin-bottom: 22px;
-                padding: 14px 16px;
+                gap: 8px;
+                margin-bottom: 18px;
+                padding: 10px 12px;
             }
 
             .site-nav {
                 width: 100%;
                 justify-content: flex-start;
                 flex-wrap: nowrap;
-                gap: 8px;
+                gap: 6px;
                 overflow-x: auto;
-                padding-bottom: 8px;
+                padding-bottom: 4px;
                 -webkit-overflow-scrolling: touch;
                 scrollbar-width: none;
             }
@@ -790,28 +790,36 @@
             }
 
             .site-header {
-                gap: 8px;
-                margin-bottom: 18px;
-                padding: 12px 14px;
+                gap: 6px;
+                margin-bottom: 14px;
+                padding: 9px 12px;
             }
 
             .brand {
-                gap: 10px;
+                gap: 9px;
             }
 
             .brand-mark {
-                width: 42px;
-                height: 42px;
-                border-radius: 14px;
+                width: 36px;
+                height: 36px;
+                border-radius: 12px;
+            }
+
+            .brand-kicker {
+                display: none;
+            }
+
+            .brand-title {
+                font-size: 0.94rem;
             }
 
             .site-nav {
-                margin-top: -2px;
+                margin-top: 0;
             }
 
             .nav-link {
-                padding: 9px 12px;
-                font-size: 0.88rem;
+                padding: 7px 10px;
+                font-size: 0.82rem;
             }
 
             .mobile-only {
@@ -841,11 +849,9 @@
             </div>
         </div>
         <nav class="site-nav" aria-label="Primary">
-            <a class="nav-link" href="/well-water/family/contaminants">Contaminants</a>
-            <a class="nav-link" href="/well-water/family/symptoms">Symptoms</a>
-            <a class="nav-link" href="/well-water/family/compares">Comparisons</a>
-            <a class="nav-link" href="/well-water/family/triggers">Triggers</a>
+            <a class="nav-link" href="/well-water/private-well-home-sale-testing-by-state">Home Sale</a>
             <a class="nav-link" href="/well-water/family/regional">Regional</a>
+            <a class="nav-link" href="/well-water/family/symptoms">Symptoms</a>
             <a class="nav-link" href="/well-water/family/authority">Articles</a>
             <a class="nav-link" href="/trust">Trust</a>
             <a class="nav-link nav-link-strong" href="/tool/result-first">Open Tool</a>

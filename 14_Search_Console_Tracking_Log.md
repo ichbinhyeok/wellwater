@@ -1153,6 +1153,114 @@ Exact questions to answer next time:
 4. do `metallic-taste-plumbing-vs-source-water`, `oregon-private-well-homebuyer-testing`, and `private-well-home-sale-testing-by-state` start receiving impressions?
 5. does the site produce its first multi-page organic clicks, or does it remain in pure discovery mode?
 
+## Implementation Note: 2026-04-22
+
+### Deploy completion
+
+- follow-up commit pushed: `ce3c77e`
+- GitHub Actions deploy run: `24761957623`
+- deploy result: `success`
+
+Why this follow-up note exists:
+- the main `2026-04-22` entry was recorded while production still reflected the last successful pre-fix app code
+- this note records the point at which the narrowed family-hub strategy was actually shipped live
+
+### Live production verification after successful deploy
+
+Live checks on `2026-04-22` after run `24761957623` completed:
+- `https://waterverdict.com/well-water/family/symptoms` -> `meta robots = noindex,follow`
+- `https://waterverdict.com/well-water/family/contaminants` -> `meta robots = noindex,follow`
+- `https://waterverdict.com/well-water/family/regional` -> `meta robots = index,follow`
+- `https://waterverdict.com/well-water/new-hampshire-arsenic-well-water` -> `meta robots = index,follow`
+- checked family-hub responses still returned `cf-cache-status: DYNAMIC`
+
+Interpretation:
+- the robots directives now match the repository search-surface policy
+- this confirms the production app is now serving the narrowed family-hub strategy, not the earlier pre-fix app state
+- future Search Console reads can evaluate family-hub decay and wedge performance on a valid live baseline
+
+### What changes in the operating read
+
+- the immediate deploy-parity blocker for family hubs is resolved
+- this does not mean the site is healthy yet
+- it means the next Search Console measurement window will be the first one that can fairly judge the narrowed strategy end to end
+
+### What to watch from here
+
+Use `2026-04-22` as the operational baseline for the live family-hub `noindex` change.
+
+Priorities for the next review remain:
+1. confirm whether family-hub impressions begin to decay after recrawl
+2. confirm whether HTTP impression share keeps falling from `15.5%`
+3. confirm whether the New Hampshire, New Jersey, and Oregon wedge gains stronger page-2 footholds
+4. confirm whether the support pages that only just went live begin to attract impressions
+5. confirm whether the site remains at `0` clicks or starts producing first-click evidence across more than one page
+
+### Verification
+
+Commands run after deploy success on `2026-04-22`:
+
+```powershell
+gh run watch 24761957623 --exit-status
+curl.exe -I -s https://waterverdict.com/well-water/family/symptoms
+curl.exe -I -s https://waterverdict.com/well-water/family/contaminants
+curl.exe -s https://waterverdict.com/well-water/family/symptoms
+curl.exe -s https://waterverdict.com/well-water/family/contaminants
+```
+
+Result:
+- deploy completed successfully
+- family-hub robots directives were verified live on production immediately after deploy
+- no new Search Console performance read was taken in this follow-up note; this note is strictly deployment-state verification
+
+## Implementation Note: 2026-04-22
+
+### Surface simplification and CTA clarity
+
+Why this note exists:
+- the live search-surface narrowing deploy was one half of the problem
+- the other half was product comprehension on first view
+- home and detail pages were still asking users to read too much before they could understand where the tool starts
+- header height also made the first actionable section feel farther away than it should
+
+### What changed
+
+Homepage changes shipped locally:
+- hero reframed around one direct promise: decide the next test before product shopping starts
+- primary CTA kept tool-first and the four start paths were grouped into one obvious "pick the closest starting point" block
+- longer browse sections were pushed later so the reading layer supports the tool instead of competing with it
+- lead capture stayed below trust instead of appearing earlier in the decision path
+
+Detail page changes shipped locally:
+- first section now explains the page in two layers: tool first, public guide second
+- added a short "quick start" block that says what the page means, what to do first, and when to use the tool
+- removed the later duplicate tool-prompt block so the action path is clearer near the top
+
+Layout changes shipped locally:
+- reduced header padding, logo block size, nav spacing, and mobile header copy
+- mobile header now consumes less vertical space before the main decision surface starts
+
+### Why this matters
+
+Interpretation:
+- this is not a ranking fix by itself
+- it is a conversion and comprehension fix for the search traffic the site already earns
+- the working hypothesis is that a newer domain still stuck around positions `30-60` should prioritize clear orientation and obvious tool entry over additional above-the-fold reading density
+
+### Verification
+
+Commands run on `2026-04-22`:
+
+```powershell
+.\gradlew.bat --no-daemon test
+"C:\Program Files\Google\Chrome\Application\chrome.exe" --headless=new --screenshot=...
+```
+
+Local verification performed:
+- JTE templates compiled and tests passed
+- local desktop and mobile screenshots were checked for `/` and `/well-water/nitrate`
+- header height was reduced and first-view CTA visibility improved in both checks
+
 ## Reusable Entry Template
 
 Copy this block for the next review.
