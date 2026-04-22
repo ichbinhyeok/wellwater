@@ -66,4 +66,19 @@ class SeoMetadataServiceTest {
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"AboutPage\"")));
     }
+
+    @Test
+    void toolLandingMetadataBuildsCanonicalAndToolEntityJson() {
+        SeoMetadata metadata = seoMetadataService.toolLanding(
+                "Private Well Water Decision Tool | Water Verdict",
+                "Start with a lab result, symptom, recent change, or state and home-sale context and get the next testing path for a private well."
+        );
+
+        assertEquals("https://waterverdict.example/tool", metadata.canonicalUrl());
+        assertEquals("index,follow", metadata.robotsDirective());
+        assertEquals(2, metadata.breadcrumbs().size());
+        assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Private well decision tool\"")));
+        assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Well-water symptom triage\"")));
+        assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
+    }
 }

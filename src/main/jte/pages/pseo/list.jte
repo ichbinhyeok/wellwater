@@ -5,31 +5,124 @@
 @param com.example.wellwater.lead.LeadCaptureContext leadContext
 @param String leadStatus
 
+!{
+    var isAuthority = "authority".equals(family);
+    var isRegional = "regional".equals(family);
+    var isTrigger = "triggers".equals(family);
+    var isSymptom = "symptoms".equals(family);
+
+    var heroEyebrow = isAuthority
+            ? "Method router"
+            : (isRegional
+            ? "State context router"
+            : (isTrigger ? "Event router" : "Decision router"));
+
+    var heroLead = isAuthority
+            ? "Use this family to choose the right tool entry before you open a long method article."
+            : (isRegional
+            ? "Use this family to decide whether state context, a lab result, or a recent change should drive the next step."
+            : (isTrigger
+            ? "Use this family to choose the right event-driven entry path before you browse every guide."
+            : "Use this family to choose the right tool entry before it turns into a browse session."));
+
+    var heroNoteTitle = isAuthority || isRegional
+            ? "This is a router, not a reading destination"
+            : "Pick the first path, not the first article";
+
+    var heroNoteBody = isAuthority
+            ? "The method layer exists to feed the decision engine. It should not replace the decision engine."
+            : (isRegional
+            ? "State pages should narrow the path, not become a directory you browse before acting."
+            : "Choose the entry path first. Open a guide only if the first pass still leaves you uncertain.");
+
+    var secondaryHeroLabel = isRegional
+            ? "I Already Have A Lab Result"
+            : (isAuthority
+            ? "I Need State Or Sale Context"
+            : (isSymptom ? "I Already Have A Lab Result" : (isTrigger ? "I Only Have A Symptom" : "I Only Have A Symptom")));
+
+    var secondaryHeroHref = isRegional
+            ? "/tool/result-first"
+            : (isAuthority
+            ? "/well-water/private-well-home-sale-testing-by-state"
+            : (isSymptom ? "/tool/result-first" : (isTrigger ? "/tool/symptom-first" : "/tool/symptom-first")));
+
+    var routeOneLabel = isRegional
+            ? "I need state or home-sale context"
+            : (isAuthority
+            ? "I already have a lab result"
+            : (isTrigger
+            ? "Something changed recently"
+            : (isSymptom ? "I have a smell, stain, or taste problem" : "I have a lab result")));
+    var routeOneHref = isRegional
+            ? "/well-water/private-well-home-sale-testing-by-state"
+            : (isAuthority
+            ? "/tool/result-first"
+            : (isTrigger ? "/tool/trigger-first" : (isSymptom ? "/tool/symptom-first" : "/tool/result-first")));
+    var routeOneBody = isRegional
+            ? "Start here when rules, transaction timing, or local geology change what should happen first."
+            : (isAuthority
+            ? "Apply the method layer to your own well instead of reading in the abstract."
+            : (isTrigger
+            ? "Use the event itself to decide whether you should retest, inspect, or escalate."
+            : (isSymptom
+            ? "Start from what you can see or smell when the data is weak or missing."
+            : "Use one analyte from a report to get the next test, scope, and verification path.")));
+
+    var routeTwoLabel = isRegional
+            ? "I already have a lab result"
+            : (isAuthority ? "I only have a symptom or vague concern" : "I already have a lab result");
+    var routeTwoHref = isRegional
+            ? "/tool/result-first"
+            : (isAuthority ? "/tool/symptom-first" : "/tool/result-first");
+    var routeTwoBody = isRegional
+            ? "Use the engine when state context matters but you already have one result line."
+            : (isAuthority
+            ? "Start with a symptom when you need triage before you have clean report data."
+            : "Use the result flow when you already have evidence and do not need a long family browse.");
+
+    var routeThreeLabel = isRegional
+            ? "Something changed recently"
+            : (isAuthority ? "I need state or home-sale context" : "I only have a symptom or recent change");
+    var routeThreeHref = isRegional
+            ? "/tool/trigger-first"
+            : (isAuthority ? "/well-water/private-well-home-sale-testing-by-state" : "/tool/symptom-first");
+    var routeThreeBody = isRegional
+            ? "Use a recent change, flood, repair, or shift when the state context alone is not enough."
+            : (isAuthority
+            ? "Open the state and home-sale layer only when local rules or transfer timing shape the answer."
+            : "Use the symptom path when you need triage before you have a clean report line.");
+}
+
 @template.layout.main(title = familyView.heroTitle(), robots = seo.robotsDirective(), description = familyView.heroLead(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">Well water topic</span>
+                    <span class="eyebrow">${heroEyebrow}</span>
                     <h1>${familyView.heroTitle()}</h1>
-                    <p class="hero-lead">${familyView.heroLead()}</p>
+                    <p class="hero-lead">${heroLead}</p>
                     <div class="hero-actions">
                         <a class="button-link" href="${familyView.primaryToolHref()}">${familyView.primaryToolLabel()}</a>
-                        <a class="button-link-secondary" href="/">Back to guide hub</a>
+                        <a class="button-link-secondary" href="${secondaryHeroHref}">${secondaryHeroLabel}</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>${pages.size()} pages in this family</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${familyView.heroNote()}</p>
+                    <strong>${heroNoteTitle}</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${heroNoteBody}</p>
                     <div class="chip-row">
-                        @if("compares".equals(family))
-                            <span class="chip">Treatment options</span>
-                            <span class="chip">After testing</span>
-                            <span class="chip">Scope matters</span>
+                        @if(isAuthority)
+                            <span class="chip">Decision first</span>
+                            <span class="chip">Method second</span>
+                            <span class="chip">Do not browse blind</span>
+                        @elseif(isRegional)
+                            <span class="chip">State context</span>
+                            <span class="chip">Lab result</span>
+                            <span class="chip">Recent change</span>
                         @else
-                            <span class="chip">Common searches</span>
-                            <span class="chip">Testing path</span>
-                            <span class="chip">Next-step guidance</span>
+                            <span class="chip">Pick an input</span>
+                            <span class="chip">Run the tool</span>
+                            <span class="chip">Read only if needed</span>
                         @endif
                     </div>
                 </aside>
@@ -39,14 +132,41 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Priority reads</p>
-                    <h2>Start with these pages in this family</h2>
+                    <p class="brand-kicker">Start here</p>
+                    <h2>Pick the first path, not the first article</h2>
                 </div>
-                <p class="section-copy">This keeps the hub from behaving like a flat index and moves visitors toward the pages most likely to answer their first question.</p>
+                <p class="section-copy">This family should route you into the right entry flow before it turns into a flat browse list.</p>
+            </div>
+            <div class="grid">
+                <a class="card-link card-link-accent" href="${routeOneHref}">
+                    <span class="card-kicker">Best first path</span>
+                    <h3>${routeOneLabel}</h3>
+                    <p class="card-meta">${routeOneBody}</p>
+                </a>
+                <a class="card-link" href="${routeTwoHref}">
+                    <span class="card-kicker">Alternative path</span>
+                    <h3>${routeTwoLabel}</h3>
+                    <p class="card-meta">${routeTwoBody}</p>
+                </a>
+                <a class="card-link" href="${routeThreeHref}">
+                    <span class="card-kicker">Alternative path</span>
+                    <h3>${routeThreeLabel}</h3>
+                    <p class="card-meta">${routeThreeBody}</p>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="section-header">
+                <div>
+                    <p class="brand-kicker">Guide layer</p>
+                    <h2>Use one of these pages only if the first pass was not enough</h2>
+                </div>
+                <p class="section-copy">These are the reading pages worth opening after you already know which branch or question still matters.</p>
             </div>
             <div class="grid">
                 @for (var starter : familyView.starterPages())
-                    <a class="card-link card-link-accent" href="/well-water/${starter.slug()}">
+                    <a class="card-link ${isAuthority ? "" : "card-link-accent"}" href="/well-water/${starter.slug()}">
                         <span class="card-kicker">${starter.family()}</span>
                         <h3>${starter.h1()}</h3>
                         <p class="card-meta">${starter.metaDescription()}</p>
@@ -58,10 +178,10 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Family guidance</p>
-                    <h2>What this hub should help you avoid</h2>
+                    <p class="brand-kicker">Before you open more guides</p>
+                    <h2>What this family should stop you from doing</h2>
                 </div>
-                <p class="section-copy">Good hub pages do more than list URLs. They explain the common mistake pattern and what to check before you open the tool.</p>
+                <p class="section-copy">The family layer is supposed to reduce browsing drift, not expand it. Use these checks to decide whether you still need the reading layer at all.</p>
             </div>
             <div class="grid">
                 <article class="card-link card-link-accent">
@@ -74,8 +194,8 @@
                     </div>
                 </article>
                 <article class="card-link">
-                    <span class="card-kicker">Before the tool</span>
-                    <h3>Three checks before opening the decision flow</h3>
+                    <span class="card-kicker">Before more reading</span>
+                    <h3>Three checks before you open the longer guide layer</h3>
                     <div class="stack" style="gap: 10px;">
                         @for (var check : familyView.beforeToolChecks())
                             <p class="card-meta">${check}</p>
@@ -88,8 +208,8 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Browse pages</p>
-                    <h2>Practical guides in this family</h2>
+                    <p class="brand-kicker">Longer reading layer</p>
+                    <h2>Browse the full family only when the router still left a real question</h2>
                 </div>
                 <p class="section-copy">${"compares".equals(family)
                         ? "Use comparison pages after you confirm the likely problem and the part of the house you are trying to protect."

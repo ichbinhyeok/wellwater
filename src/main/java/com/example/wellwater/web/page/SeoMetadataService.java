@@ -110,6 +110,27 @@ public class SeoMetadataService {
         );
     }
 
+    public SeoMetadata toolLanding(String title, String description) {
+        String canonicalUrl = absolute("/tool");
+        List<SeoBreadcrumb> breadcrumbs = List.of(
+                new SeoBreadcrumb("Home", absolute("/")),
+                new SeoBreadcrumb("Decision Tool", canonicalUrl)
+        );
+        return new SeoMetadata(
+                canonicalUrl,
+                "index,follow",
+                breadcrumbs,
+                List.of(
+                        toolPageJson(canonicalUrl, title, description),
+                        breadcrumbJson(breadcrumbs)
+                ),
+                "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
+        );
+    }
+
     public SeoMetadata detail(PseoDetailView pageView) {
         String canonicalUrl = absolute("/well-water/" + pageView.page().slug());
         List<SeoBreadcrumb> breadcrumbs = List.of(
@@ -190,6 +211,36 @@ public class SeoMetadataService {
         payload.put("author", editorialAuthor());
         payload.put("publisher", publisher());
         payload.put("dateModified", updatedAt == null ? "" : updatedAt);
+        payload.put("isPartOf", Map.of(
+                "@type", "WebSite",
+                "name", "Water Verdict",
+                "url", absolute("/")
+        ));
+        return object(payload);
+    }
+
+    private String toolPageJson(String canonicalUrl, String title, String description) {
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("@context", "https://schema.org");
+        payload.put("@type", "WebPage");
+        payload.put("url", canonicalUrl);
+        payload.put("name", title);
+        payload.put("headline", title);
+        payload.put("description", description);
+        payload.put("inLanguage", "en");
+        payload.put("author", editorialAuthor());
+        payload.put("publisher", publisher());
+        payload.put("about", List.of(
+                Map.of("@type", "Thing", "name", "Private well lab result routing"),
+                Map.of("@type", "Thing", "name", "Well-water symptom triage"),
+                Map.of("@type", "Thing", "name", "State-specific well-water testing"),
+                Map.of("@type", "Thing", "name", "Home-sale well testing")
+        ));
+        payload.put("mainEntity", Map.of(
+                "@type", "Thing",
+                "name", "Private well decision tool",
+                "description", "Start from a lab result, symptom, recent change, or state and sale context to get the next testing or routing step."
+        ));
         payload.put("isPartOf", Map.of(
                 "@type", "WebSite",
                 "name", "Water Verdict",

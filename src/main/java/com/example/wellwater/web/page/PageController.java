@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 @Controller
@@ -78,6 +79,30 @@ public class PageController {
                 "Decide what to test next for a private well, especially during home purchase, state-specific testing, and suspicious result follow-up."
         ));
         return "pages/home";
+    }
+
+    @GetMapping("/tool")
+    public String toolLanding(
+            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
+            Model model
+    ) {
+        trackPublicPageView("tool-hub", "tool", "tool-surface", "/tool", "tool", "index,follow");
+        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
+        model.addAttribute("leadContext", new LeadCaptureContext(
+                "Need help choosing the first tool path?",
+                "Leave an email if you have a vague clue, a home-sale situation, or a confusing report and want help choosing the right starting input.",
+                "Request follow-up",
+                "/tool",
+                "tool-hub",
+                "tool",
+                "tool",
+                "Decision tool"
+        ));
+        model.addAttribute("seo", seoMetadataService.toolLanding(
+                "Private Well Water Decision Tool | Water Verdict",
+                "Start with a lab result, symptom, recent change, or state and home-sale context and get the next testing path for a private well."
+        ));
+        return "pages/tool/landing";
     }
 
     @GetMapping("/well-water/family/{family}")
@@ -241,7 +266,9 @@ public class PageController {
     @ResponseBody
     public String sitemap() {
         String baseUrl = seoMetadataService.absolute("");
-        return pseoCatalogService.sitemapXml(baseUrl, trustPageService.sitemapPaths());
+        ArrayList<String> extraPaths = new ArrayList<>(trustPageService.sitemapPaths());
+        extraPaths.add("/tool");
+        return pseoCatalogService.sitemapXml(baseUrl, extraPaths);
     }
 
     private String sanitizeLeadStatus(String lead) {

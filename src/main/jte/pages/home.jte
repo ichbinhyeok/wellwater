@@ -14,35 +14,36 @@
             <div class="hero-grid">
                 <div class="hero-copy">
                     <span class="eyebrow">Private well decision tool</span>
-                    <h1>Check your well water before you buy anything.</h1>
-                    <p class="hero-lead">Start from one clue you already have: a lab result, a smell or stain, a recent change, or a state or home-sale requirement. The goal is to decide the next test before product shopping takes over.</p>
-                    <div class="chip-row" style="margin-top: 18px;">
-                        <span class="chip">Lab result</span>
-                        <span class="chip">Smell or stain</span>
-                        <span class="chip">Recent change</span>
-                        <span class="chip">State or home sale</span>
-                    </div>
+                    <h1>Choose your starting clue.</h1>
+                    <p class="hero-lead">Pick one input and get the next safe step before you read anything deeper. This surface should behave like a routing tool first, not a guide directory.</p>
                     <div class="hero-actions">
-                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/tool/result-first")}">Open The Tool</a>
-                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/well-water/private-well-home-sale-testing-by-state")}">Start With State Or Home Sale</a>
+                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/tool/result-first")}">Start With A Lab Result</a>
+                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/tool/symptom-first")}">I Only Have A Symptom</a>
+                    </div>
+                    <div class="chip-row" style="margin-top: 16px;">
+                        <a class="chip" href="/tool">See the public tool page</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>Start in 10 seconds</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">You do not need to read the whole site first. Pick the closest starting point, get oriented, and only then go deeper.</p>
+                    <strong>Pick one path now</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">You do not need to browse first. Choose the clue you already have and let the tool narrow the path.</p>
                     <div class="hero-metrics">
-                        <div class="metric">
-                            <strong>1</strong>
-                            <span>Pick the clue you already have</span>
-                        </div>
-                        <div class="metric">
-                            <strong>2</strong>
-                            <span>Get the next safe step</span>
-                        </div>
-                        <div class="metric">
-                            <strong>3</strong>
-                            <span>Read more only if you need it</span>
-                        </div>
+                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/result-first")}">
+                            <strong>Lab result</strong>
+                            <span>Use one report line to start.</span>
+                        </a>
+                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/symptom-first")}">
+                            <strong>Smell or stain</strong>
+                            <span>Start from what you can see or smell.</span>
+                        </a>
+                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/trigger-first")}">
+                            <strong>Recent change</strong>
+                            <span>Use a flood, repair, or sudden shift.</span>
+                        </a>
+                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/well-water/private-well-home-sale-testing-by-state")}">
+                            <strong>State or sale</strong>
+                            <span>Use rules and location when they change the answer.</span>
+                        </a>
                     </div>
                 </aside>
             </div>
@@ -51,58 +52,31 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Start here</p>
-                    <h2>Pick the closest starting point</h2>
+                    <p class="brand-kicker">What happens after you start</p>
+                    <h2>Use the tool first, then read only if the first pass is not enough</h2>
                 </div>
-                <p class="section-copy">First choose the signal you already have. The longer reading can wait until after the problem is narrowed.</p>
-            </div>
-            <div class="grid">
-                <a class="card-link card-link-accent" href="${trackingLinks.home("home_start_path", "/tool/result-first")}">
-                    <span class="card-kicker">Tool</span>
-                    <h3>I have a lab result</h3>
-                    <p class="card-meta">Enter one analyte from a report and get the next test, scope, and verification path.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/tool/symptom-first")}">
-                    <span class="card-kicker">Tool</span>
-                    <h3>I have a smell, stain, or taste problem</h3>
-                    <p class="card-meta">Start from what you can see or smell when the data is weak or missing.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/tool/trigger-first")}">
-                    <span class="card-kicker">Tool</span>
-                    <h3>I have a recent change</h3>
-                    <p class="card-meta">Use a flood, repair, treatment change, or sudden shift to decide whether to retest or escalate.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_start_path", "/well-water/private-well-home-sale-testing-by-state")}">
-                    <span class="card-kicker">Guide</span>
-                    <h3>I need state or home-sale guidance</h3>
-                    <p class="card-meta">Start here when rules, transfer timing, or state context shape what should happen first.</p>
-                </a>
-            </div>
-        </section>
-
-        <section class="panel panel-accent">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">What happens next</p>
-                    <h2>Use the tool first, then read deeper only if you need it</h2>
-                </div>
-                <p class="section-copy">The site is supposed to work in two layers: first get oriented, then open the longer reading only when the next step is still unclear.</p>
+                <p class="section-copy">The first job is not browsing. The first job is to pick the input you already have, get oriented, and only then open the longer public guide layer if something is still unclear.</p>
             </div>
             <div class="grid grid-compact">
                 <article class="card-link card-link-accent">
                     <span class="card-kicker">Start</span>
-                    <h3>Pick the closest input</h3>
+                    <h3>Pick the clue you already have</h3>
                     <p class="card-meta">Lab result, symptom, recent change, or state and home-sale context.</p>
                 </article>
                 <article class="card-link">
                     <span class="card-kicker">Orient</span>
                     <h3>Get the next safe step</h3>
-                    <p class="card-meta">The tool should narrow scope before treatment research gets ahead of the evidence.</p>
+                    <p class="card-meta">Let the tool narrow scope before treatment research gets ahead of the evidence.</p>
+                </article>
+                <article class="card-link">
+                    <span class="card-kicker">Verify</span>
+                    <h3>Check method or state context</h3>
+                    <p class="card-meta">Use the reading layer only when you need the reasoning, source trail, or a local rule check.</p>
                 </article>
                 <article class="card-link">
                     <span class="card-kicker">Read</span>
-                    <h3>Open the public guide if needed</h3>
-                    <p class="card-meta">Use the article layer only when you want the reasoning, source trail, or a deeper branch explanation.</p>
+                    <h3>Open the longer guide if needed</h3>
+                    <p class="card-meta">Read only after the first pass tells you which branch, household, or test question still matters.</p>
                 </article>
                 <article class="card-link">
                     <span class="card-kicker">Compare</span>
@@ -115,10 +89,10 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Browse if you want more context</p>
-                    <h2>High-signal pages worth reading after you know your starting point</h2>
+                    <p class="brand-kicker">Guide layer</p>
+                    <h2>High-signal pages worth opening only after you start the tool</h2>
                 </div>
-                <p class="section-copy">This is the longer reading layer. It should support the tool, not force you to learn the whole site before you can act.</p>
+                <p class="section-copy">These guides exist to support the routing tool. They should not force you to learn the whole site before you can act.</p>
             </div>
             <div class="grid">
                 @for (int i = 0; i < priorityPages.size(); i++)
@@ -164,8 +138,8 @@
         <section class="panel desktop-only">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Deeper browsing</p>
-                    <h2>Open these only when the first pass was not enough</h2>
+                    <p class="brand-kicker">Longer reading layer</p>
+                    <h2>Only open these when the first routing pass still left you uncertain</h2>
                 </div>
                 <p class="section-copy">These hubs are useful for people who already know the broad direction and want the longer reading path.</p>
             </div>
@@ -206,10 +180,10 @@
         <section class="panel panel-accent">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Trust surface</p>
+                    <p class="brand-kicker">Trust layer</p>
                     <h2>Method, review, sources, and safety limits</h2>
                 </div>
-                <p class="section-copy">These pages explain how advice is reviewed, where the source trail comes from, and when testing should stay ahead of product research.</p>
+                <p class="section-copy">These pages are evidence and review support for the decision surface. They should sit behind the first action, not in front of it.</p>
             </div>
             <div class="grid">
                 @for (int i = 0; i < trustPages.size(); i++)

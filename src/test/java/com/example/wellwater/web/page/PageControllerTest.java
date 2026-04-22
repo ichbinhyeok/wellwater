@@ -98,6 +98,21 @@ class PageControllerTest {
     }
 
     @Test
+    void toolLandingRendersWithSeoAndLeadContext() {
+        PageController controller = newController(tempDir.resolve("events-tool.csv"));
+        Model model = new ExtendedModelMap();
+
+        String viewName = controller.toolLanding(null, model);
+
+        assertEquals("pages/tool/landing", viewName);
+        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals("", model.getAttribute("leadStatus"));
+        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
+        assertEquals("https://example.com/tool", seo.canonicalUrl());
+        assertEquals("index,follow", seo.robotsDirective());
+    }
+
+    @Test
     void detailRendersNotFoundWhenSlugMissing() {
         PageController controller = newController(tempDir.resolve("events-not-found.csv"));
         Model model = new ExtendedModelMap();
@@ -118,6 +133,7 @@ class PageControllerTest {
         assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
         assertTrue(xml.contains("/well-water/hardness"));
         assertTrue(xml.contains("/well-water/rotten-egg-smell"));
+        assertTrue(xml.contains("/tool"));
         assertTrue(xml.contains("/well-water/family/regional"));
         assertTrue(xml.contains("/well-water/family/authority"));
         assertTrue(xml.contains("/well-water/family/triggers"));

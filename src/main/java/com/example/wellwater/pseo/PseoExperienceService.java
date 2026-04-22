@@ -205,9 +205,9 @@ public class PseoExperienceService {
             );
             case "regional" -> new PseoFamilyView(
                     family,
-                    "State-specific private well testing guides",
-                    "These pages cover states where testing rules, transfer panels, geology, or lab pathways change the right next step.",
-                    size + " guides built for local testing intent, with official guidance and lab routing mapped across "
+                    "Start with your state, then narrow the decision",
+                    "Use state context when local rules, transfer timing, geology, or lab routing change what should happen first.",
+                    size + " state-context pages for narrowing the next step without getting lost in directory browsing across "
                             + stateResourceRegistryService.supportedStateCount() + " states.",
                     "Start With State Context",
                     "/well-water/private-well-home-sale-testing-by-state",
@@ -217,10 +217,10 @@ public class PseoExperienceService {
             );
             case "authority" -> new PseoFamilyView(
                     family,
-                    "Testing-order and sampling articles",
-                    "Support articles for reading reports, planning test scope, checking home-sale panels, and avoiding expensive sampling mistakes before you buy.",
-                    size + " articles for tightening sample quality, test scope, and decision order before treatment research takes over.",
-                    "Open Decision Tool",
+                    "Use the method layer to start the right decision path",
+                    "Use these pages when lab-reading, sampling, or home-sale method context helps you enter the tool with better evidence.",
+                    size + " method pages for tightening scope without letting articles replace the decision engine.",
+                    "Start My Decision",
                     "/tool/result-first",
                     starterPages,
                     commonMistakes,
@@ -269,7 +269,7 @@ public class PseoExperienceService {
             case "compares" -> "Category comparison";
             case "triggers" -> "Event response guide";
             case "regional" -> "Regional guide";
-            case "authority" -> "Authority article";
+            case "authority" -> "Method router";
             default -> "Well-water guide";
         };
     }
@@ -294,7 +294,7 @@ public class PseoExperienceService {
             return "Regional / state-specific";
         }
         if ("authority".equals(page.family())) {
-            return "Authority / methodology";
+            return "Method / routing";
         }
         if (MICROBIAL_SLUGS.contains(page.slug())) {
             return "Health / microbial";
@@ -325,7 +325,7 @@ public class PseoExperienceService {
                     ? "Use this page when local geology, regulation, or state lab pathways change the right next step."
                     : "Use this page when " + regionalContext.stateName()
                     + " guidance, geology, or certified lab routing changes the right next step.";
-            case "Authority / methodology" -> "Use this page to tighten your method and avoid sloppy interpretations before shopping.";
+            case "Method / routing" -> "Use this page to choose the right decision path, then read the method only if it still matters.";
             default -> "Use this page for orientation, then hand off to a more specific tool flow.";
         };
     }
@@ -340,7 +340,7 @@ public class PseoExperienceService {
             case "Nuisance / operational" -> "Whole-house comfort household";
             case "Event-driven" -> "Incident-response household";
             case "Regional / state-specific" -> "State-context household";
-            case "Authority / methodology" -> "Verification-first household";
+            case "Method / routing" -> "Decision-first household";
             default -> "Verification-first household";
         };
     }
@@ -359,7 +359,7 @@ public class PseoExperienceService {
                     ? "Best for households where state guidance, geology, or home-sale rules change what you should test first."
                     : "Best for households in " + regionalContext.stateName()
                     + " where local guidance, geology, or sale rules change what you should test first.";
-            case "Authority / methodology" -> "Best for households trying to make fewer mistakes with testing, interpretation, and product claims.";
+            case "Method / routing" -> "Best for households using a method page to pick the right tool path instead of getting stuck in article reading.";
             default -> "Best for households still narrowing the problem definition.";
         };
     }
@@ -378,7 +378,7 @@ public class PseoExperienceService {
                     ? "Do not assume a national answer fits local geology, rules, or lab pathways in your state."
                     : "Do not assume a national answer fits " + regionalContext.stateName()
                     + ". Check state guidance and certified lab routing before buying treatment.";
-            case "Authority / methodology" -> "Do not treat a method article like a product verdict. Clean up the evidence first.";
+            case "Method / routing" -> "Do not treat a method page like the final answer. Use it to route into the right decision flow, then clean up the evidence.";
             default -> "Do not shop from uncertainty. Narrow the problem first.";
         };
     }

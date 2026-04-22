@@ -64,14 +64,14 @@ class PseoExperienceServiceTest {
         assertTrue(detailView.riskSummary().contains("New Hampshire"));
         assertTrue(detailView.doNotBuyYet().contains("New Hampshire"));
         assertTrue(detailView.quickAnswers().stream().anyMatch(answer -> answer.title().equals("What NH changes")));
-        assertEquals("Testing-order and sampling articles", familyView.heroTitle());
+        assertEquals("Use the method layer to start the right decision path", familyView.heroTitle());
     }
 
     @Test
     void regionalFamilyViewHighlightsOfficialStateCoverage() {
         PseoFamilyView familyView = experienceService.familyView("regional", catalogService.byFamily("regional"));
 
-        assertTrue(familyView.heroNote().contains("official guidance"));
+        assertTrue(familyView.heroNote().contains("state-context"));
         assertTrue(familyView.heroNote().contains("states"));
     }
 

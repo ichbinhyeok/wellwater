@@ -31,6 +31,10 @@ public class PublicTrackingLinkService {
         );
     }
 
+    public String toolLanding(String ctaType, String targetUrl) {
+        return trackedHref("tool-hub", "tool", "tool-surface", "tool", ctaType, targetUrl);
+    }
+
     private String trackedHref(
             String entryMode,
             String slug,

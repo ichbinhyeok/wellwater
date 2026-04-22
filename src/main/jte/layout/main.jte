@@ -849,12 +849,13 @@
             </div>
         </div>
         <nav class="site-nav" aria-label="Primary">
+            <a class="nav-link" href="/tool">Decision Tool</a>
             <a class="nav-link" href="/well-water/private-well-home-sale-testing-by-state">Home Sale</a>
             <a class="nav-link" href="/well-water/family/regional">Regional</a>
             <a class="nav-link" href="/well-water/family/symptoms">Symptoms</a>
-            <a class="nav-link" href="/well-water/family/authority">Articles</a>
+            <a class="nav-link" href="/well-water/family/authority">Methods</a>
             <a class="nav-link" href="/trust">Trust</a>
-            <a class="nav-link nav-link-strong" href="/tool/result-first">Open Tool</a>
+            <a class="nav-link nav-link-strong" href="/tool">Open Tool</a>
         </nav>
     </header>
 

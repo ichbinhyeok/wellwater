@@ -1261,6 +1261,88 @@ Local verification performed:
 - local desktop and mobile screenshots were checked for `/` and `/well-water/nitrate`
 - header height was reduced and first-view CTA visibility improved in both checks
 
+## Implementation Note: 2026-04-22
+
+### Indexable tool-surface added
+
+Why this note exists:
+- the narrowed wedge and CTA simplification solved only part of the product-surface problem
+- Google could see the public guide and router layer, but the actual intake routes under `/tool/*` and saved results under `/result/saved/*` were still intentionally blocked from indexation
+- that created a real risk that the site would still read like an information shell with a hidden tool behind it
+- the target strategy is now explicit:
+- narrow wedge
+- wide public surface
+- public surface should still read as a tool, not as a publisher-first guide layer
+
+### What changed
+
+Files changed:
+- `src/main/java/com/example/wellwater/web/page/PageController.java`
+- `src/main/java/com/example/wellwater/web/page/SeoMetadataService.java`
+- `src/main/java/com/example/wellwater/web/page/PublicTrackingLinkService.java`
+- `src/main/jte/layout/main.jte`
+- `src/main/jte/pages/home.jte`
+- `src/main/jte/pages/tool/landing.jte`
+- `src/test/java/com/example/wellwater/web/RenderingSmokeTest.java`
+- `src/test/java/com/example/wellwater/web/page/PageControllerTest.java`
+- `src/test/java/com/example/wellwater/web/page/SeoMetadataServiceTest.java`
+
+What changed:
+- added a new public, indexable `/tool` landing page
+- added `/tool` to the generated sitemap
+- changed the main header "Open Tool" path to point to `/tool`, not directly to a noindexed intake route
+- added a home-page bridge into the public tool surface so the site can explain the tool before the user enters a private flow
+- the new `/tool` page now explains:
+- the four valid starting inputs:
+- lab result
+- symptom
+- recent change
+- state or sale context
+- the expected output shape:
+- decision call
+- recommended tests
+- treatment hold logic
+- public reasoning and support links
+- `/tool/*` intake routes and `/result/saved/*` personalized outputs remain intentionally non-indexed
+- structured data on `/tool` now describes a private-well decision tool surface in crawlable public HTML instead of leaving all tool identity buried behind blocked routes
+
+Interpretation:
+- this is the first repo-side change that turns the public surface itself into an indexable tool explanation layer
+- Google still cannot fully evaluate the private intake and result engine directly
+- but Google can now crawl a page whose main job is to say:
+- this site accepts problem inputs
+- this site routes users into a decision engine
+- the guide layer exists after the route, not before it
+
+### Why this matters
+
+Interpretation:
+- this change better matches the intended strategy than a guide-first homepage plus hidden tool CTA
+- it should reduce the risk that Google classifies the broad public surface as a generic well-water publisher shell
+- it does not guarantee rich-result treatment or automatic "tool" classification
+- it does give Google a crawlable public page that can support a stronger product-identity read than the prior structure
+
+### Verification
+
+Commands run on `2026-04-22`:
+
+```powershell
+.\gradlew.bat --no-daemon test
+```
+
+Result:
+- local full test suite passed after the `/tool` landing, sitemap inclusion, and metadata changes
+- the repo now contains an indexable tool landing page that can be used as the next URL-inspection target after deploy
+
+### What to watch next
+
+Use the next live review to answer:
+1. does `https://waterverdict.com/tool` return `200` and `meta robots = index,follow` on production?
+2. does `https://waterverdict.com/sitemap.xml` include `/tool` live?
+3. does Search Console start showing impressions for `/tool` after recrawl?
+4. do queries around `tool`, `test`, `decision`, `lab result`, `home sale`, or `symptom` begin attaching to `/tool` or to the newly tool-routed home surface?
+5. does the site identity look less article-led in Search Console page distribution over the next `2` to `4` weeks?
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

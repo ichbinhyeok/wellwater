@@ -4,27 +4,55 @@
 @param String leadStatus
 @param com.example.wellwater.web.page.PublicTrackingLinkService trackingLinks
 
+!{
+    var isAuthority = "authority".equals(pageView.page().family());
+    var isHomeSaleAuthority = isAuthority && "private-well-home-sale-testing-by-state".equals(pageView.page().slug());
+    var heroEyebrow = isAuthority ? "Method router" : pageView.archetypeLabel();
+    var heroLead = isAuthority
+            ? "Use this page to choose the right decision path first. Read the public guide only if the method detail still matters after you start."
+            : pageView.page().intro();
+    var primaryCtaLabel = isAuthority ? "Start My Decision" : "Get My Next Step";
+    var primaryCtaHref = trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href());
+    var secondaryCtaLabel = isAuthority ? "Use This Guide Only If Needed" : pageView.page().primaryCtaLabel();
+    var secondaryCtaHref = isAuthority ? "#public-guide" : trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl());
+    var authorityRouteThreeLabel = isHomeSaleAuthority ? "I am in a home purchase or transfer" : "Something changed recently";
+    var authorityRouteThreeHref = isHomeSaleAuthority
+            ? "/tool/trigger-first?trigger=home-purchase-test&slug=" + pageView.page().slug()
+            : "/tool/trigger-first?slug=" + pageView.page().slug();
+    var authorityRouteThreeBody = isHomeSaleAuthority
+            ? "Use the home-purchase trigger when transfer timing is what changed your testing path."
+            : "Use a recent change, flood, repair, or sudden shift when the method page alone is not enough.";
+}
+
 @template.layout.main(title = pageView.page().title(), robots = seo.robotsDirective(), description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
                 <div class="hero-copy">
-                    <span class="eyebrow">${pageView.archetypeLabel()}</span>
+                    <span class="eyebrow">${heroEyebrow}</span>
                     <h1>${pageView.page().h1()}</h1>
-                    <p class="hero-lead">${pageView.page().intro()}</p>
+                    <p class="hero-lead">${heroLead}</p>
                     <div class="chip-row" style="margin-top: 18px;">
-                        <span class="chip">${pageView.riskLabel()}</span>
-                        <span class="chip">${pageView.householdLabel()}</span>
-                        <span class="chip">${pageView.intentLabel()}</span>
+                        @if(isAuthority)
+                            <span class="chip">Decision first</span>
+                            <span class="chip">Guide second</span>
+                            <span class="chip">Test before treatment</span>
+                        @else
+                            <span class="chip">${pageView.riskLabel()}</span>
+                            <span class="chip">${pageView.householdLabel()}</span>
+                            <span class="chip">${pageView.intentLabel()}</span>
+                        @endif
                     </div>
                     <div class="hero-actions">
-                        <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">Get My Next Step</a>
-                        <a class="button-link-secondary" href="${trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl())}">${pageView.page().primaryCtaLabel()}</a>
+                        <a class="button-link" href="${primaryCtaHref}">${primaryCtaLabel}</a>
+                        <a class="button-link-secondary" href="${secondaryCtaHref}">${secondaryCtaLabel}</a>
                     </div>
                 </div>
                 <aside class="hero-note">
-                    <strong>Use this page in two layers</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">If you want a personalized answer, start with the tool first. Use the rest of this page only if you want the public explanation and source trail.</p>
+                    <strong>${isAuthority ? "Use this page like a router" : "Use this page in two layers"}</strong>
+                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">${isAuthority
+                            ? "This method page should route you into the decision flow before it turns into a long read. Use the public guide only when you still need the reasoning."
+                            : "If you want a personalized answer, start with the tool first. Use the rest of this page only if you want the public explanation and source trail."}</p>
                     <div class="chip-row">
                         <span class="chip">Tool first</span>
                         <span class="chip">Public guide second</span>
@@ -34,35 +62,68 @@
             </div>
         </section>
 
-        <section class="panel panel-accent">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">Quick start</p>
-                    <h2>Understand the page fast, then decide if you need the deeper reading</h2>
+        @if(isAuthority)
+            <section class="panel panel-accent">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Start here</p>
+                        <h2>Pick the input that matches your situation</h2>
+                    </div>
+                    <p class="section-copy">This page should route you into the decision flow before it turns into a long read. Choose the input you already have, then come back to the guide only if something is still unclear.</p>
                 </div>
-                <p class="section-copy">This top section is the short version. The longer explanation below is there when you want the public reasoning, not because you should have to read everything first.</p>
-            </div>
-            <div class="grid">
-                <article class="card-link card-link-accent">
-                    <span class="card-kicker">What this page is saying</span>
-                    <p class="card-meta">${pageView.riskSummary()}</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Do this first</span>
-                    <p class="card-meta">${pageView.page().actionNow()}</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Use the tool when</span>
-                    <p class="card-meta">${pageView.entryHint().reason()}</p>
-                </article>
-            </div>
-            <div class="cta-row">
-                <a class="button-link" href="${trackingLinks.detail(pageView.page(), "detail_tool_cta", pageView.entryHint().href())}">Get My Next Step</a>
-                <a class="button-link-secondary" href="${trackingLinks.detail(pageView.page(), "detail_primary_cta", pageView.page().primaryCtaUrl())}">${pageView.page().primaryCtaLabel()}</a>
-            </div>
-        </section>
+                <div class="grid">
+                    <a class="card-link card-link-accent" href="${primaryCtaHref}">
+                        <span class="card-kicker">Route</span>
+                        <h3>I already have a lab result</h3>
+                        <p class="card-meta">Apply this method page to your own well now instead of reading in the abstract.</p>
+                    </a>
+                    <a class="card-link" href="/tool/symptom-first?slug=${pageView.page().slug()}">
+                        <span class="card-kicker">Route</span>
+                        <h3>I only have a symptom or vague concern</h3>
+                        <p class="card-meta">Use the symptom flow when you need triage before you have a clean report line.</p>
+                    </a>
+                    <a class="card-link" href="${authorityRouteThreeHref}">
+                        <span class="card-kicker">Route</span>
+                        <h3>${authorityRouteThreeLabel}</h3>
+                        <p class="card-meta">${authorityRouteThreeBody}</p>
+                    </a>
+                </div>
+                <div class="cta-row">
+                    <a class="button-link" href="${primaryCtaHref}">${primaryCtaLabel}</a>
+                    <a class="button-link-secondary" href="${secondaryCtaHref}">${secondaryCtaLabel}</a>
+                </div>
+            </section>
+        @else
+            <section class="panel panel-accent">
+                <div class="section-header">
+                    <div>
+                        <p class="brand-kicker">Quick start</p>
+                        <h2>Understand the page fast, then decide if you need the deeper reading</h2>
+                    </div>
+                    <p class="section-copy">This top section is the short version. The longer explanation below is there when you want the public reasoning, not because you should have to read everything first.</p>
+                </div>
+                <div class="grid">
+                    <article class="card-link card-link-accent">
+                        <span class="card-kicker">What this page is saying</span>
+                        <p class="card-meta">${pageView.riskSummary()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Do this first</span>
+                        <p class="card-meta">${pageView.page().actionNow()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Use the tool when</span>
+                        <p class="card-meta">${pageView.entryHint().reason()}</p>
+                    </article>
+                </div>
+                <div class="cta-row">
+                    <a class="button-link" href="${primaryCtaHref}">${primaryCtaLabel}</a>
+                    <a class="button-link-secondary" href="${secondaryCtaHref}">${secondaryCtaLabel}</a>
+                </div>
+            </section>
+        @endif
 
-        <section class="panel">
+        <section class="panel" id="public-guide">
             <div class="section-header">
                 <div>
                     <p class="brand-kicker">Read more if needed</p>

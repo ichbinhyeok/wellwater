@@ -36,21 +36,39 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private well testing decisions")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Four reliable ways to narrow the problem")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Testing Decisions")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Choose your starting clue.")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pick one path now")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("ctaType=home_primary_cta")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("ctaType=home_start_path")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision workflow")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("How the engine moves you toward a testing decision instead of a premature purchase")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal starting points")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("ctaType=home_hero_route")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("See the public tool page")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What happens after you start")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal pages worth opening only after you start the tool")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("New Jersey PWTA Private Well Testing What To Know")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("State pages with official guidance and lab handoff")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("New Hampshire Arsenic in Well Water What To Do")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Home sale testing by state")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Plumbing vs source-water splits")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust surface")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust layer")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("application/ld+json")))
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("@content()"))));
+    }
+
+    @Test
+    void toolLandingPageRendersAsIndexableToolSurface() throws Exception {
+        mockMvc.perform(get("/tool"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Decision Tool")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/tool\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Wide public surface, narrow decision wedge")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What this page does")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What the engine gives back")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Public pages should feed the tool, not replace it")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("/well-water/private-well-home-sale-testing-by-state")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private result wedge")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("application/ld+json")));
     }
 
     @Test
@@ -290,7 +308,7 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("noindex,follow")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("RO vs Adsorptive Media for Arsenic in Well Water")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Compare after scope")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Slow down category shopping until scope and claims are clearer")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related regional reads")));
     }
 
@@ -298,9 +316,9 @@ class RenderingSmokeTest {
     void authorityFamilyPageRendersLeadCaptureSurface() throws Exception {
         mockMvc.perform(get("/well-water/family/authority"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Testing-order and sampling articles")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Start with these pages in this family")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("What this hub should help you avoid")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Use the method layer to start the right decision path")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pick the first path, not the first article")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("What this family should stop you from doing")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")));
     }
 
