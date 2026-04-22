@@ -1343,6 +1343,65 @@ Use the next live review to answer:
 4. do queries around `tool`, `test`, `decision`, `lab result`, `home sale`, or `symptom` begin attaching to `/tool` or to the newly tool-routed home surface?
 5. does the site identity look less article-led in Search Console page distribution over the next `2` to `4` weeks?
 
+## Implementation Note: 2026-04-22
+
+### Live verification after tool-surface deploy
+
+Why this note exists:
+- the earlier `2026-04-22` implementation note recorded the repo-side product-surface change
+- this follow-up note records that the new public tool surface is now actually live on production
+
+### Deploy status
+
+- commit pushed for the tool-surface change: `dc868cf`
+- GitHub Actions deploy run: `24765132058`
+- deploy result: `success`
+
+Interpretation:
+- the new `/tool` public surface is no longer only a repository state
+- Google can now actually crawl the live page, not just the repo-local version
+
+### Live production verification
+
+Live checks run on `2026-04-22` after deploy success:
+- `https://waterverdict.com/tool` -> `200 OK`
+- `/tool` live HTML now emits:
+- `meta robots = index,follow`
+- canonical `https://waterverdict.com/tool`
+- JSON-LD describing a public private-well decision tool surface
+- `https://waterverdict.com/sitemap.xml` now includes `https://waterverdict.com/tool`
+- live `/tool` page copy confirms:
+- public tool surface
+- four valid starting inputs
+- private wedge boundary between indexable public routing and non-indexed personalized flows
+
+Interpretation:
+- the key structural change for this cycle is now fully live
+- today is therefore a valid baseline date for measuring whether Google starts attaching impressions and identity signals to `/tool`
+
+### Verification
+
+Commands run on `2026-04-22`:
+
+```powershell
+gh run list --limit 5
+curl.exe -I -s https://waterverdict.com/tool
+curl.exe -s https://waterverdict.com/sitemap.xml
+curl.exe -s https://waterverdict.com/tool
+```
+
+Result:
+- deploy success was confirmed in GitHub Actions
+- live `/tool` returned `200`
+- live `/tool` was confirmed indexable
+- live sitemap inclusion of `/tool` was confirmed
+
+### Operating read
+
+- no additional product or SEO implementation work is required on `2026-04-22`
+- the project should now switch from build mode to observation mode
+- next meaningful work should be based on recrawl and Search Console response, not another same-day surface rewrite
+
 ## Reusable Entry Template
 
 Copy this block for the next review.
