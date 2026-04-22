@@ -933,6 +933,226 @@ Interpretation:
 - the repository and production are back in sync for the tracked support pages
 - future Search Console analysis can now evaluate the narrowed support strategy on real live URLs instead of stale deploy state
 
+## Entry: 2026-04-22
+
+### Scope
+
+- Property reviewed: `sc-domain:waterverdict.com`
+- Comparison window reviewed:
+- current: `2026-03-23` to `2026-04-19`
+- previous: `2026-02-23` to `2026-03-22`
+- Review context:
+- this review was performed against the latest final 28-day Search Console window available on `2026-04-22`
+- the tracking documents from `2026-04-12` were used as the decision frame:
+- keep the narrowed wedge in place
+- do not re-expand until clicks start and protocol drift is controlled
+- verify whether `contaminants` and `symptoms` family hubs are truly `noindex,follow` on production
+
+### Data
+
+#### Search Performance
+
+- Current 28-day window:
+- clicks: `0`
+- impressions: `809`
+- average position: `42.6`
+- Previous 28-day window:
+- clicks: `0`
+- impressions: `326`
+- average position: `39.2`
+- Delta vs previous window:
+- impressions: `+483` (`+148.2%`)
+- clicks: unchanged at `0`
+- average position: worsened by `3.4`
+
+Interpretation:
+- discovery is still expanding
+- ranking quality is not holding with that growth yet
+- this remains an impressions-phase site, not a clicks-phase site
+
+#### Page Pattern
+
+Most visible pages in the current window:
+- `https://waterverdict.com/well-water/new-hampshire-arsenic-well-water` -> `280` impressions, position `53.6`
+- `https://waterverdict.com/well-water/new-jersey-pwta-private-well-testing` -> `121` impressions, position `43.9`
+- `http://waterverdict.com/well-water/new-jersey-pwta-private-well-testing` -> `61` impressions, position `20.6`
+- `https://waterverdict.com/well-water/oregon-private-well-testing-recommendations` -> `123` impressions, position `29.6`
+- `http://waterverdict.com/well-water/oregon-private-well-testing-recommendations` -> `26` impressions, position `7.8`
+- `https://waterverdict.com/well-water/metallic-taste` -> `92` impressions, position `46.2`
+- `https://waterverdict.com/well-water/cloudy-water` -> `81` impressions, position `42.9`
+- `https://waterverdict.com/well-water/home-purchase-test` -> `41` impressions, position `5.2`
+
+Additional surface that should be watched carefully:
+- `https://waterverdict.com/well-water/family/contaminants` -> `20` impressions, position `3.7`
+- `https://waterverdict.com/well-water/family/symptoms` -> `9` impressions, position `3.9`
+- `http://waterverdict.com/well-water/family/symptoms` -> `19` impressions, position `2.0`
+
+Interpretation:
+- the New Hampshire, New Jersey, and Oregon wedge still owns most meaningful visibility
+- but broad symptom and family-hub surface is still leaking into Search
+- that means the narrowed strategy cannot yet be judged as fully live on production
+
+#### Device Pattern
+
+- desktop: `589` impressions, average position `38.8`
+- mobile: `215` impressions, average position `52.0`
+- tablet: `5` impressions, average position `77.4`
+
+Interpretation:
+- mobile still trails desktop materially
+- but the bigger blocker is still weak rank depth and production parity, not CTR tuning
+
+#### Protocol Findings
+
+Current protocol split from page-level Search Console data:
+- HTTP pages still earned `125` impressions in the current window
+- HTTP share of total impressions: about `15.5%`
+- previous comparison window HTTP share: about `12.0%` (`39` of `326`)
+- compared with the `18.2%` share logged on `2026-04-12`, this is better than that read but still far above the `<5%` consolidation gate
+
+Live checks on `2026-04-22`:
+- `http://waterverdict.com/well-water/new-jersey-pwta-private-well-testing` -> `301` to `https://...`
+- `http://waterverdict.com/well-water/oregon-private-well-testing-recommendations` -> `301` to `https://...`
+
+Interpretation:
+- edge redirects are working
+- protocol cleanup is still incomplete inside Google selection, so re-expansion remains blocked
+
+#### Family-Hub / Production Parity Findings
+
+Live HTML checks on `2026-04-22` showed:
+- `https://waterverdict.com/well-water/family/symptoms` -> `meta robots = index,follow`
+- `https://waterverdict.com/well-water/family/contaminants` -> `meta robots = index,follow`
+- both responses returned `cf-cache-status: DYNAMIC`
+
+Repository-side checks on the same date showed:
+- `src/main/java/com/example/wellwater/pseo/PseoSearchStrategy.java` currently marks only `regional`, `authority`, and `triggers` family hubs as indexable
+- `src/test/java/com/example/wellwater/web/page/SeoMetadataServiceTest.java` and `src/test/java/com/example/wellwater/web/page/PageControllerTest.java` both expect `contaminants` family hubs to emit `noindex,follow`
+
+Interpretation:
+- this is not a stale Cloudflare HTML cache read
+- production app code is behind the repository search-strategy state
+- Search Console family-hub impressions are therefore partly a deployment-parity problem, not just a Google-lag problem
+
+#### Support Page Findings
+
+Live checks on `2026-04-22`:
+- `https://waterverdict.com/well-water/new-hampshire-arsenic-testing-order` -> present in sitemap
+- `https://waterverdict.com/well-water/metallic-taste-plumbing-vs-source-water` -> present in sitemap
+- `https://waterverdict.com/well-water/oregon-private-well-homebuyer-testing` -> present in sitemap
+- `https://waterverdict.com/well-water/private-well-home-sale-testing-by-state` -> present in sitemap
+
+Search Console page reads for `2026-04-13` to `2026-04-19`:
+- `new-hampshire-arsenic-testing-order` -> `4` impressions, position `57.5`
+- `metallic-taste-plumbing-vs-source-water` -> `0`
+- `oregon-private-well-homebuyer-testing` -> `0`
+- `private-well-home-sale-testing-by-state` -> `0`
+
+Interpretation:
+- support-page deploy parity for data is restored
+- but only one of the four tracked support pages has started to register impressions
+- the support layer still needs crawl time after the `2026-04-12` deploy recovery
+
+### Changes Shipped
+
+- no new production search changes were shipped during this review
+
+#### Deploy-Gate Fix Prepared Locally
+
+Files changed:
+- `src/test/java/com/example/wellwater/pseo/PseoCatalogServiceTest.java`
+
+What changed:
+- updated the outdated sitemap expectation that still assumed `/well-water/family/contaminants` should remain indexable
+- added a positive assertion that `/well-water/family/regional` stays in the sitemap under the narrowed strategy
+
+Why this matters:
+- the latest strategy commit `7f73f32` (`Narrow search focus and add re-expansion triggers`) failed deploy run `24305628425`
+- failure cause: `PseoCatalogServiceTest > loadsPagesAndCountsFamilies()` still expected the old family-hub sitemap policy
+- until that stale test is corrected, the production app cannot ship the family-hub `noindex` behavior described in the tracking documents
+
+#### Deployment Finding
+
+GitHub Actions deploy status checked on `2026-04-22`:
+- `24305628425` for commit `7f73f32` -> failed
+- latest successful deploy runs remain:
+- `24303500116`
+- `24303455892`
+
+Failure mode in `24305628425`:
+- deploy stopped in the test phase
+- the failing test was `PseoCatalogServiceTest > loadsPagesAndCountsFamilies()`
+- no Docker image build or OCI deploy steps ran after that failure
+
+Interpretation:
+- production currently reflects the last successful pre-fix app code, not the narrowed family-hub strategy commit
+- that explains why support-page data can be live while family hubs still emit `index,follow`
+
+### Verification
+
+Commands run on `2026-04-22`:
+
+```powershell
+gh run list --workflow deploy.yml --limit 8
+gh run view 24305628425 --log-failed
+./gradlew --no-daemon test
+curl.exe -I -s http://waterverdict.com/well-water/new-jersey-pwta-private-well-testing
+curl.exe -I -s http://waterverdict.com/well-water/oregon-private-well-testing-recommendations
+curl.exe -I -s https://waterverdict.com/well-water/family/symptoms
+curl.exe -I -s https://waterverdict.com/well-water/family/contaminants
+```
+
+Result:
+- local full test suite passed on `2026-04-22` after the stale catalog test was corrected
+- live HTTP redirects were confirmed
+- live family-hub HTML was confirmed dynamic and still indexable
+
+### Insights
+
+#### Primary Read
+
+- the narrowed search wedge still looks directionally right
+- but production is not fully serving the narrowed strategy yet
+- that means Search Console is still partly measuring an old app state
+
+#### Re-Expansion Gate Read
+
+The `2026-04-12` re-expansion triggers are still not met:
+- site-wide clicks are still `0`
+- HTTP share is still `15.5%`, not below `5%`
+- family hubs that should be held back are still indexable on production
+
+Interpretation:
+- re-expansion remains off the table
+- do not promote new `SUPPORT` pages to `CORE`
+- do not reopen any held family
+
+#### Most Important Constraint
+
+- the biggest blocker is now deployment parity for app code, not lack of content
+- until the successful post-`7f73f32` app build is live, Search Console cannot fairly evaluate the `noindex` family-hub strategy
+
+#### Current Priority Order
+
+1. ship a successful deploy for the narrowed strategy app code
+2. re-check live `meta robots` on `family/symptoms` and `family/contaminants`
+3. only after production shows `noindex,follow`, watch whether family-hub impressions decay
+4. keep the current wedge closed and avoid search-surface expansion
+5. re-check support-page impressions after another `7` to `14` days of post-fix crawl time
+
+### Next Check
+
+Target follow-up window:
+- first check: immediately after the next successful deploy of the narrowed strategy code
+- second check: `2026-04-29` to `2026-05-03`
+
+Exact questions to answer next time:
+1. do `family/symptoms` and `family/contaminants` now emit `noindex,follow` on production?
+2. does HTTP impression share fall below the current `15.5%`?
+3. do the New Hampshire, New Jersey, and Oregon clusters move closer to page 2 without broad family-hub leakage?
+4. do `metallic-taste-plumbing-vs-source-water`, `oregon-private-well-homebuyer-testing`, and `private-well-home-sale-testing-by-state` start receiving impressions?
+5. does the site produce its first multi-page organic clicks, or does it remain in pure discovery mode?
+
 ## Reusable Entry Template
 
 Copy this block for the next review.
