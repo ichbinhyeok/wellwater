@@ -1,6 +1,6 @@
 # Water Verdict
 
-Automated private-well test finder for web and ChatGPT distribution.
+Automated private-well test finder for web and OpenAI plugin distribution.
 
 ## Current Product Shape
 
@@ -15,7 +15,7 @@ Current public surface:
 Current tool surface:
 - web entry at `/#test-plan`
 - MCP endpoint at `POST /mcp`
-- one ChatGPT tool: `recommend_private_well_test_plan`
+- one MCP tool for the OpenAI plugin: `recommend_private_well_test_plan`
 - MCP App widget resource at `ui://widget/well-test-plan.html`
 - official guidance and certified-lab links in every successful result
 - legacy result-first flows remain in the codebase but are not promoted
@@ -102,6 +102,7 @@ Use these files as the current source of truth:
 - `17_Search_Focus_Revision_2026-04-12.md`
 - `18_Search_ReExpansion_Triggers_2026-04-12.md`
 - `19_Automated_Distribution_Pivot_2026-07-10.md`
+- `20_OpenAI_Plugin_Submission_Packet_2026-07-10.md`
 
 Session-specific handoff files have been removed so the active documentation set stays clean.
 

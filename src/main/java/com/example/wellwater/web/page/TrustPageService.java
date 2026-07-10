@@ -282,6 +282,37 @@ public class TrustPageService {
                             "For sampling, analysis, or result questions, contact an appropriately certified drinking-water laboratory.",
                             "For orders, refunds, kit fulfillment, or laboratory status, contact the external seller shown at checkout."
                     )
+            ),
+            page(
+                    "terms",
+                    "Terms Of Use",
+                    "Water Verdict Terms Of Use",
+                    "Read the terms that apply to the Water Verdict website, private-well test finder, MCP app, and external partner links.",
+                    "Terms of use",
+                    "By using Water Verdict, you agree to use it as educational testing decision support and not as emergency, medical, legal, laboratory, or regulatory advice.",
+                    "These terms cover the public website and the MCP-backed app distributed through an OpenAI plugin.",
+                    "2026-07-10",
+                    section(
+                            "Permitted use and product limits",
+                            "Water Verdict helps users choose a private-well testing scope from limited situation inputs.",
+                            "You must not rely on a result as proof that water is safe, compliant, or suitable for a particular person.",
+                            "Use certified laboratories and applicable state or local authorities for sampling, analysis, transactions, and urgent contamination events.",
+                            "Do not submit credentials, payment data, government identifiers, medical records, lab reports, or other restricted or sensitive information."
+                    ),
+                    section(
+                            "External resources and purchases",
+                            "Results may link to government resources, certified-laboratory directories, or an optional physical test kit sold by a third party.",
+                            "External sites control their own content, availability, checkout, fulfillment, refunds, testing, and privacy practices.",
+                            "Water Verdict may earn a commission from a clearly disclosed eligible physical-kit link, but that relationship does not change the testing logic.",
+                            "A partner link is optional and does not create a laboratory, professional-services, or sales contract with Water Verdict."
+                    ),
+                    section(
+                            "Availability, warranties, and contact",
+                            "The service is provided as available and may change, pause, or remove unsupported functionality.",
+                            "To the extent permitted by law, Water Verdict disclaims implied warranties and is not liable for decisions made in place of certified testing or official guidance.",
+                            "You remain responsible for checking the recommendation against current local requirements and qualified professional advice.",
+                            "Questions about these terms can be sent to support@waterverdict.com."
+                    )
             )
     );
 

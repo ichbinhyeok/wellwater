@@ -336,5 +336,10 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How This Site Turns Well-Water Clues Into Next Steps")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/trust/methodology\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))));
+
+        mockMvc.perform(get("/trust/terms"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict Terms Of Use")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("support@waterverdict.com")));
     }
 }

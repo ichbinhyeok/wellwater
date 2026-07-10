@@ -33,14 +33,14 @@ public class WellTestMcpAdapter {
         McpSchema.Tool tool = McpSchema.Tool.builder()
                 .name(TOOL_NAME)
                 .title("Recommend a private-well test plan")
-                .description("Builds a focused U.S. private-well testing plan from the user's reason for testing, visible water clues, nearby risk context, optional state, existing treatment, and use scope. Use only when the user wants to decide what to test before buying treatment or a water test. It does not interpret lab results, diagnose illness, or guarantee legal compliance.")
+                .description("Builds a focused U.S. private-well testing plan from the user's reason for testing, visible water clues, nearby risk context, optional state, existing treatment, and use scope. Use only when the user wants to decide what to test before buying treatment or a water test. It does not interpret lab results, diagnose illness, or guarantee legal compliance. Each call records only a disclosed non-identifying aggregate outcome, result category, partner eligibility, and latency metric; raw inputs and user identifiers are not stored.")
                 .inputSchema(inputSchema())
                 .outputSchema(outputSchema())
                 .annotations(new McpSchema.ToolAnnotations(
                         "Recommend a private-well test plan",
-                        true,
                         false,
-                        true,
+                        false,
+                        false,
                         false,
                         false
                 ))

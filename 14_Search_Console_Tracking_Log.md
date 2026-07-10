@@ -1430,8 +1430,8 @@ Result:
 
 - stop treating another observation period as the strategy
 - keep the private-well decision engine and narrow test-selection wedge
-- replace publisher-first acquisition with tool-first web and ChatGPT app distribution
-- freeze the existing pSEO inventory during the app test instead of expanding or immediately deleting it
+- replace publisher-first acquisition with tool-first web and OpenAI plugin distribution
+- freeze the existing pSEO inventory during the plugin test instead of expanding or immediately deleting it
 - permit only automated, safety-gated physical test-kit affiliate routing
 
 ### Changes Shipped
@@ -1460,12 +1460,12 @@ Result:
 
 - this is a distribution-model pivot, not another page-level SEO experiment
 - the site remains broad through engine inputs, result families, official state routes, and ChatGPT conversations
-- no new SEO content, outbound, lead handling, or manual interpretation work is authorized during the 90-day app test
-- the KPI clock starts only after public ChatGPT app approval
+- no new SEO content, outbound, lead handling, or manual interpretation work is authorized during the 90-day plugin test
+- the KPI clock starts only after the approved plugin is publicly published
 
 ### Next Check
 
-- approval date: add after OpenAI directory approval
+- publication date: add after OpenAI plugin approval and publication
 - Day 30: distribution sanity and failure-rate gate
 - Day 60: utility and partner-intent gate
 - Day 90: keep, iterate once, or stop according to `19_Automated_Distribution_Pivot_2026-07-10.md`

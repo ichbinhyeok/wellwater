@@ -51,7 +51,8 @@ class McpAppIntegrationTest {
                 """);
         assertEquals(200, tools.getStatusCode().value());
         assertTrue(tools.getBody().contains("recommend_private_well_test_plan"));
-        assertTrue(tools.getBody().contains("readOnlyHint"));
+        assertTrue(tools.getBody().contains("\"readOnlyHint\":false"));
+        assertTrue(tools.getBody().contains("\"idempotentHint\":false"));
         assertTrue(tools.getBody().contains("ui://widget/well-test-plan.html"));
 
         ResponseEntity<String> call = post("""

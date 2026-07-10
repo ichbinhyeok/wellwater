@@ -2,7 +2,7 @@
 
 ## Decision
 
-Water Verdict is no longer operated as an SEO publisher with a tool attached. It is an automated private-well test-selection product distributed first through the web tool and the ChatGPT app directory.
+Water Verdict is no longer operated as an SEO publisher with a tool attached. It is an automated private-well test-selection product distributed first through the web tool and the universal OpenAI plugin directory.
 
 The wedge stays narrow: choose a private-well test panel before treatment or test-kit purchase. The reachable surface stays broad through structured reasons, signals, risk contexts, state resources, and ChatGPT conversations. Broadness comes from the engine's inputs and outputs, not from publishing more near-duplicate pages.
 
@@ -37,7 +37,7 @@ Supported outputs:
 - optional physical-kit offer when eligible
 
 Explicitly out of scope:
-- lab-result interpretation in the ChatGPT app
+- lab-result interpretation in the MCP app inside the plugin
 - diagnosis, medical advice, legal clearance, or emergency response
 - accounts, saved app results, direct payment, lead capture, or manual consulting
 - names, email addresses, street addresses, medical histories, and uploaded reports
@@ -66,7 +66,7 @@ Primary counters:
 - result-family mix
 - average completion latency
 
-The 90-day clock begins on the date the ChatGPT app is publicly approved, not on the code deployment date.
+The 90-day clock begins on the date the approved plugin is publicly published, not on the code deployment or approval date.
 
 ## 30 / 60 / 90 Day Gates
 
@@ -100,7 +100,7 @@ Revenue confirmation remains in the partner's affiliate reporting because Water 
 
 ## Search Surface Policy
 
-During the 90-day app test:
+During the 90-day plugin test:
 - freeze the current sitemap inventory
 - publish no new pSEO pages
 - do not perform routine CTR-title or internal-link work
@@ -119,8 +119,8 @@ These steps cannot be automated from this repository, but they are one-time setu
 2. Apply to the Tap Score affiliate program and set the approved Essential and Advanced product URLs in GitHub Secrets.
 3. Configure `support@waterverdict.com` forwarding or a mailbox.
 4. Set Cloudflare SSL/TLS to `Full (strict)` and confirm the origin certificate is valid.
-5. Create the OpenAI organization/app listing, set the domain challenge token, verify `https://waterverdict.com/mcp`, and submit the app for directory review.
-6. Record the public approval date in `14_Search_Console_Tracking_Log.md`; that date starts the KPI clock.
+5. Verify the publisher identity, create a `With MCP` plugin draft, set the domain challenge token, scan `https://waterverdict.com/mcp`, and submit the plugin for review.
+6. Publish the approved plugin, then record its public publication date in `14_Search_Console_Tracking_Log.md`; that date starts the KPI clock.
 
 ## Automated Operations
 

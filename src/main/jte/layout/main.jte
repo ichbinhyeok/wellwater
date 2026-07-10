@@ -884,6 +884,7 @@
             <a href="/trust/privacy-and-data-handling">Privacy and data</a>
             <a href="/trust/commercial-disclosure">Commercial disclosure</a>
             <a href="/trust/support">Support</a>
+            <a href="/trust/terms">Terms</a>
         </nav>
     </footer>
 </div>

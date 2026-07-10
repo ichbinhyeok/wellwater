@@ -112,6 +112,7 @@ class PageControllerTest {
         String xml = controller.sitemap();
         assertTrue(xml.contains("/well-water/"));
         assertTrue(xml.contains("/trust/methodology"));
+        assertTrue(xml.contains("/trust/terms"));
         assertTrue(xml.contains("/well-water/new-jersey-pwta-private-well-testing"));
         assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
         assertTrue(xml.contains("/well-water/hardness"));

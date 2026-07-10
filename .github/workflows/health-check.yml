@@ -27,3 +27,15 @@ jobs:
             --header 'Accept: application/json, text/event-stream' \
             --data '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}')"
           printf '%s' "${response}" | jq -e '.result.tools | any(.name == "recommend_private_well_test_plan")'
+
+      - name: Verify protected metric store
+        shell: bash
+        env:
+          APP_ADMIN_USERNAME: ${{ secrets.APP_ADMIN_USERNAME }}
+          APP_ADMIN_PASSWORD: ${{ secrets.APP_ADMIN_PASSWORD }}
+        run: |
+          test -n "${APP_ADMIN_USERNAME}" && test -n "${APP_ADMIN_PASSWORD}"
+          curl --fail --silent --show-error \
+            --user "${APP_ADMIN_USERNAME}:${APP_ADMIN_PASSWORD}" \
+            https://waterverdict.com/admin/pivot-metrics \
+            | jq -e 'has("completions") and has("failures") and has("completionsByChannel")' >/dev/null

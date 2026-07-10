@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1.7
 
-# Build and run on Java 21 to match the current Gradle toolchain and class target.
-FROM bellsoft/liberica-openjdk-alpine:21 AS build
+# Java bytecode is platform-neutral, so compile on the native GitHub runner
+# instead of emulating ARM64. The final image still targets the requested platform.
+FROM --platform=$BUILDPLATFORM bellsoft/liberica-openjdk-alpine:21 AS build
 
 WORKDIR /app
 
