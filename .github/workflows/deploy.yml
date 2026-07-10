@@ -138,6 +138,7 @@ jobs:
           APP_TAP_SCORE_ESSENTIAL_URL: ${{ secrets.APP_TAP_SCORE_ESSENTIAL_URL }}
           APP_TAP_SCORE_ADVANCED_URL: ${{ secrets.APP_TAP_SCORE_ADVANCED_URL }}
           APP_OPENAI_DOMAIN_CHALLENGE_TOKEN: ${{ secrets.APP_OPENAI_DOMAIN_CHALLENGE_TOKEN }}
+          APP_PIVOT_EXPERIMENT_START_DATE: ${{ secrets.APP_PIVOT_EXPERIMENT_START_DATE }}
           APP_SUPPORT_EMAIL: ${{ secrets.APP_SUPPORT_EMAIL }}
         run: |
           {
@@ -148,6 +149,7 @@ jobs:
             printf 'APP_TAP_SCORE_ESSENTIAL_URL=%s\n' "${APP_TAP_SCORE_ESSENTIAL_URL}"
             printf 'APP_TAP_SCORE_ADVANCED_URL=%s\n' "${APP_TAP_SCORE_ADVANCED_URL}"
             printf 'APP_OPENAI_DOMAIN_CHALLENGE_TOKEN=%s\n' "${APP_OPENAI_DOMAIN_CHALLENGE_TOKEN}"
+            printf 'APP_PIVOT_EXPERIMENT_START_DATE=%s\n' "${APP_PIVOT_EXPERIMENT_START_DATE}"
             printf 'APP_SUPPORT_EMAIL=%s\n' "${APP_SUPPORT_EMAIL:-support@waterverdict.com}"
           } > /tmp/waterverdict.env
           chmod 600 /tmp/waterverdict.env
@@ -178,6 +180,7 @@ jobs:
                 APP_TAP_SCORE_ESSENTIAL_URL: ${APP_TAP_SCORE_ESSENTIAL_URL}
                 APP_TAP_SCORE_ADVANCED_URL: ${APP_TAP_SCORE_ADVANCED_URL}
                 APP_OPENAI_DOMAIN_CHALLENGE_TOKEN: ${APP_OPENAI_DOMAIN_CHALLENGE_TOKEN}
+                APP_PIVOT_EXPERIMENT_START_DATE: ${APP_PIVOT_EXPERIMENT_START_DATE}
                 APP_SUPPORT_EMAIL: ${APP_SUPPORT_EMAIL}
               volumes:
                 - ./data:/app/data

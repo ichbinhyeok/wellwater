@@ -1,6 +1,6 @@
 # Water Verdict
 
-Automated private-well test finder for web and OpenAI plugin distribution.
+Automated private-well test finder with a first-party web surface and a bounded OpenAI distribution experiment.
 
 ## Current Product Shape
 
@@ -16,7 +16,7 @@ Current tool surface:
 - web entry at `/#test-plan`
 - MCP endpoint at `POST /mcp`
 - one MCP tool for the OpenAI plugin: `recommend_private_well_test_plan`
-- MCP App widget resource at `ui://widget/well-test-plan.html`
+- MCP App widget resource at `ui://widget/well-test-plan-v2.html`
 - official guidance and certified-lab links in every successful result
 - legacy result-first flows remain in the codebase but are not promoted
 
@@ -24,7 +24,7 @@ Current commercial surface:
 - optional allowlisted Tap Score physical-kit links for eligible routine paths
 - no offer on urgent, home-purchase, known-contamination, flood, wildfire, PFAS, fuel, or radionuclide paths
 - no new lead capture, account, direct payment, or manual consulting flow
-- aggregate pivot metrics at the credential-protected `/admin/pivot-metrics`
+- aggregate completion, official-resource, certified-lab, and partner metrics at the credential-protected `/admin/pivot-metrics`
 
 ## Product Positioning
 
@@ -74,6 +74,7 @@ Optional launch variables:
 - `APP_TAP_SCORE_ESSENTIAL_URL`
 - `APP_TAP_SCORE_ADVANCED_URL`
 - `APP_OPENAI_DOMAIN_CHALLENGE_TOKEN`
+- `APP_PIVOT_EXPERIMENT_START_DATE` in `YYYY-MM-DD` format after public plugin publication
 - `APP_SUPPORT_EMAIL`
 
 Operational endpoints:

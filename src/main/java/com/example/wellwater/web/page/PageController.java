@@ -178,6 +178,7 @@ public class PageController {
                 Disallow: /tool/
                 Disallow: /mcp
                 Disallow: /partner/
+                Disallow: /out/
 
                 Sitemap: %s/sitemap.xml
                 """.formatted(baseUrl);

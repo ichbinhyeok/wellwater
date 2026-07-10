@@ -44,7 +44,7 @@ class McpAppIntegrationTest {
                 """);
         assertEquals(200, initialize.getStatusCode().value());
         assertNotNull(initialize.getBody());
-        assertTrue(initialize.getBody().contains("Water Verdict: Well Test Finder"));
+        assertTrue(initialize.getBody().contains("Water Verdict: Private Well Test Finder"));
 
         ResponseEntity<String> tools = post("""
                 {"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}
@@ -53,7 +53,9 @@ class McpAppIntegrationTest {
         assertTrue(tools.getBody().contains("recommend_private_well_test_plan"));
         assertTrue(tools.getBody().contains("\"readOnlyHint\":false"));
         assertTrue(tools.getBody().contains("\"idempotentHint\":false"));
-        assertTrue(tools.getBody().contains("ui://widget/well-test-plan.html"));
+        assertTrue(tools.getBody().contains("ui://widget/well-test-plan-v2.html"));
+        assertTrue(tools.getBody().contains("Use this when a U.S. private-well owner asks"));
+        assertTrue(tools.getBody().contains("openai/toolInvocation/invoking"));
 
         ResponseEntity<String> call = post("""
                 {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"recommend_private_well_test_plan","arguments":{"reason":"annual","signals":["no_obvious_issue"],"risk_contexts":[],"state_code":"NH","existing_treatment":"none","use_scope":"drinking_only"}}}
@@ -61,19 +63,25 @@ class McpAppIntegrationTest {
         assertEquals(200, call.getStatusCode().value());
         assertTrue(call.getBody().contains("structuredContent"));
         assertTrue(call.getBody().contains("certified baseline well-water panel"));
-        assertTrue(call.getBody().contains("partner_offer"));
+        assertFalse(call.getBody().contains("\"partner_offer\""));
+        assertFalse(call.getBody().contains("physical test kit"));
+        assertTrue(call.getBody().contains("next_steps"));
+        assertTrue(call.getBody().contains("avoid_for_now"));
+        assertTrue(call.getBody().contains("/out/resource/certified_lab/"));
         assertFalse(call.getBody().contains("session_id"));
     }
 
     @Test
     void exposesTheMcpAppWidgetResource() {
         ResponseEntity<String> resource = post("""
-                {"jsonrpc":"2.0","id":4,"method":"resources/read","params":{"uri":"ui://widget/well-test-plan.html"}}
+                {"jsonrpc":"2.0","id":4,"method":"resources/read","params":{"uri":"ui://widget/well-test-plan-v2.html"}}
                 """);
 
         assertEquals(200, resource.getStatusCode().value());
         assertTrue(resource.getBody().contains("text/html;profile=mcp-app"));
         assertTrue(resource.getBody().contains("Recommended panel"));
+        assertTrue(resource.getBody().contains("Do this first"));
+        assertTrue(resource.getBody().contains("openExternal"));
         assertTrue(resource.getBody().contains("ui/initialize"));
     }
 

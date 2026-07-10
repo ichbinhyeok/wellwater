@@ -38,4 +38,4 @@ jobs:
           curl --fail --silent --show-error \
             --user "${APP_ADMIN_USERNAME}:${APP_ADMIN_PASSWORD}" \
             https://waterverdict.com/admin/pivot-metrics \
-            | jq -e 'has("completions") and has("failures") and has("completionsByChannel")' >/dev/null
+            | jq -e 'has("experimentStartDate") and has("chatgptCompletions") and has("chatgptFailureRatePct") and has("resourceClicksByType")' >/dev/null

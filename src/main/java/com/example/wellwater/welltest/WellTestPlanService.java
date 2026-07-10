@@ -20,7 +20,7 @@ import java.util.Set;
 @Service
 public class WellTestPlanService {
 
-    public static final String PLAN_VERSION = "well-test-plan-2026-07-10-v1";
+    public static final String PLAN_VERSION = "well-test-plan-2026-07-10-v2";
     private static final String DISCLOSURE = "This is testing decision support, not a safety guarantee, legal opinion, or substitute for a certified laboratory.";
     private static final Set<String> ALLOWED_REASONS = Set.of(
             "annual", "home_purchase", "after_flood", "after_heavy_rain", "after_repair",
@@ -72,10 +72,13 @@ public class WellTestPlanService {
                 verdict,
                 urgency,
                 new ArrayList<>(panel.values()),
+                nextSteps(normalized, urgency),
+                avoidForNow(normalized, urgency, family),
                 reasons,
                 new PlanResourceLink(guidanceLabel(stateResource), stateResource.localGuidanceUrl()),
                 new PlanResourceLink(labLabel(stateResource), stateResource.certifiedLabUrl()),
                 offer,
+                commerceNote(normalized, urgency, offer),
                 DISCLOSURE,
                 PLAN_VERSION,
                 family
@@ -90,8 +93,14 @@ public class WellTestPlanService {
         if (!ALLOWED_REASONS.contains(reason)) {
             throw new IllegalArgumentException("Unsupported reason.");
         }
-        List<String> signals = normalizedList(request.signals(), ALLOWED_SIGNALS, "signal");
-        List<String> risks = normalizedList(request.riskContexts(), ALLOWED_RISKS, "risk context");
+        List<String> signals = removePlaceholderWhenSpecific(
+                normalizedList(request.signals(), ALLOWED_SIGNALS, "signal"),
+                "no_obvious_issue"
+        );
+        List<String> risks = removePlaceholderWhenSpecific(
+                normalizedList(request.riskContexts(), ALLOWED_RISKS, "risk context"),
+                "unknown"
+        );
         String stateCode = normalizeState(request.stateCode());
         String treatment = optionalToken(request.existingTreatment(), Set.of("none", "ro", "uv", "softener", "iron_filter", "carbon", "sediment", "unknown"), "existing treatment");
         String useScope = optionalToken(request.useScope(), Set.of("drinking_only", "whole_house", "both", "unknown"), "use scope");
@@ -233,6 +242,41 @@ public class WellTestPlanService {
         };
     }
 
+    private List<String> nextSteps(NormalizedRequest request, String urgency) {
+        if (urgency.equals("immediate")) {
+            return List.of(
+                    "Use an alternate source for drinking and cooking now.",
+                    "Review the official response guidance for the event or contamination context.",
+                    "Contact a certified drinking-water laboratory before collecting a sample."
+            );
+        }
+        if (request.reason().equals("home_purchase")) {
+            return List.of(
+                    "Confirm the state's property-transfer testing requirements before closing.",
+                    "Ask a certified laboratory for the transaction panel and sampling protocol.",
+                    "Use the certified report, not a screening kit, for the closing decision."
+            );
+        }
+        return List.of(
+                "Send this panel list to a certified drinking-water laboratory.",
+                "Get the laboratory's containers and sampling instructions before collecting water.",
+                "Use the certified results before choosing treatment or expanding the panel."
+        );
+    }
+
+    private String avoidForNow(NormalizedRequest request, String urgency, String family) {
+        if (urgency.equals("immediate")) {
+            return "Do not keep drinking the water or rely on a home kit while the urgent route is unresolved.";
+        }
+        if (request.reason().equals("home_purchase")) {
+            return "Do not treat a mail-in screening kit as proof that property-transfer requirements are satisfied.";
+        }
+        if (family.equals("certified_urgent")) {
+            return "Do not choose treatment from a smell, taste, stain, or nearby risk alone.";
+        }
+        return "Do not buy treatment before the recommended panel confirms what is actually present.";
+    }
+
     private List<String> reasons(NormalizedRequest request, DecisionResult engineResult, StateResource stateResource) {
         LinkedHashSet<String> reasons = new LinkedHashSet<>();
         if (request.reason().equals("home_purchase")) {
@@ -260,12 +304,10 @@ public class WellTestPlanService {
     }
 
     private Optional<PartnerOffer> partnerOffer(NormalizedRequest request, String urgency, String channel) {
-        if (urgency.equals("immediate")
-                || request.reason().equals("home_purchase")
-                || request.reason().equals("known_contamination")
-                || request.reason().equals("after_flood")
-                || request.reason().equals("after_wildfire")
-                || request.riskContexts().stream().anyMatch(SPECIALIZED_RISKS::contains)) {
+        if ("chatgpt".equalsIgnoreCase(channel)) {
+            return Optional.empty();
+        }
+        if (commerceSuppressed(request, urgency)) {
             return Optional.empty();
         }
         if (request.riskContexts().stream().anyMatch(EXPANDED_RISKS::contains)) {
@@ -274,6 +316,25 @@ public class WellTestPlanService {
         }
         return partnerCatalogService.offer("essential", channel,
                 "Matches a routine private-well baseline when no specialized or transaction-specific method is required.");
+    }
+
+    private String commerceNote(NormalizedRequest request, String urgency, PartnerOffer offer) {
+        if (offer != null) {
+            return "The optional physical kit is shown only after the testing scope is selected; the certified-lab path remains available.";
+        }
+        if (commerceSuppressed(request, urgency)) {
+            return "No physical kit is shown because this route needs urgent, transaction-specific, or specialized certified testing.";
+        }
+        return "No partner kit is currently available for this route; use the certified-laboratory path.";
+    }
+
+    private boolean commerceSuppressed(NormalizedRequest request, String urgency) {
+        return urgency.equals("immediate")
+                || request.reason().equals("home_purchase")
+                || request.reason().equals("known_contamination")
+                || request.reason().equals("after_flood")
+                || request.reason().equals("after_wildfire")
+                || request.riskContexts().stream().anyMatch(SPECIALIZED_RISKS::contains);
     }
 
     private List<String> supportingSignals(NormalizedRequest request) {
@@ -340,6 +401,13 @@ public class WellTestPlanService {
             normalized.add(token);
         }
         return List.copyOf(normalized);
+    }
+
+    private List<String> removePlaceholderWhenSpecific(List<String> values, String placeholder) {
+        if (values.size() <= 1 || !values.contains(placeholder)) {
+            return values;
+        }
+        return values.stream().filter(value -> !placeholder.equals(value)).toList();
     }
 
     private String optionalToken(String value, Set<String> allowed, String label) {

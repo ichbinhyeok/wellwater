@@ -2,7 +2,7 @@
 
 ## Decision
 
-Water Verdict is no longer operated as an SEO publisher with a tool attached. It is an automated private-well test-selection product distributed first through the web tool and the universal OpenAI plugin directory.
+Water Verdict is no longer operated as an SEO publisher with a tool attached. It is an automated private-well test-selection product with a first-party web surface and a capped 90-day OpenAI distribution experiment.
 
 The wedge stays narrow: choose a private-well test panel before treatment or test-kit purchase. The reachable surface stays broad through structured reasons, signals, risk contexts, state resources, and ChatGPT conversations. Broadness comes from the engine's inputs and outputs, not from publishing more near-duplicate pages.
 
@@ -16,6 +16,8 @@ The Search Console evidence did not support another cycle of page-level CTR and 
 - the sitemap exposes about `75` URLs while the submitted-page report covered `74` and showed no dependable indexed growth signal at review time
 
 This does not prove that the domain is permanently dead. It does prove that organic search is not earning more development investment under the current low-touch operating constraint.
+
+The OpenAI channel is not assumed to replace search. Public evidence shows strong platform reach and good fit for practical guidance, but no dependable install, invocation, or revenue benchmark for independent ChatGPT apps. The plugin is therefore a low-cost falsification test, not the product identity or a proven acquisition engine. See `21_ChatGPT_App_Distribution_Research_2026-07-10.md`.
 
 ## V1 Product Contract
 
@@ -48,6 +50,8 @@ Only configured HTTPS URLs on `mytapscore.com` or `www.mytapscore.com` can recei
 
 Offers are suppressed for immediate escalation and for home purchase, known contamination, flood, wildfire, PFAS, fuel, and radionuclide paths. Official resources and certified-lab routes are always shown independently of commerce.
 
+The initial ChatGPT tool schema and widget contain no commerce. Current OpenAI guidance describes generally available external checkout on the developer's own domain, while Water Verdict hands off to a third-party merchant. Web commerce remains independently configurable, but any future ChatGPT commerce requires explicit policy confirmation, a code change, and review before release.
+
 ## Measurement Contract
 
 The application writes only these aggregate fields:
@@ -61,12 +65,14 @@ No raw tool answers, account ID, session ID, IP address, contact detail, or prec
 Primary counters:
 - completed plans by `web` and `chatgpt`
 - failed tool calls
-- partner-eligible completions
-- partner clicks and successful redirects
+- official-guidance and certified-lab clicks
+- web partner-eligible completions and redirects, outside the initial ChatGPT KPI
 - result-family mix
 - average completion latency
 
-The 90-day clock begins on the date the approved plugin is publicly published, not on the code deployment or approval date.
+The 90-day clock begins on the date the approved plugin is publicly published, not on the code deployment or approval date. Set that date as `APP_PIVOT_EXPERIMENT_START_DATE=YYYY-MM-DD`; the protected summary excludes review, QA, and pre-publication rows before that date.
+
+`chatgptExternalActionRatePct` is an action-to-completion ratio, not a unique-user conversion rate. No user or session identifier is retained, so repeated actions can make the ratio exceed `100%`.
 
 ## 30 / 60 / 90 Day Gates
 
@@ -84,19 +90,19 @@ If ChatGPT completions are below `30`, fix listing clarity or tool invocation me
 
 Continue only if all are true:
 - at least `100` cumulative ChatGPT completions
-- at least `20` partner-eligible completions
-- partner clicks are at least `5%` of partner-eligible completions
+- ChatGPT external-action ratio of at least `10%` across official guidance and certified-lab paths
 - tool failure rate remains below `5%`
 
 If usage passes but clicks fail, revise offer fit and result presentation once. Do not widen the product scope.
 
 ### Day 90 - Keep, Iterate, Or Stop
 
-- Scale maintenance-only operation when completions are at least `250`, eligible click-through is at least `5%`, and at least `10` partner redirects occurred.
-- Run one final narrow iteration when completions are `100-249` and safety/quality gates pass.
+- Keep the automatic distribution channel when completions are at least `250`, the ChatGPT external-action ratio is at least `10%`, and safety/quality gates pass.
+- Keep the app in maintenance-only mode when utility passes; the initial experiment does not validate monetization.
+- Run one final narrow metadata or result-presentation iteration when completions are `100-249` and safety/quality gates pass.
 - Stop active investment when completions are below `100`, or when failure/safety gates repeatedly fail.
 
-Revenue confirmation remains in the partner's affiliate reporting because Water Verdict does not control checkout. Lack of an affiliate conversion API must not cause user-level tracking to be added.
+These thresholds are minimum pulse checks, not statistically conclusive proof of a durable business. They validate only whether automatic ChatGPT distribution produces useful actions. They do not validate a revenue model.
 
 ## Search Surface Policy
 
@@ -120,7 +126,9 @@ These steps cannot be automated from this repository, but they are one-time setu
 3. Configure `support@waterverdict.com` forwarding or a mailbox.
 4. Set Cloudflare SSL/TLS to `Full (strict)` and confirm the origin certificate is valid.
 5. Verify the publisher identity, create a `With MCP` plugin draft, set the domain challenge token, scan `https://waterverdict.com/mcp`, and submit the plugin for review.
-6. Publish the approved plugin, then record its public publication date in `14_Search_Console_Tracking_Log.md`; that date starts the KPI clock.
+6. Run the direct, indirect, and negative discovery set in `21_ChatGPT_App_Distribution_Research_2026-07-10.md` on ChatGPT web and mobile.
+7. Publish the approved plugin, set `APP_PIVOT_EXPERIMENT_START_DATE`, and record the date in `14_Search_Console_Tracking_Log.md`; that date starts the KPI clock.
+8. Do not add ChatGPT commerce without OpenAI policy confirmation and a new review of the changed app surface.
 
 ## Automated Operations
 

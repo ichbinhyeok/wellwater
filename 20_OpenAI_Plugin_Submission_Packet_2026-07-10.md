@@ -19,8 +19,8 @@ Official references:
 
 ## Listing Copy
 
-- plugin name: `Water Verdict: Well Test Finder`
-- short description: `Build a focused private-well testing panel before buying treatment or a test kit.`
+- plugin name: `Water Verdict: Private Well Test Finder`
+- short description: `Turn an annual check, well-water clue, flood, or home purchase into a focused certified-lab testing panel.`
 - website: `https://waterverdict.com/`
 - support: `https://waterverdict.com/trust/support`
 - privacy: `https://waterverdict.com/trust/privacy-and-data-handling`
@@ -29,12 +29,12 @@ Official references:
 
 Long description:
 
-> Water Verdict turns a reason for testing, visible water clues, nearby risk context, and optional U.S. state context into a focused private-well testing panel. Every result explains why each item belongs, provides official guidance and a certified-laboratory path, and suppresses commerce when the situation needs urgent or higher-evidence handling. It does not interpret lab reports, diagnose illness, or replace certified testing.
+> Water Verdict helps U.S. private-well owners decide what to test before choosing treatment. It turns annual checks, home purchases, floods, repairs, odors, tastes, stains, and nearby contamination risks into an action-first panel with an urgency level, three next steps, official guidance, and a certified-laboratory path. The app contains no shopping or affiliate links. It does not interpret lab reports, diagnose illness, size treatment, or replace certified testing.
 
 ## Tool Contract
 
 - tool: `recommend_private_well_test_plan`
-- custom UI: `ui://widget/well-test-plan.html`
+- custom UI: `ui://widget/well-test-plan-v2.html`
 - `readOnlyHint`: `false`
 - `destructiveHint`: `false`
 - `openWorldHint`: `false`
@@ -42,9 +42,17 @@ Long description:
 
 Annotation justification:
 
-> The tool writes a disclosed aggregate operational metric containing only date, event, channel, result category, optional partner product code, outcome, and latency. It does not store raw inputs, conversation text, identifiers, sessions, IP addresses, precise locations, or reports, so it is non-destructive and cannot change public internet state. Repeated calls increment aggregate metrics, so the tool is not read-only or idempotent.
+> The tool writes a disclosed aggregate operational metric containing only date, event, channel, result category, outcome, and latency. The shared CSV schema has an optional partner-product column used by the separate web surface, but this ChatGPT tool always leaves it blank. It does not store raw inputs, conversation text, identifiers, sessions, IP addresses, precise locations, or reports, so it is non-destructive and cannot change public internet state. Repeated calls increment aggregate metrics, so the tool is not read-only or idempotent.
 
-The UI CSP allows no external fetch connections and allows first-party Water Verdict resources only. External official and physical-product URLs are ordinary user-selected navigation links, not embedded checkout or third-party frames.
+The UI CSP allows no external fetch connections and allows first-party Water Verdict resources only. Official guidance and certified-lab actions first pass through allowlisted Water Verdict redirects for aggregate click counting, then open as user-selected external navigation. There is no embedded checkout or third-party frame.
+
+Initial review contract:
+- no product, shopping, checkout, or affiliate field exists in the MCP output schema
+- no product or affiliate UI exists in the widget
+- web commerce is outside the app and does not change the app review behavior
+- any future ChatGPT commerce requires policy confirmation, an updated schema and widget, and review before release
+
+Discovery metadata deliberately covers direct and indirect private-well intent: annual testing, home purchase, flood or heavy rain, repair, wildfire, new wells, odor, taste, stains, cloudiness, scale, agriculture, septic, industrial, mining, fuel, PFAS, and radionuclide context. A general private-well testing question maps to `reason=other` without forcing optional clarification.
 
 ## Starter Prompts
 
@@ -105,7 +113,7 @@ The UI CSP allows no external fetch connections and allows first-party Water Ver
 
 ## Release Notes
 
-> Initial submission of Water Verdict: Well Test Finder. The plugin exposes one MCP tool and one compact result widget for selecting a U.S. private-well testing panel. It requires no account, stores no raw inputs or identifiers, provides official and certified-lab paths, and limits optional commerce to eligible physical test kits after safety gates.
+> Initial submission of Water Verdict: Private Well Test Finder. The plugin exposes one MCP tool and one action-first result widget for selecting a U.S. private-well testing panel. It requires no account, stores no raw inputs or identifiers, provides official and certified-lab paths, and contains no shopping or affiliate surface.
 
 ## Portal-Only Blockers
 
@@ -116,5 +124,8 @@ The UI CSP allows no external fetch connections and allows first-party Water Ver
 - scan tools and confirm the deployed annotation values
 - capture production screenshots in the required portal dimensions
 - rerun all eight cases in ChatGPT web and mobile
+- pass the extended discovery evaluation in `21_ChatGPT_App_Distribution_Research_2026-07-10.md`
 - choose supported countries and complete policy attestations
 - submit for review, then publish after approval
+- set the publication date in `APP_PIVOT_EXPERIMENT_START_DATE` so review and QA calls do not enter the 90-day KPI window
+- confirm the scanned output schema contains no commerce field

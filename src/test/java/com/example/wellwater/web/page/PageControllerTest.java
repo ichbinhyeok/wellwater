@@ -136,6 +136,7 @@ class PageControllerTest {
         assertTrue(robots.contains("Disallow: /tool/"));
         assertTrue(robots.contains("Disallow: /mcp"));
         assertTrue(robots.contains("Disallow: /partner/"));
+        assertTrue(robots.contains("Disallow: /out/"));
         assertTrue(robots.contains("Sitemap: https://example.com/sitemap.xml"));
     }
 

@@ -17,6 +17,7 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -71,15 +72,9 @@ public class McpAppConfiguration {
                 .uri(WellTestMcpAdapter.WIDGET_URI)
                 .name("well-test-plan-widget")
                 .title("Private-well test plan")
-                .description("Compact private-well testing verdict, recommended panel, official paths, and optional physical test-kit handoff.")
+                .description("Action-first private-well testing verdict with next steps, a focused panel, official guidance, and a certified-laboratory path.")
                 .mimeType(WIDGET_MIME_TYPE)
-                .meta(Map.of("ui", Map.of(
-                        "domain", "https://waterverdict.com",
-                        "csp", Map.of(
-                                "connectDomains", List.of(),
-                                "resourceDomains", List.of("https://waterverdict.com")
-                        )
-                )))
+                .meta(widgetMeta())
                 .build();
         var widget = new McpStatelessServerFeatures.SyncResourceSpecification(
                 widgetResource,
@@ -89,12 +84,33 @@ public class McpAppConfiguration {
         );
 
         return McpServer.sync(mcpTransport)
-                .serverInfo(new McpSchema.Implementation("water-verdict", "Water Verdict: Well Test Finder", "1.0.0"))
-                .instructions("Use this app only to choose a U.S. private-well testing plan before treatment or test-kit purchase. Keep commerce secondary to certified testing, official guidance, and the user's explicit context.")
+                .serverInfo(new McpSchema.Implementation("water-verdict", "Water Verdict: Private Well Test Finder", "1.1.0"))
+                .instructions("Use this app only to choose a U.S. private-well testing plan before treatment decisions. Invoke it for direct or indirect well-testing intent. When private-well ownership is clear but the reason is general, use reason 'other'; omit unknown optional fields rather than delaying the first plan. Do not invoke it for municipal water, report interpretation, diagnosis, treatment sizing, legal clearance, or shopping. The app exposes no commerce.")
                 .capabilities(McpSchema.ServerCapabilities.builder().tools(false).resources(false, false).build())
                 .tools(adapter.toolSpecification())
                 .resources(widget)
                 .build();
+    }
+
+    private Map<String, Object> widgetMeta() {
+        Map<String, Object> ui = new LinkedHashMap<>();
+        ui.put("domain", "https://waterverdict.com");
+        ui.put("prefersBorder", false);
+        ui.put("csp", Map.of(
+                "connectDomains", List.of(),
+                "resourceDomains", List.of("https://waterverdict.com")
+        ));
+
+        Map<String, Object> meta = new LinkedHashMap<>();
+        meta.put("ui", Map.copyOf(ui));
+        meta.put("openai/widgetDescription", "Shows the user's private-well verdict, first three actions, tests to request, what to avoid, official guidance, and a certified-lab path.");
+        meta.put("openai/widgetPrefersBorder", false);
+        meta.put("openai/widgetDomain", "https://waterverdict.com");
+        meta.put("openai/widgetCSP", Map.of(
+                "resource_domains", List.of("https://waterverdict.com"),
+                "redirect_domains", List.of("https://waterverdict.com")
+        ));
+        return Map.copyOf(meta);
     }
 
     private List<String> allowedHosts(String siteBaseUrl) {

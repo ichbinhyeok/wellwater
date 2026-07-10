@@ -27,7 +27,7 @@ public class PartnerRedirectController {
         String safeSource = "chatgpt".equalsIgnoreCase(source) ? "chatgpt" : ("web".equalsIgnoreCase(source) ? "web" : "tool");
         String target = partnerCatalogService.target(product).orElse("/tool/test-plan");
         String outcome = target.startsWith("https://") ? "redirect" : "unavailable";
-        pivotMetricService.record("partner_clicked", safeSource, "", product, outcome, 0L);
+        pivotMetricService.tryRecord("partner_clicked", safeSource, "", product, outcome, 0L);
         RedirectView view = new RedirectView(target);
         view.setExposeModelAttributes(false);
         return view;

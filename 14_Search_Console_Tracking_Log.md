@@ -1470,6 +1470,52 @@ Result:
 - Day 60: utility and partner-intent gate
 - Day 90: keep, iterate once, or stop according to `19_Automated_Distribution_Pivot_2026-07-10.md`
 
+## Entry: 2026-07-10 - ChatGPT Distribution Experiment Hardening
+
+### Research Read
+
+- the product pivot remains `publisher-first -> automated private-well test-selection tool`
+- the ChatGPT app is now classified as a capped distribution experiment, not the product identity or a proven replacement for search
+- official discovery depends on direct mention, directory browsing, conversation context, metadata, linking state, and past usage; listing alone does not guarantee traffic
+- public evidence supports the practical-guidance and complex-decision fit, but no dependable independent-app install or revenue benchmark was found
+- broad ChatGPT reach must not be reported as Water Verdict reach
+
+### Changes Shipped
+
+- expanded discovery metadata across direct and indirect private-well testing intents
+- mapped general private-well testing requests to `reason=other` without forcing optional clarification
+- versioned the widget URI as `ui://widget/well-test-plan-v2.html`
+- reordered the widget to verdict, first three actions, official paths, panel, avoid-now guidance, and explanation
+- added host-aware external navigation, theme adaptation, tool invocation status copy, widget description, and submission CSP metadata
+- added allowlisted aggregate tracking for official-guidance and certified-lab clicks
+- added `APP_PIVOT_EXPERIMENT_START_DATE` so review and QA calls are excluded from the KPI window
+- added ChatGPT-specific failure, external-action, and partner-intent ratios to the protected metric summary
+- removed commerce from the ChatGPT tool schema and widget; web commerce remains independently configurable and any future app commerce requires policy confirmation plus review
+- added a direct, indirect, and negative discovery evaluation set in `21_ChatGPT_App_Distribution_Research_2026-07-10.md`
+
+### Decision Gates
+
+- fewer than `100` ChatGPT completions by Day 90 means automatic distribution failed
+- `250+` completions and at least `10%` external-action ratio keep the channel in low-touch operation
+- the initial ChatGPT experiment validates automatic distribution and utility, not monetization
+- utility without revenue permits maintenance-only operation, not expansion
+- no new SEO pages, outbound, or paid acquisition may contaminate the experiment window
+
+### Current Status
+
+- implementation and local automated verification are complete
+- the experiment has not started because the plugin is not publicly published
+- publication date and `APP_PIVOT_EXPERIMENT_START_DATE` remain blank until approval and public release
+
+### Verification
+
+- `127` automated tests passed with `0` failures and `0` skips
+- `clean test bootJar` completed successfully
+- the production-profile JAR returned the v2 widget, action-first output, and tracked official/certified links
+- the scanned MCP output schema and annual result contained no commerce field
+- an allowlisted official-resource action returned `302` to the expected New Hampshire government URL and incremented only the aggregate action counter
+- desktop and `390px` mobile widget QA passed; the only browser console error was the temporary QA server's missing favicon
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

@@ -23,15 +23,28 @@ class WellTestPlanServiceTest {
 
     @Test
     void annualBaselineRoutesToEssentialKitWhenConfigured() {
-        WellTestPlanResult result = service.create(request("annual", List.of("no_obvious_issue"), List.of(), "NH"), "chatgpt");
+        WellTestPlanResult result = service.create(request("annual", List.of("no_obvious_issue"), List.of(), "NH"), "web");
 
         assertEquals("routine", result.urgency());
         assertEquals("baseline", result.resultFamily());
         assertTrue(result.hasPartnerOffer());
         assertEquals("essential", result.partnerOffer().productCode());
-        assertEquals("https://waterverdict.com/partner/tap-score/essential?source=chatgpt", result.partnerOffer().url());
+        assertEquals(3, result.nextSteps().size());
+        assertTrue(result.avoidForNow().contains("Do not buy treatment"));
+        assertTrue(result.commerceNote().contains("optional physical kit"));
+        assertEquals("https://waterverdict.com/partner/tap-score/essential?source=web", result.partnerOffer().url());
         assertTrue(result.recommendedPanel().stream().anyMatch(item -> item.name().contains("coliform")));
         assertEquals("NH private-well guidance", result.officialGuidance().label());
+    }
+
+    @Test
+    void chatgptChannelNeverReturnsCommerce() {
+        WellTestPlanResult result = service.create(
+                request("annual", List.of("no_obvious_issue"), List.of(), "NH"),
+                "chatgpt"
+        );
+
+        assertFalse(result.hasPartnerOffer());
     }
 
     @Test
