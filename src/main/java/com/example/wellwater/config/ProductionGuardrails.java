@@ -10,17 +10,11 @@ import org.springframework.stereotype.Component;
 public class ProductionGuardrails {
 
     private final String baseUrl;
-    private final String adminUsername;
-    private final String adminPassword;
 
     public ProductionGuardrails(
-            @Value("${app.site.base-url:}") String baseUrl,
-            @Value("${app.admin.username:}") String adminUsername,
-            @Value("${app.admin.password:}") String adminPassword
+            @Value("${app.site.base-url:}") String baseUrl
     ) {
         this.baseUrl = baseUrl == null ? "" : baseUrl.trim();
-        this.adminUsername = adminUsername == null ? "" : adminUsername.trim();
-        this.adminPassword = adminPassword == null ? "" : adminPassword.trim();
     }
 
     @PostConstruct
@@ -31,9 +25,6 @@ public class ProductionGuardrails {
         String normalized = baseUrl.toLowerCase();
         if (normalized.contains("localhost") || normalized.contains("127.0.0.1")) {
             throw new IllegalStateException("APP_SITE_BASE_URL must not point to localhost in production.");
-        }
-        if (adminUsername.isBlank() || adminPassword.isBlank()) {
-            throw new IllegalStateException("APP_ADMIN_USERNAME and APP_ADMIN_PASSWORD must be set in production.");
         }
     }
 }

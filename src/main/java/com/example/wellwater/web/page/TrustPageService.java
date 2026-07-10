@@ -200,64 +200,87 @@ public class TrustPageService {
             page(
                     "privacy-and-data-handling",
                     "Privacy And Data Handling",
-                    "How This Site Handles Saved Results, Follow-Up Requests, and Analytics",
-                    "Understand what this site stores when you save a result, request follow-up, or click through a decision path.",
+                    "How Water Verdict Handles Tool Inputs And Analytics",
+                    "Understand what the web and ChatGPT tools process, what is retained, and what happens after an optional partner click.",
                     "Privacy and data",
-                    "This page explains the minimum data stored by the current product and the limits of that storage model.",
-                    "A diagnostic product that stores results and follow-up requests should explain retention, visibility, and limits in plain English.",
-                    "2026-03-08",
+                    "Water Verdict is designed to build a test plan without creating an account, collecting contact details, or storing the household inputs used to produce it.",
+                    "The current tool minimizes collection by separating short-lived decision inputs from non-identifying operational counts.",
+                    "2026-07-10",
                     section(
-                            "What is stored today",
-                            "The current product stores a limited set of operational data so results can be reopened and follow-up requests can be reviewed.",
-                            "Saved results are stored as private snapshot files with a time limit instead of being published as indexable pages.",
-                            "Analytics events record route behavior such as public-page views, tool entry, result views, and CTA clicks.",
-                            "Lead requests store the contact details and page context the visitor explicitly submitted."
+                            "What the test finder processes",
+                            "The test finder processes only the options needed to build a plan, such as the reason for testing, visible clues, nearby risk context, state code, existing treatment, and intended water use.",
+                            "Tool inputs are evaluated in application memory and are not written to the pivot-metrics file.",
+                            "Do not submit names, email addresses, street addresses, medical histories, lab reports, or other sensitive personal information.",
+                            "The ChatGPT app receives tool arguments from OpenAI; OpenAI handles the surrounding conversation under its own terms and privacy controls."
                     ),
                     section(
-                            "What this storage model is for",
-                            "The point of storage is to support decision continuity, not to silently create public profiles.",
-                            "Saved results exist so a household can reopen, share, or export a private decision snapshot.",
-                            "Analytics are used to understand which clusters lead to testing, compare clicks, and follow-up demand.",
-                            "Follow-up requests exist so high-intent visitors do not hit a dead end after a result."
+                            "What is retained",
+                            "The pivot measures only aggregate operational fields needed to judge whether the automated product works.",
+                            "Recorded fields are date, event type, web or ChatGPT channel, result family, optional partner product code, outcome, and latency.",
+                            "No raw answers, account identifiers, session identifiers, IP addresses, contact details, or precise locations are written to that metric file.",
+                            "Aggregate operational metrics may be retained for up to 13 months, then deleted or reduced to longer-term totals."
                     ),
                     section(
-                            "Current limits and handling rules",
-                            "The current repo uses a lightweight storage model, so this page is intentionally explicit about its limits.",
-                            "Private result snapshots expire instead of staying available forever.",
-                            "Admin access should stay credential-protected and noindex.",
-                            "If Google Analytics or Search Console verification is configured, it should stay limited to low-sensitivity route metadata and avoid sending saved-result content, email fields, or follow-up notes into shared analytics surfaces.",
-                            "This product should avoid collecting more personal detail than is required for the follow-up or saved-result flow."
+                            "External services and legacy data",
+                            "A partner receives normal browser request data only after a visitor chooses an external affiliate link; Water Verdict does not run the partner checkout.",
+                            "Google Analytics, when enabled, is limited to public route behavior and must not receive tool answers or result content.",
+                            "Older saved-result and lead files may remain from the previous product model, but new follow-up submissions are disabled and the new test finder does not create saved snapshots.",
+                            "Administrative metric summaries remain credential-protected, noindex, and unavailable through the public tool."
                     )
             ),
             page(
                     "commercial-disclosure",
                     "Commercial Disclosure",
-                    "How Commercial Routing Works On This Site",
-                    "Read how testing referrals, compare pages, lead capture, and future affiliate routing are constrained by evidence and safety rules.",
+                    "How Optional Test-Kit Links Work On Water Verdict",
+                    "Read when a physical test-kit link may appear, when it is suppressed, and how an affiliate relationship affects the site.",
                     "Commercial disclosure",
-                    "This page explains how money can flow through the product without letting commerce outrun testing, scope, or trust.",
-                    "A well-water decision product should make the commercial model explicit because hidden incentives are a trust risk in YMYL categories.",
-                    "2026-03-08",
+                    "Water Verdict may earn a commission when a visitor buys an eligible physical test kit after following a clearly labeled partner link.",
+                    "The recommendation engine chooses the testing scope first. Affiliate availability cannot add tests, lower urgency, or override official guidance.",
+                    "2026-07-10",
                     section(
-                            "What the commercial layer is allowed to do",
-                            "Commercial routing is intentionally downstream from evidence and safety.",
-                            "Testing, interpretation, and state guidance can appear before any product or partner handoff.",
-                            "Category compare pages can be commercial bridges only when the page already explains what the category cannot solve.",
-                            "Lead capture is allowed where the page has enough intent and context to justify a follow-up."
+                            "What an affiliate link means",
+                            "The current commercial route is limited to optional Tap Score physical well-water test kits configured by the operator.",
+                            "The visitor completes any purchase, sample registration, payment, and fulfillment on the partner site.",
+                            "Water Verdict does not increase the price and does not receive the visitor's checkout or laboratory result data.",
+                            "If approved partner URLs are not configured, no commercial offer is shown."
                     ),
                     section(
-                            "What the commercial layer is not allowed to do",
-                            "Some commercial patterns are blocked on purpose because they damage trust and decision quality.",
-                            "No page should jump from one weak clue straight to a product verdict.",
-                            "No affiliate or partner path should outrank certified testing on red or low-confidence paths.",
-                            "No nuisance equipment module should be used to imply broad health protection."
+                            "When the offer is suppressed",
+                            "The engine blocks affiliate output when the situation needs a higher-evidence or urgent path.",
+                            "No offer appears for flood, wildfire, known contamination, home-purchase, PFAS, fuel, radionuclide, or immediate-escalation paths.",
+                            "Official state guidance and certified-laboratory directories remain available whether or not an affiliate relationship exists.",
+                            "No physical kit is presented as a medical diagnosis, legal clearance, or guarantee that treatment is unnecessary."
                     ),
                     section(
-                            "How to read a commercial CTA on this site",
-                            "A commercial CTA should be read as a next-step option, not as proof that the problem is fully understood.",
-                            "Internal compare pages are often the first commercial bridge because they keep claim-checks visible.",
-                            "Testing and follow-up routes can be monetized without pretending the user is already ready to buy equipment.",
-                            "If a CTA appears, the page should still state what remains unknown."
+                            "How to read the recommendation",
+                            "A kit link is an optional way to purchase the panel, not the evidence behind the panel selection.",
+                            "Users may take the same recommended panel to another appropriately certified laboratory.",
+                            "The recommendation explains why each panel item was included before presenting any commercial route.",
+                            "Questions about the recommendation or disclosure can be sent to support@waterverdict.com."
+                    )
+            ),
+            page(
+                    "support",
+                    "Support",
+                    "Water Verdict Support",
+                    "Get support for the Water Verdict private-well test finder, privacy questions, or affiliate disclosures.",
+                    "Support",
+                    "For product, privacy, or commercial-disclosure questions, email support@waterverdict.com.",
+                    "Support is asynchronous and does not provide emergency, medical, legal, or laboratory services.",
+                    "2026-07-10",
+                    section(
+                            "What support can help with",
+                            "Support covers the automated test finder and its published operating rules.",
+                            "Report a broken tool flow, inaccessible page, or incorrect official-resource link.",
+                            "Ask how aggregate metrics, ChatGPT tool inputs, or affiliate links are handled.",
+                            "Include the page URL and a short description, but do not send lab reports, medical details, account credentials, or other sensitive data."
+                    ),
+                    section(
+                            "What support cannot do",
+                            "Water Verdict does not operate a manual consulting or interpretation service.",
+                            "For urgent health or contamination concerns, use local public-health or environmental authorities.",
+                            "For sampling, analysis, or result questions, contact an appropriately certified drinking-water laboratory.",
+                            "For orders, refunds, kit fulfillment, or laboratory status, contact the external seller shown at checkout."
                     )
             )
     );

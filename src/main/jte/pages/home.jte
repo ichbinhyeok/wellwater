@@ -1,236 +1,150 @@
-@param java.util.Map<String, Long> familyCounts
-@param Integer totalPageCount
-@param java.util.List<com.example.wellwater.pseo.PseoPage> priorityPages
-@param java.util.List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages
-@param java.util.List<com.example.wellwater.web.page.TrustPage> trustPages
-@param com.example.wellwater.lead.LeadCaptureContext leadContext
-@param String leadStatus
 @param com.example.wellwater.web.page.SeoMetadata seo
-@param com.example.wellwater.web.page.PublicTrackingLinkService trackingLinks
 
-@template.layout.main(title = "Water Verdict | Private Well Testing Decisions", robots = seo.robotsDirective(), description = "Decide what to test next for a private well, especially during home purchase, state-specific testing, and suspicious result follow-up.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
-    <main class="stack">
-        <section class="hero">
-            <div class="hero-grid">
-                <div class="hero-copy">
-                    <span class="eyebrow">Private well decision tool</span>
-                    <h1>Choose your starting clue.</h1>
-                    <p class="hero-lead">Pick one input and get the next safe step before you read anything deeper. This surface should behave like a routing tool first, not a guide directory.</p>
-                    <div class="hero-actions">
-                        <a class="button-link" href="${trackingLinks.home("home_primary_cta", "/tool/result-first")}">Start With A Lab Result</a>
-                        <a class="button-link-secondary" href="${trackingLinks.home("home_secondary_cta", "/tool/symptom-first")}">I Only Have A Symptom</a>
-                    </div>
-                    <div class="chip-row" style="margin-top: 16px;">
-                        <a class="chip" href="/tool">See the public tool page</a>
-                    </div>
+@template.layout.main(title = "Water Verdict | Find The Right Private-Well Test", robots = seo.robotsDirective(), description = "Choose the focused private-well testing panel and certified lab path for an annual check, visible clue, nearby risk, flood, or home purchase.", canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
+    <main class="stack home-tool-first">
+        <section class="hero home-hero">
+            <div class="home-hero-copy">
+                <span class="eyebrow">Private-well test finder</span>
+                <h1>Find the right water test before you buy the wrong one.</h1>
+                <p class="hero-lead">Choose why you are testing, add any clues you already have, and get a focused panel plus a certified-lab path. No report, account, or email required.</p>
+                <div class="home-proof-row">
+                    <span>About 60 seconds</span>
+                    <span>U.S. private wells</span>
+                    <span>Official guidance first</span>
                 </div>
-                <aside class="hero-note">
-                    <strong>Pick one path now</strong>
-                    <p class="muted" style="color: rgba(246, 251, 249, 0.78);">You do not need to browse first. Choose the clue you already have and let the tool narrow the path.</p>
-                    <div class="hero-metrics">
-                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/result-first")}">
-                            <strong>Lab result</strong>
-                            <span>Use one report line to start.</span>
-                        </a>
-                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/symptom-first")}">
-                            <strong>Smell or stain</strong>
-                            <span>Start from what you can see or smell.</span>
-                        </a>
-                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/tool/trigger-first")}">
-                            <strong>Recent change</strong>
-                            <span>Use a flood, repair, or sudden shift.</span>
-                        </a>
-                        <a class="metric" href="${trackingLinks.home("home_hero_route", "/well-water/private-well-home-sale-testing-by-state")}">
-                            <strong>State or sale</strong>
-                            <span>Use rules and location when they change the answer.</span>
-                        </a>
-                    </div>
-                </aside>
             </div>
+            <aside class="home-hero-aside">
+                <p class="brand-kicker">One output</p>
+                <strong>What to test next</strong>
+                <p>Not another article list. The result names the panel, urgency, official source, and certified lab route.</p>
+                <a href="#test-plan">Start with one choice</a>
+            </aside>
         </section>
 
-        <section class="panel panel-accent">
+        <section id="test-plan" class="panel test-plan-panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">What happens after you start</p>
-                    <h2>Use the tool first, then read only if the first pass is not enough</h2>
+                    <p class="brand-kicker">Step 1 of 1</p>
+                    <h2>Why are you testing your well?</h2>
                 </div>
-                <p class="section-copy">The first job is not browsing. The first job is to pick the input you already have, get oriented, and only then open the longer public guide layer if something is still unclear.</p>
+                <p class="section-copy">Pick the closest reason. Everything else is optional and only changes the panel when it matters.</p>
             </div>
-            <div class="grid grid-compact">
-                <article class="card-link card-link-accent">
-                    <span class="card-kicker">Start</span>
-                    <h3>Pick the clue you already have</h3>
-                    <p class="card-meta">Lab result, symptom, recent change, or state and home-sale context.</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Orient</span>
-                    <h3>Get the next safe step</h3>
-                    <p class="card-meta">Let the tool narrow scope before treatment research gets ahead of the evidence.</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Verify</span>
-                    <h3>Check method or state context</h3>
-                    <p class="card-meta">Use the reading layer only when you need the reasoning, source trail, or a local rule check.</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Read</span>
-                    <h3>Open the longer guide if needed</h3>
-                    <p class="card-meta">Read only after the first pass tells you which branch, household, or test question still matters.</p>
-                </article>
-                <article class="card-link">
-                    <span class="card-kicker">Compare</span>
-                    <h3>Shop only after scope is clear</h3>
-                    <p class="card-meta">Compare paths and follow-up CTAs should stay downstream from verification, not replace it.</p>
-                </article>
-            </div>
-        </section>
 
-        <section class="panel">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">Guide layer</p>
-                    <h2>High-signal pages worth opening only after you start the tool</h2>
+            <form method="post" action="/tool/test-plan" class="test-plan-form">
+                <fieldset class="choice-grid reason-grid">
+                    <legend class="sr-only">Reason for testing</legend>
+                    <label class="choice-card"><input type="radio" name="reason" value="annual" checked><span><strong>Annual check</strong><small>No obvious problem</small></span></label>
+                    <label class="choice-card"><input type="radio" name="reason" value="symptom"><span><strong>Something changed</strong><small>Smell, taste, stain, or cloudiness</small></span></label>
+                    <label class="choice-card"><input type="radio" name="reason" value="home_purchase"><span><strong>Buying or selling</strong><small>Transaction and state context</small></span></label>
+                    <label class="choice-card choice-card-alert"><input type="radio" name="reason" value="after_flood"><span><strong>After a flood</strong><small>Urgent certified path</small></span></label>
+                    <label class="choice-card"><input type="radio" name="reason" value="after_heavy_rain"><span><strong>After heavy rain</strong><small>Disturbance-sensitive retest</small></span></label>
+                    <label class="choice-card"><input type="radio" name="reason" value="new_or_unused_well"><span><strong>New or unused well</strong><small>First baseline</small></span></label>
+                </fieldset>
+
+                <div class="form-split">
+                    <fieldset>
+                        <legend>Clues you can see, smell, or taste <span>optional</span></legend>
+                        <div class="check-grid">
+                            <label><input type="checkbox" name="signals" value="rotten_egg_smell"> Rotten-egg smell</label>
+                            <label><input type="checkbox" name="signals" value="metallic_taste"> Metallic taste</label>
+                            <label><input type="checkbox" name="signals" value="orange_stains"> Orange stains</label>
+                            <label><input type="checkbox" name="signals" value="blue_green_stains"> Blue-green stains</label>
+                            <label><input type="checkbox" name="signals" value="black_stains"> Black stains</label>
+                            <label><input type="checkbox" name="signals" value="cloudy_water"> Cloudy water</label>
+                            <label><input type="checkbox" name="signals" value="scale_buildup"> Scale buildup</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Nearby risk context <span>optional</span></legend>
+                        <div class="check-grid">
+                            <label><input type="checkbox" name="riskContexts" value="agriculture"> Agriculture</label>
+                            <label><input type="checkbox" name="riskContexts" value="nearby_septic"> Nearby septic</label>
+                            <label><input type="checkbox" name="riskContexts" value="industrial"> Industrial activity</label>
+                            <label><input type="checkbox" name="riskContexts" value="mining"> Mining activity</label>
+                            <label><input type="checkbox" name="riskContexts" value="fuel_or_petroleum"> Fuel or petroleum</label>
+                            <label><input type="checkbox" name="riskContexts" value="pfas_source"> Known PFAS source</label>
+                            <label><input type="checkbox" name="riskContexts" value="radionuclides"> Radionuclide concern</label>
+                        </div>
+                    </fieldset>
                 </div>
-                <p class="section-copy">These guides exist to support the routing tool. They should not force you to learn the whole site before you can act.</p>
-            </div>
-            <div class="grid">
-                @for (int i = 0; i < priorityPages.size(); i++)
-                    !{var page = priorityPages.get(i);}
-                    @if (i < 8)
-                        <a class="card-link ${i >= 6 ? "mobile-card-hidden" : ""}" href="${trackingLinks.home("home_priority_page", "/well-water/" + page.slug())}">
-                            <span class="card-kicker">${page.family()}</span>
-                            <h3>${page.h1()}</h3>
-                            <p class="card-meta">${page.metaDescription()}</p>
-                        </a>
-                    @endif
-                @endfor
-            </div>
-            <div class="chip-row mobile-only" style="margin-top: 18px;">
-                <a class="chip" href="/well-water/private-well-home-sale-testing-by-state">Home sale</a>
-                <a class="chip" href="/well-water/family/regional">State guides</a>
-                <a class="chip" href="/well-water/family/triggers">Triggers</a>
-                <a class="chip" href="/well-water/family/authority">Testing order</a>
-            </div>
-        </section>
 
-        @if (!featuredRegionalPages.isEmpty())
-            <section class="panel panel-accent">
-                <div class="section-header">
-                    <div>
-                        <p class="brand-kicker">State-specific paths</p>
-                        <h2>State pages with official guidance and lab handoff</h2>
+                <details class="plan-details">
+                    <summary>Add state or existing treatment</summary>
+                    <div class="detail-fields">
+                        <label>State code <span>optional</span><input name="stateCode" maxlength="2" pattern="[A-Za-z]{2}" placeholder="OR" autocomplete="address-level1"></label>
+                        <label>Existing treatment
+                            <select name="existingTreatment">
+                                <option value="unknown">Unknown</option><option value="none">None</option><option value="ro">Reverse osmosis</option><option value="uv">UV</option><option value="softener">Softener</option><option value="iron_filter">Iron filter</option><option value="carbon">Carbon</option><option value="sediment">Sediment filter</option>
+                            </select>
+                        </label>
+                        <label>Use scope
+                            <select name="useScope"><option value="drinking_only">Drinking water</option><option value="whole_house">Whole house</option><option value="both">Both</option><option value="unknown">Not sure</option></select>
+                        </label>
                     </div>
-                    <p class="section-copy">These state pages are most useful when local rules, geology, or certified-lab routing change what you should do next.</p>
-                </div>
-                <div class="grid">
-                    @for (var page : featuredRegionalPages)
-                        <a class="card-link card-link-accent" href="${trackingLinks.home("home_featured_regional", "/well-water/" + page.slug())}">
-                            <span class="card-kicker">${page.family()}</span>
-                            <h3>${page.h1()}</h3>
-                            <p class="card-meta">${page.metaDescription()}</p>
-                        </a>
-                    @endfor
-                </div>
-            </section>
-        @endif
+                </details>
 
-        <section class="panel desktop-only">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">Longer reading layer</p>
-                    <h2>Only open these when the first routing pass still left you uncertain</h2>
+                <div class="plan-submit-row">
+                    <button class="button-link" type="submit">Build my test plan</button>
+                    <p>No contact details. Inputs are not stored in the pivot metrics.</p>
                 </div>
-                <p class="section-copy">These hubs are useful for people who already know the broad direction and want the longer reading path.</p>
-            </div>
-            <div class="grid grid-compact">
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/private-well-home-sale-testing-by-state")}">
-                    <span class="card-kicker">Home sale guide</span>
-                    <h3>Home sale testing by state</h3>
-                    <p class="card-meta">Lead with transaction timing, required panels, and where a state checklist is still too thin.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/regional")}">
-                    <span class="card-kicker">State guide hub</span>
-                    <h3>State-specific guides</h3>
-                    <p class="card-meta">${familyCounts.get("regional")} pages where geology, rules, and certified-lab paths change the answer.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/authority")}">
-                    <span class="card-kicker">Testing guide hub</span>
-                    <h3>Testing-order articles</h3>
-                    <p class="card-meta">${familyCounts.get("authority")} articles covering sampling, lab-reading, and checklist logic before product research.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/family/triggers")}">
-                    <span class="card-kicker">Retest guide hub</span>
-                    <h3>Trigger and retest guides</h3>
-                    <p class="card-meta">${familyCounts.get("triggers")} pages for home purchase, flood response, repairs, and retest timing.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/arsenic")}">
-                    <span class="card-kicker">Result guide</span>
-                    <h3>Named result interpretation</h3>
-                    <p class="card-meta">Use result guides to clarify what a contaminant or symptom means before you compare products.</p>
-                </a>
-                <a class="card-link" href="${trackingLinks.home("home_deeper_path", "/well-water/metallic-taste-plumbing-vs-source-water")}">
-                    <span class="card-kicker">Suspicious clue follow-up</span>
-                    <h3>Plumbing vs source-water splits</h3>
-                    <p class="card-meta">Use a proven corrosion cluster to separate fixture clues from source-water risk before you open treatment comparisons.</p>
-                </a>
-            </div>
+            </form>
         </section>
 
-        <section class="panel panel-accent">
-            <div class="section-header">
-                <div>
-                    <p class="brand-kicker">Trust layer</p>
-                    <h2>Method, review, sources, and safety limits</h2>
-                </div>
-                <p class="section-copy">These pages are evidence and review support for the decision surface. They should sit behind the first action, not in front of it.</p>
-            </div>
-            <div class="grid">
-                @for (int i = 0; i < trustPages.size(); i++)
-                    !{var page = trustPages.get(i);}
-                    <a class="card-link ${i >= 3 ? "mobile-card-hidden" : ""}" href="/trust/${page.slug()}">
-                        <span class="card-kicker">${page.eyebrow()}</span>
-                        <h3>${page.h1()}</h3>
-                        <p class="card-meta">${page.metaDescription()}</p>
-                    </a>
-                @endfor
-                <a class="card-link mobile-only" href="/trust">
-                    <span class="card-kicker">Trust hub</span>
-                    <h3>Open the full trust surface</h3>
-                    <p class="card-meta">Review methodology, reviewers, privacy, and disclosure without scrolling through the entire directory.</p>
-                </a>
-            </div>
+        <section class="home-trust-strip">
+            <div><span>01</span><strong>Diagnose</strong><p>Your reason and clues define the panel.</p></div>
+            <div><span>02</span><strong>Choose</strong><p>Get a certified path before any product.</p></div>
+            <div><span>03</span><strong>Act</strong><p>Use the official link or matching physical kit.</p></div>
+            <a href="/trust/methodology">Read the method only if you need it</a>
         </section>
-
-        @if(leadContext != null)
-            <section class="panel" id="lead-capture">
-                <div class="section-header">
-                    <div>
-                        <p class="brand-kicker">Still unsure?</p>
-                        <h2>${leadContext.heading()}</h2>
-                    </div>
-                    <p class="section-copy">${leadContext.summary()}</p>
-                </div>
-                @if("success".equals(leadStatus))
-                    <p class="section-copy" style="color: #0f766e; font-weight: 700;">Follow-up request captured. Check <code>/admin</code> for the new row.</p>
-                @elseif("invalid".equals(leadStatus))
-                    <p class="section-copy" style="color: #c66a2b; font-weight: 700;">Enter a valid email address to submit this follow-up request.</p>
-                @endif
-                <form method="post" action="/lead/submit" class="form-grid" style="margin-top: 18px;">
-                    <input type="hidden" name="redirectPath" value="${leadContext.redirectPath()}">
-                    <input type="hidden" name="sourceType" value="${leadContext.sourceType()}">
-                    <input type="hidden" name="sourceFamily" value="${leadContext.sourceFamily()}">
-                    <input type="hidden" name="sourceSlug" value="${leadContext.sourceSlug()}">
-                    <input type="hidden" name="sourceLabel" value="${leadContext.sourceLabel()}">
-                    <input type="text" name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true">
-                    <div class="form-grid two">
-                        <input type="email" name="email" placeholder="you@example.com" required class="form-field">
-                        <input type="text" name="state" placeholder="State (optional)" maxlength="12" class="form-field">
-                    </div>
-                    <textarea name="note" rows="4" placeholder="What seems off? Example: sulfur smell, stains, home purchase, or a result you do not trust yet." class="form-textarea"></textarea>
-                    <button type="submit" class="button-link" style="justify-content: center;">${leadContext.submitLabel()}</button>
-                </form>
-            </section>
-        @endif
     </main>
+
+    <style>
+        .home-tool-first { gap: 26px; }
+        .home-hero { min-height: 430px; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(260px, .6fr); gap: 30px; align-items: end; background:
+            radial-gradient(circle at 92% 15%, rgba(157, 205, 179, .2), transparent 34%),
+            linear-gradient(135deg, #10271e, #1e4c3a); }
+        .home-hero h1 { max-width: 820px; font-size: clamp(3rem, 7vw, 6.2rem); line-height: .93; letter-spacing: -.055em; }
+        .home-hero-copy { align-self: center; }
+        .home-proof-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+        .home-proof-row span { border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 8px 11px; color: rgba(255,255,255,.82); font-size: .78rem; font-weight: 700; }
+        .home-hero-aside { border: 1px solid rgba(255,255,255,.18); border-radius: 22px; padding: 22px; background: rgba(4, 19, 13, .24); }
+        .home-hero-aside strong { display: block; font: 700 1.6rem/1.05 Georgia, serif; }
+        .home-hero-aside p { color: rgba(255,255,255,.72); line-height: 1.55; }
+        .home-hero-aside a { color: #d9f1e4; font-weight: 800; text-decoration: none; }
+        .test-plan-panel { padding: clamp(22px, 4vw, 44px); }
+        .test-plan-form { display: grid; gap: 28px; margin-top: 26px; }
+        fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+        legend { margin-bottom: 12px; font-weight: 800; }
+        legend span, .detail-fields label > span { color: var(--muted); font-size: .72rem; font-weight: 600; text-transform: uppercase; }
+        .choice-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+        .choice-card { cursor: pointer; }
+        .choice-card input { position: absolute; opacity: 0; pointer-events: none; }
+        .choice-card span { display: grid; min-height: 104px; align-content: center; gap: 6px; border: 1px solid var(--line); border-radius: 17px; padding: 16px; background: var(--paper); transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease; }
+        .choice-card strong { font: 700 1.04rem/1.1 Georgia, serif; }
+        .choice-card small { color: var(--muted); line-height: 1.35; }
+        .choice-card input:checked + span { border-color: #246b50; box-shadow: 0 0 0 3px rgba(36,107,80,.13); transform: translateY(-2px); }
+        .choice-card-alert input:checked + span { border-color: #a73f35; box-shadow: 0 0 0 3px rgba(167,63,53,.12); }
+        .form-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; }
+        .check-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+        .check-grid label { border: 1px solid var(--line); border-radius: 12px; padding: 11px 12px; color: #293a32; font-size: .88rem; background: #fff; }
+        .check-grid input { accent-color: #246b50; }
+        .plan-details { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 16px 0; }
+        .plan-details summary { cursor: pointer; font-weight: 800; }
+        .detail-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+        .detail-fields label { display: grid; gap: 7px; font-size: .84rem; font-weight: 800; }
+        .detail-fields input, .detail-fields select { width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px; background: #fff; color: var(--ink); }
+        .plan-submit-row { display: flex; align-items: center; gap: 16px; }
+        .plan-submit-row button { border: 0; cursor: pointer; font-size: 1rem; }
+        .plan-submit-row p { margin: 0; color: var(--muted); font-size: .78rem; }
+        .home-trust-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) auto; gap: 10px; align-items: stretch; }
+        .home-trust-strip > * { border: 1px solid var(--line); border-radius: 16px; padding: 16px; background: rgba(255,255,255,.72); }
+        .home-trust-strip span { color: #246b50; font-size: .72rem; font-weight: 900; }
+        .home-trust-strip strong { display: block; margin-top: 6px; font-family: Georgia, serif; }
+        .home-trust-strip p { margin: 6px 0 0; color: var(--muted); font-size: .78rem; line-height: 1.4; }
+        .home-trust-strip > a { display: grid; place-items: center; max-width: 220px; color: var(--ink); font-weight: 800; text-align: center; text-decoration: none; }
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        @media (max-width: 900px) { .home-hero { grid-template-columns: 1fr; min-height: auto; } .home-hero h1 { font-size: clamp(3rem, 12vw, 5rem); } .choice-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .home-trust-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .home-trust-strip > a { max-width: none; } }
+        @media (max-width: 640px) { .choice-grid, .form-split, .check-grid, .detail-fields, .home-trust-strip { grid-template-columns: 1fr; } .choice-card span { min-height: 84px; } .plan-submit-row { align-items: stretch; flex-direction: column; } .plan-submit-row .button-link { justify-content: center; } }
+    </style>
 `)

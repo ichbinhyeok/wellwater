@@ -60,23 +60,11 @@ class PageControllerTest {
     void homeRendersWithJteTemplate() {
         PageController controller = newController(tempDir.resolve("events-home.csv"));
         Model model = new ExtendedModelMap();
-        String viewName = controller.home(null, model);
+        String viewName = controller.home(model);
 
         assertEquals("pages/home", viewName);
-        assertNotNull(model.getAttribute("familyCounts"));
-        assertNotNull(model.getAttribute("totalPageCount"));
-        assertNotNull(model.getAttribute("priorityPages"));
-        assertNotNull(model.getAttribute("featuredRegionalPages"));
-        assertNotNull(model.getAttribute("trustPages"));
-        assertNotNull(model.getAttribute("leadContext"));
-        assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
-        @SuppressWarnings("unchecked")
-        List<com.example.wellwater.pseo.PseoPage> featuredRegionalPages =
-                (List<com.example.wellwater.pseo.PseoPage>) model.getAttribute("featuredRegionalPages");
-        assertNotNull(featuredRegionalPages);
-        assertEquals(3, featuredRegionalPages.size());
-        assertEquals("new-jersey-pwta-private-well-testing", featuredRegionalPages.get(0).slug());
+        assertEquals(1, model.asMap().size());
     }
 
     @Test
@@ -98,18 +86,13 @@ class PageControllerTest {
     }
 
     @Test
-    void toolLandingRendersWithSeoAndLeadContext() {
+    void legacyToolLandingRedirectsToTheSingleToolSurface() {
         PageController controller = newController(tempDir.resolve("events-tool.csv"));
         Model model = new ExtendedModelMap();
 
         String viewName = controller.toolLanding(null, model);
 
-        assertEquals("pages/tool/landing", viewName);
-        assertNotNull(model.getAttribute("leadContext"));
-        assertEquals("", model.getAttribute("leadStatus"));
-        SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
-        assertEquals("https://example.com/tool", seo.canonicalUrl());
-        assertEquals("index,follow", seo.robotsDirective());
+        assertEquals("redirect:/#test-plan", viewName);
     }
 
     @Test
@@ -133,7 +116,7 @@ class PageControllerTest {
         assertTrue(xml.contains("/well-water/private-well-home-sale-testing-by-state"));
         assertTrue(xml.contains("/well-water/hardness"));
         assertTrue(xml.contains("/well-water/rotten-egg-smell"));
-        assertTrue(xml.contains("/tool"));
+        assertTrue(!xml.contains("<loc>https://example.com/tool</loc>"));
         assertTrue(xml.contains("/well-water/family/regional"));
         assertTrue(xml.contains("/well-water/family/authority"));
         assertTrue(xml.contains("/well-water/family/triggers"));
@@ -150,6 +133,8 @@ class PageControllerTest {
 
         assertTrue(robots.contains("Disallow: /admin"));
         assertTrue(robots.contains("Disallow: /tool/"));
+        assertTrue(robots.contains("Disallow: /mcp"));
+        assertTrue(robots.contains("Disallow: /partner/"));
         assertTrue(robots.contains("Sitemap: https://example.com/sitemap.xml"));
     }
 
@@ -165,7 +150,7 @@ class PageControllerTest {
         assertEquals(200, response.getStatus());
         assertNotNull(model.getAttribute("page"));
         assertNotNull(model.getAttribute("pageView"));
-        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals(null, model.getAttribute("leadContext"));
         SeoMetadata seo = (SeoMetadata) model.getAttribute("seo");
         assertEquals("index,follow", seo.robotsDirective());
     }
@@ -259,7 +244,7 @@ class PageControllerTest {
 
         assertEquals("pages/trust/list", viewName);
         assertNotNull(model.getAttribute("trustPages"));
-        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals(null, model.getAttribute("leadContext"));
         assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
     }
@@ -275,7 +260,7 @@ class PageControllerTest {
         assertEquals("pages/trust/view", viewName);
         assertEquals(200, response.getStatus());
         assertNotNull(model.getAttribute("page"));
-        assertNotNull(model.getAttribute("leadContext"));
+        assertEquals(null, model.getAttribute("leadContext"));
         assertEquals("", model.getAttribute("leadStatus"));
         assertNotNull(model.getAttribute("seo"));
     }

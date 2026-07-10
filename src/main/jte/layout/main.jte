@@ -849,13 +849,9 @@
             </div>
         </div>
         <nav class="site-nav" aria-label="Primary">
-            <a class="nav-link" href="/tool">Decision Tool</a>
-            <a class="nav-link" href="/well-water/private-well-home-sale-testing-by-state">Home Sale</a>
-            <a class="nav-link" href="/well-water/family/regional">Regional</a>
-            <a class="nav-link" href="/well-water/family/symptoms">Symptoms</a>
-            <a class="nav-link" href="/well-water/family/authority">Methods</a>
-            <a class="nav-link" href="/trust">Trust</a>
-            <a class="nav-link nav-link-strong" href="/tool">Open Tool</a>
+            <a class="nav-link" href="/trust/methodology">Method</a>
+            <a class="nav-link" href="/trust/privacy-and-data-handling">Privacy</a>
+            <a class="nav-link nav-link-strong" href="/#test-plan">Find My Test</a>
         </nav>
     </header>
 
@@ -877,7 +873,7 @@
     ${content}
 
     <footer class="site-footer">
-        <strong>Water Verdict</strong> helps you move from a water clue or lab result to the next test, comparison, or follow-up step.
+        <strong>Water Verdict</strong> helps private-well owners choose a focused testing panel and certified lab path before treatment or test-kit purchase.
         <nav class="footer-links" aria-label="Trust and policy">
             <a href="/trust">Trust hub</a>
             <a href="/trust/methodology">Methodology</a>
@@ -887,6 +883,7 @@
             <a href="/trust/safety-and-scope">Safety and scope</a>
             <a href="/trust/privacy-and-data-handling">Privacy and data</a>
             <a href="/trust/commercial-disclosure">Commercial disclosure</a>
+            <a href="/trust/support">Support</a>
         </nav>
     </footer>
 </div>

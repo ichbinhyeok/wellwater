@@ -1,94 +1,50 @@
 # Water Verdict
 
-Private well water decision engine for problem-first search traffic.
+Automated private-well test finder for web and ChatGPT distribution.
 
 ## Current Product Shape
 
-This repo is no longer just a pSEO skeleton.
+The product is tool-first. It turns a reason for testing, visible clues, and nearby risk context into a focused test panel and certified-lab path before any optional commercial handoff.
 
 Current public surface:
-- indexable home page
-- family hubs for `contaminants`, `symptoms`, `compares`, `triggers`, `regional`, `authority`
-- 97 pSEO detail pages backed by CSV and registry context
-- trust hub and 4 trust pages at `/trust/*`
-- structured data, canonical, and breadcrumb support on public pages
-- visible review and traceability block on public detail pages
-- regional detail pages that surface state-specific decision deltas, guidance, and certified lab paths
+- tool-first home page with the first input above the fold
+- immediate, noindex web results at `POST /tool/test-plan`
+- trust, privacy, disclosure, and support pages at `/trust/*`
+- the existing pSEO inventory remains available but is frozen; it is not the active growth model
 
 Current tool surface:
-- `/tool/result-first`
-- `/tool/symptom-first`
-- `/tool/trigger-first`
-- `/tool/result`
-- personalized result pages rendered as `noindex,nofollow`
+- web entry at `/#test-plan`
+- MCP endpoint at `POST /mcp`
+- one ChatGPT tool: `recommend_private_well_test_plan`
+- MCP App widget resource at `ui://widget/well-test-plan.html`
+- official guidance and certified-lab links in every successful result
+- legacy result-first flows remain in the codebase but are not promoted
 
 Current commercial surface:
-- lead capture on regional, authority, and detail pages
-- admin dashboard at `/admin`
-- internal compare pages used as the active commercial bridge
-- direct vendor or affiliate channels are not the primary surface yet
+- optional allowlisted Tap Score physical-kit links for eligible routine paths
+- no offer on urgent, home-purchase, known-contamination, flood, wildfire, PFAS, fuel, or radionuclide paths
+- no new lead capture, account, direct payment, or manual consulting flow
+- aggregate pivot metrics at the credential-protected `/admin/pivot-metrics`
 
 ## Product Positioning
 
 This project is not an Amazon-style review site.
 
 The current sequence is:
-1. organic search lands on an indexable page
-2. the page frames risk, scope, and the next verification step
-3. the user enters the tool or moves into a compare page
-4. lead capture or future partner routing happens only after the page earns that transition
+1. the user states why they need a well-water test
+2. the engine selects a focused panel and urgency level
+3. the result shows official guidance and a certified-lab path
+4. an optional physical-kit link appears only when the safety gates allow it
 
-That means the moat is the decision framework, not a list of products.
+The engine is the product. Public information explains and supports its output; it is not the main experience.
 
-## Current SEO Inventory
+## Search Inventory Policy
 
-pSEO families:
-- contaminants: 22
-- symptoms: 14
-- compares: 16
-- triggers: 12
-- regional: 15
-- authority: 19
-
-Trust pages:
-- methodology
-- review policy
-- sources policy
-- safety and scope
-
-Core high-intent pages also have a deeper decision-doc layer with:
-- one-line call
-- health vs nuisance split
-- retest timing
-- three actions before buying
-- common confusion block
-- FAQ
-
-Regional winner pages now follow the same depth model when state context changes the next action.
-Current examples include:
-- New Hampshire arsenic
-- Florida sulfur smell
-- Iowa nitrate and baby-risk follow-up
-- Connecticut low pH and blue-green stains
-- Pennsylvania radon
+The existing sitemap is a frozen acquisition bench, not a mandate to publish more pages. No new SEO inventory is added during the 90-day ChatGPT distribution test. Existing URLs are retained initially to avoid mixing a product pivot with a destructive index reset. Any later pruning must follow the gates in `19_Automated_Distribution_Pivot_2026-07-10.md`.
 
 ## Commercial Readiness
 
-The current site can support partner or lead routing for the right clusters.
-
-Best current partner-ready clusters:
-- arsenic
-- nitrate
-- sulfur smell
-- iron and orange stains
-- low pH and corrosion
-- radon
-- PFAS
-- coliform or post-flood microbial follow-up
-
-Current rule:
-- testing, verification, and state guidance come before vendor links
-- internal compare pages are the active commercial handoff until verified partner channels go live
+Commerce is configuration-driven. If an approved HTTPS Tap Score URL is absent or does not use an allowlisted Tap Score host, the offer is suppressed. Water Verdict never handles checkout or laboratory results.
 
 ## Running Locally
 
@@ -96,10 +52,35 @@ Current rule:
 .\gradlew.bat bootRun
 ```
 
+Run the packaged JAR with the production profile so JTE uses the precompiled templates:
+
+```powershell
+java -jar build/libs/waterverdict-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
+```
+
 Default app URL:
 - `http://localhost:8080`
 
 Admin credentials are configured via environment variables in production.
+
+Required production variable:
+- `APP_SITE_BASE_URL`
+
+Admin variables; when either is blank, `/admin/**` fails closed with `503`:
+- `APP_ADMIN_USERNAME`
+- `APP_ADMIN_PASSWORD`
+
+Optional launch variables:
+- `APP_TAP_SCORE_ESSENTIAL_URL`
+- `APP_TAP_SCORE_ADVANCED_URL`
+- `APP_OPENAI_DOMAIN_CHALLENGE_TOKEN`
+- `APP_SUPPORT_EMAIL`
+
+Operational endpoints:
+- public health: `GET /health/app`
+- MCP transport: `POST /mcp`
+- OpenAI domain challenge: `GET /.well-known/openai-apps-challenge`
+- protected aggregate metrics: `GET /admin/pivot-metrics`
 
 ## Documentation Map
 
@@ -120,6 +101,7 @@ Use these files as the current source of truth:
 - `14_Search_Console_Tracking_Log.md`
 - `17_Search_Focus_Revision_2026-04-12.md`
 - `18_Search_ReExpansion_Triggers_2026-04-12.md`
+- `19_Automated_Distribution_Pivot_2026-07-10.md`
 
 Session-specific handoff files have been removed so the active documentation set stays clean.
 

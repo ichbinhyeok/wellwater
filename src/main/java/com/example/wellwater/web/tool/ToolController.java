@@ -166,7 +166,7 @@ public class ToolController {
         model.addAttribute("expiresLabel", snapshot.expiresAt().substring(0, 10));
         model.addAttribute("sharedView", false);
         model.addAttribute("leadStatus", "");
-        model.addAttribute("leadContext", buildResultLeadContext(result, snapshot.id(), input.slugHint()));
+        model.addAttribute("leadContext", null);
 
         analyticsEventService.logEvent(
                 "test_completed",

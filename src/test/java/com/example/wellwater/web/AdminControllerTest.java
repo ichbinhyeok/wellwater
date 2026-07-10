@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -37,6 +38,20 @@ class AdminControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Operations Dashboard")))
                 .andExpect(content().string(containsString("Search Visibility Gaps")));
+    }
+
+    @Test
+    void pivotMetricsStayBehindAdminAuthentication() throws Exception {
+        mockMvc.perform(get("/admin/pivot-metrics"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string("X-Robots-Tag", containsString("noindex")));
+
+        mockMvc.perform(get("/admin/pivot-metrics")
+                        .header("Authorization", basicAuth("test-admin", "test-secret")))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Cache-Control", containsString("no-store")))
+                .andExpect(jsonPath("$.completions").isNumber())
+                .andExpect(jsonPath("$.completionsByChannel").isMap());
     }
 
     private String basicAuth(String username, String password) {

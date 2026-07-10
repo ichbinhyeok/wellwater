@@ -89,7 +89,7 @@
                     </div>
                     <p class="card-meta">Use trust pages alongside the main guides and the decision tool when you want to understand how evidence, review, and safety limits are handled.</p>
                     <div class="cta-row" style="margin-top: 16px;">
-                        <a class="button-link" href="/tool/result-first">Open Tool</a>
+                        <a class="button-link" href="/#test-plan">Find My Test</a>
                     </div>
                 </section>
 

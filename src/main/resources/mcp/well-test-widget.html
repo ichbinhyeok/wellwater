@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Private-well test plan</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --ink: #14231d;
+            --muted: #58675f;
+            --paper: #f3efe5;
+            --panel: #fffdf8;
+            --line: #d7d2c4;
+            --moss: #1e6048;
+            --moss-soft: #dbe9df;
+            --amber: #9a5b19;
+            --red: #9c332d;
+        }
+
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 14px;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at 90% 5%, rgba(54, 125, 94, .14), transparent 32%),
+                linear-gradient(145deg, #f7f3e9, var(--paper));
+            font-family: "Aptos", "Trebuchet MS", sans-serif;
+        }
+        main {
+            max-width: 680px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: rgba(255, 253, 248, .96);
+            box-shadow: 0 16px 42px rgba(43, 55, 48, .12);
+        }
+        header { padding: 22px 22px 18px; border-bottom: 1px solid var(--line); }
+        .kicker { margin: 0 0 8px; color: var(--moss); font-size: 11px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+        h1 { margin: 0; max-width: 560px; font: 700 28px/1.08 Georgia, serif; }
+        .urgency { display: inline-flex; margin-top: 14px; border-radius: 999px; padding: 7px 10px; background: var(--moss-soft); color: var(--moss); font-size: 12px; font-weight: 800; text-transform: uppercase; }
+        .urgency[data-level="prompt"] { color: var(--amber); background: #f6e7cf; }
+        .urgency[data-level="immediate"] { color: var(--red); background: #f7dcd8; }
+        section { padding: 18px 22px; border-bottom: 1px solid var(--line); }
+        section:last-child { border-bottom: 0; }
+        h2 { margin: 0 0 12px; font: 700 17px/1.2 Georgia, serif; }
+        ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+        li { padding: 12px 13px; border: 1px solid #e2ded2; border-radius: 13px; background: #faf8f1; }
+        li strong { display: block; font-size: 14px; }
+        li span { display: block; margin-top: 4px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+        .paths { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        a { color: inherit; }
+        .path { display: block; padding: 13px; border: 1px solid var(--line); border-radius: 13px; text-decoration: none; font-size: 13px; font-weight: 800; }
+        .path:hover { border-color: var(--moss); }
+        .partner { background: var(--ink); color: #fff; }
+        .partner p { margin: 6px 0 14px; color: rgba(255,255,255,.75); font-size: 12px; line-height: 1.45; }
+        .partner a { display: inline-flex; border-radius: 999px; padding: 9px 13px; background: #fff; color: var(--ink); font-size: 13px; font-weight: 800; text-decoration: none; }
+        .disclosure { margin: 12px 0 0; font-size: 10px; color: rgba(255,255,255,.62); }
+        .fine-print { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
+        [hidden] { display: none !important; }
+        @media (max-width: 520px) {
+            body { padding: 8px; }
+            header, section { padding: 17px; }
+            h1 { font-size: 23px; }
+            .paths { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<main aria-live="polite">
+    <header>
+        <p class="kicker">Water Verdict · test first</p>
+        <h1 id="verdict">Building your private-well test plan…</h1>
+        <span id="urgency" class="urgency" hidden></span>
+    </header>
+    <section id="panel-section" hidden>
+        <h2>Recommended panel</h2>
+        <ul id="panel"></ul>
+    </section>
+    <section id="reason-section" hidden>
+        <h2>Why this route</h2>
+        <ul id="reasons"></ul>
+    </section>
+    <section id="path-section" hidden>
+        <h2>Use an official path</h2>
+        <div class="paths">
+            <a id="guidance" class="path" target="_blank" rel="noopener noreferrer"></a>
+            <a id="lab" class="path" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+    </section>
+    <section id="partner" class="partner" hidden>
+        <h2 id="partner-name"></h2>
+        <p id="partner-fit"></p>
+        <a id="partner-link" target="_blank" rel="sponsored noopener noreferrer">View matching physical test kit</a>
+        <p id="partner-disclosure" class="disclosure"></p>
+    </section>
+    <section>
+        <p id="fine-print" class="fine-print">This tool does not replace a certified laboratory, emergency instructions, or state property-transfer requirements.</p>
+    </section>
+</main>
+<script type="module">
+    const byId = (id) => document.getElementById(id);
+    const text = (element, value) => { element.textContent = typeof value === "string" ? value : ""; };
+    const safeLink = (element, link) => {
+        if (!link || typeof link.url !== "string" || !link.url.startsWith("https://")) return false;
+        element.href = link.url;
+        text(element, link.label);
+        return true;
+    };
+    const render = (payload) => {
+        if (!payload || typeof payload !== "object") return;
+        text(byId("verdict"), payload.verdict);
+        const urgency = byId("urgency");
+        text(urgency, payload.urgency);
+        urgency.dataset.level = payload.urgency || "routine";
+        urgency.hidden = false;
+
+        const panel = byId("panel");
+        panel.replaceChildren();
+        for (const item of Array.isArray(payload.recommended_panel) ? payload.recommended_panel : []) {
+            const row = document.createElement("li");
+            const name = document.createElement("strong");
+            const reason = document.createElement("span");
+            text(name, item?.name);
+            text(reason, item?.reason);
+            row.append(name, reason);
+            panel.append(row);
+        }
+        byId("panel-section").hidden = panel.children.length === 0;
+
+        const reasons = byId("reasons");
+        reasons.replaceChildren();
+        for (const value of Array.isArray(payload.reasons) ? payload.reasons : []) {
+            const row = document.createElement("li");
+            text(row, value);
+            reasons.append(row);
+        }
+        byId("reason-section").hidden = reasons.children.length === 0;
+
+        const hasGuidance = safeLink(byId("guidance"), payload.official_guidance);
+        const hasLab = safeLink(byId("lab"), payload.certified_lab_path);
+        byId("path-section").hidden = !(hasGuidance || hasLab);
+
+        const offer = payload.partner_offer;
+        const partner = byId("partner");
+        if (offer && typeof offer.url === "string" && offer.url.startsWith("https://waterverdict.com/")) {
+            text(byId("partner-name"), offer.product_name);
+            text(byId("partner-fit"), offer.fit_reason);
+            text(byId("partner-disclosure"), offer.disclosure);
+            byId("partner-link").href = offer.url;
+            partner.hidden = false;
+        } else {
+            partner.hidden = true;
+        }
+        text(byId("fine-print"), payload.disclosure);
+    };
+
+    let rpcId = 0;
+    const pending = new Map();
+    const notify = (method, params) => window.parent.postMessage({ jsonrpc: "2.0", method, params }, "*");
+    const request = (method, params) => new Promise((resolve, reject) => {
+        const id = ++rpcId;
+        pending.set(id, { resolve, reject });
+        window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, "*");
+    });
+    window.addEventListener("message", (event) => {
+        if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
+        if (typeof event.data.id === "number") {
+            const handler = pending.get(event.data.id);
+            if (!handler) return;
+            pending.delete(event.data.id);
+            event.data.error ? handler.reject(event.data.error) : handler.resolve(event.data.result);
+            return;
+        }
+        if (event.data.method === "ui/notifications/tool-result") {
+            render(event.data.params?.structuredContent ?? event.data.params?.structured_content);
+        }
+    }, { passive: true });
+    try {
+        await request("ui/initialize", {
+            appInfo: { name: "water-verdict-well-test-finder", version: "1.0.0" },
+            appCapabilities: {},
+            protocolVersion: "2026-01-26"
+        });
+        notify("ui/notifications/initialized", {});
+    } catch (error) {
+        text(byId("verdict"), "The test-plan card could not initialize.");
+    }
+</script>
+</body>
+</html>

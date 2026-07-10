@@ -27,6 +27,8 @@ dependencies {
 	implementation "gg.jte:jte:${jteVersion}"
 	implementation 'org.apache.pdfbox:pdfbox:3.0.3'
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation platform('io.modelcontextprotocol.sdk:mcp-bom:1.0.0')
+	implementation 'io.modelcontextprotocol.sdk:mcp'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

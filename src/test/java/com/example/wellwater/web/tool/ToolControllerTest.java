@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ToolControllerTest {
@@ -131,7 +132,7 @@ class ToolControllerTest {
         assertNotNull(model.getAttribute("result"));
         assertNotNull(model.getAttribute("sessionId"));
         assertNotNull(model.getAttribute("ctaLinks"));
-        assertNotNull(model.getAttribute("leadContext"));
+        assertNull(model.getAttribute("leadContext"));
         assertEquals("noindex, nofollow, noarchive", response.getHeader("X-Robots-Tag"));
         assertTrue(((String) model.getAttribute("savedResultUrl")).startsWith("/result/saved/"));
         assertTrue(((String) model.getAttribute("pdfUrl")).endsWith(".pdf"));

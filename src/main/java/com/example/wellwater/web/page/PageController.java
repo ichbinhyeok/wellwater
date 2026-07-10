@@ -1,7 +1,6 @@
 package com.example.wellwater.web.page;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
-import com.example.wellwater.lead.LeadCaptureContext;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import com.example.wellwater.pseo.PseoPage;
@@ -53,30 +52,11 @@ public class PageController {
     }
 
     @GetMapping("/")
-    public String home(
-            @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
-            Model model
-    ) {
+    public String home(Model model) {
         trackPublicPageView("home", "", "home", "/", "home", "index,follow");
-        model.addAttribute("familyCounts", pseoCatalogService.familyCounts());
-        model.addAttribute("totalPageCount", pseoCatalogService.allPages().size());
-        model.addAttribute("priorityPages", pseoExperienceService.priorityPages(16));
-        model.addAttribute("featuredRegionalPages", pseoExperienceService.featuredRegionalPages());
-        model.addAttribute("trustPages", trustPageService.allPages());
-        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", new LeadCaptureContext(
-                "Not ready to enter lab data yet?",
-                "Leave an email and a short note if you only have a smell, stain, recent change, or a general well-water concern.",
-                "Request follow-up",
-                "/",
-                "home",
-                "home",
-                "",
-                "Water Verdict home"
-        ));
         model.addAttribute("seo", seoMetadataService.home(
-                "Water Verdict | Private Well Testing Decisions",
-                "Decide what to test next for a private well, especially during home purchase, state-specific testing, and suspicious result follow-up."
+                "Water Verdict | Find The Right Private-Well Test",
+                "Choose the focused private-well testing panel and certified lab path for an annual check, visible clue, nearby risk, flood, or home purchase."
         ));
         return "pages/home";
     }
@@ -86,23 +66,7 @@ public class PageController {
             @org.springframework.web.bind.annotation.RequestParam(required = false) String lead,
             Model model
     ) {
-        trackPublicPageView("tool-hub", "tool", "tool-surface", "/tool", "tool", "index,follow");
-        model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", new LeadCaptureContext(
-                "Need help choosing the first tool path?",
-                "Leave an email if you have a vague clue, a home-sale situation, or a confusing report and want help choosing the right starting input.",
-                "Request follow-up",
-                "/tool",
-                "tool-hub",
-                "tool",
-                "tool",
-                "Decision tool"
-        ));
-        model.addAttribute("seo", seoMetadataService.toolLanding(
-                "Private Well Water Decision Tool | Water Verdict",
-                "Start with a lab result, symptom, recent change, or state and home-sale context and get the next testing path for a private well."
-        ));
-        return "pages/tool/landing";
+        return "redirect:/#test-plan";
     }
 
     @GetMapping("/well-water/family/{family}")
@@ -127,18 +91,6 @@ public class PageController {
         model.addAttribute("seo", seo);
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
         model.addAttribute("leadContext", null);
-        if ("regional".equals(family) || "authority".equals(family)) {
-            model.addAttribute("leadContext", new LeadCaptureContext(
-                    "Want follow-up on this " + family + " topic?",
-                    "Leave an email and the page you were reading if you want help turning this guidance into a concrete next step.",
-                    "Request follow-up",
-                    "/well-water/family/" + family,
-                    "pseo-family",
-                    family,
-                    family,
-                    familyView.heroTitle()
-            ));
-        }
         return "pages/pseo/list";
     }
 
@@ -171,22 +123,7 @@ public class PageController {
         model.addAttribute("page", maybePageView.get().page());
         model.addAttribute("seo", seo);
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", new LeadCaptureContext(
-                maybePageView.get().page().family().equals("regional")
-                        ? "Need a state-aware follow-up?"
-                        : (maybePageView.get().page().family().equals("authority")
-                        ? "Want this method applied to your own well?"
-                        : "Want a private-well follow-up on this issue?"),
-                maybePageView.get().page().family().equals("regional")
-                        ? "Leave an email and your state context. This page already knows the cluster you came in on."
-                        : "Leave an email and a short note so this page can become a direct lead path instead of dead-end research.",
-                "Request follow-up",
-                "/well-water/" + slug,
-                "pseo-detail",
-                maybePageView.get().page().family(),
-                maybePageView.get().page().slug(),
-                maybePageView.get().page().h1()
-        ));
+        model.addAttribute("leadContext", null);
         return "pages/pseo/detail";
     }
 
@@ -198,16 +135,7 @@ public class PageController {
         trackPublicPageView("trust-hub", "trust", "trust", "/trust", "trust", "index,follow");
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", new LeadCaptureContext(
-                "Need help before you use the tool?",
-                "Leave an email if you have a well-water concern but are not ready to enter results. This keeps trust reading from becoming a dead end.",
-                "Request follow-up",
-                "/trust",
-                "trust-hub",
-                "trust",
-                "trust",
-                "Trust hub"
-        ));
+        model.addAttribute("leadContext", null);
         model.addAttribute("seo", seoMetadataService.trustHub(
                 "Trust And Method | Water Verdict",
                 "Read the methodology, review policy, sources policy, and safety limits behind this private-well decision surface."
@@ -232,16 +160,7 @@ public class PageController {
         model.addAttribute("page", maybePage.get());
         model.addAttribute("trustPages", trustPageService.allPages());
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", new LeadCaptureContext(
-                "Want a follow-up before you enter results?",
-                "Leave an email and a short note if this trust page matches your situation but you are still in the suspicion or scoping phase.",
-                "Request follow-up",
-                "/trust/" + maybePage.get().slug(),
-                "trust-page",
-                "trust",
-                maybePage.get().slug(),
-                maybePage.get().h1()
-        ));
+        model.addAttribute("leadContext", null);
         model.addAttribute("seo", seoMetadataService.trustPage(maybePage.get()));
         return "pages/trust/view";
     }
@@ -257,6 +176,8 @@ public class PageController {
                 Disallow: /lead/
                 Disallow: /result/
                 Disallow: /tool/
+                Disallow: /mcp
+                Disallow: /partner/
 
                 Sitemap: %s/sitemap.xml
                 """.formatted(baseUrl);
@@ -267,7 +188,6 @@ public class PageController {
     public String sitemap() {
         String baseUrl = seoMetadataService.absolute("");
         ArrayList<String> extraPaths = new ArrayList<>(trustPageService.sitemapPaths());
-        extraPaths.add("/tool");
         return pseoCatalogService.sitemapXml(baseUrl, extraPaths);
     }
 

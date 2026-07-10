@@ -1402,6 +1402,74 @@ Result:
 - the project should now switch from build mode to observation mode
 - next meaningful work should be based on recrawl and Search Console response, not another same-day surface rewrite
 
+## Entry: 2026-07-10
+
+### Scope
+
+- Property reviewed: `sc-domain:waterverdict.com`
+- Decision scope: determine whether to keep optimizing the publisher surface or pivot to an automated product-distribution model
+- Operating constraint: no early outbound, no manual service, and no recurring work outside development
+
+### Data
+
+#### Search Performance
+
+- `180`-day total: `1` click, `1,568` impressions, average position `40.3`
+- latest `28` days: `0` clicks, `13` impressions, average position `22.6`
+- successive impression blocks reviewed: `102 -> 850 -> 417 -> 186 -> 13`
+- latest block decline from peak block: about `98.5%`
+
+#### Index And Surface Pattern
+
+- sitemap surface: about `75` URLs
+- submitted-page report reviewed: `74` URLs
+- dependable submitted-and-indexed growth signal: `0` in the reviewed report
+- interpretation: URL count created more eligible surface, but did not produce durable distribution or clicks
+
+### Decision
+
+- stop treating another observation period as the strategy
+- keep the private-well decision engine and narrow test-selection wedge
+- replace publisher-first acquisition with tool-first web and ChatGPT app distribution
+- freeze the existing pSEO inventory during the app test instead of expanding or immediately deleting it
+- permit only automated, safety-gated physical test-kit affiliate routing
+
+### Changes Shipped
+
+- replaced the home surface with an immediate private-well test-plan input
+- added a deterministic test-plan domain service that reuses the existing decision registries
+- added one MCP tool, `recommend_private_well_test_plan`, plus its MCP App widget resource
+- added official guidance and certified-lab routes to every successful output
+- added allowlisted Tap Score redirects that fail closed and suppress commerce on high-risk paths
+- retired new lead capture with HTTP `410 Gone`
+- added aggregate-only pivot metrics and protected `/admin/pivot-metrics` summary
+- added `/health/app`, OpenAI domain challenge handling, deployment verification, and a daily MCP health workflow
+- removed hardcoded admin credentials from Compose and GitHub Actions
+- updated privacy, commercial disclosure, and support surfaces to match the new product model
+
+### Verification
+
+- `123` automated tests passed with `0` failures and `0` skips
+- `clean test bootJar` completed successfully
+- the packaged JAR returned `200` for the tool-first home page and `ok` from `/health/app` under the production profile
+- MCP `tools/list` returned only `recommend_private_well_test_plan`
+- malformed MCP JSON returned a sanitized `400` response without Java stack frames
+- desktop and mobile browser QA passed for the first-input surface and immediate annual-test result
+
+### Operating Read
+
+- this is a distribution-model pivot, not another page-level SEO experiment
+- the site remains broad through engine inputs, result families, official state routes, and ChatGPT conversations
+- no new SEO content, outbound, lead handling, or manual interpretation work is authorized during the 90-day app test
+- the KPI clock starts only after public ChatGPT app approval
+
+### Next Check
+
+- approval date: add after OpenAI directory approval
+- Day 30: distribution sanity and failure-rate gate
+- Day 60: utility and partner-intent gate
+- Day 90: keep, iterate once, or stop according to `19_Automated_Distribution_Pivot_2026-07-10.md`
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

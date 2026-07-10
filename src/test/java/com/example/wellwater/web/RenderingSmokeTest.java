@@ -36,39 +36,41 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Water Verdict")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Testing Decisions")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Choose your starting clue.")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Pick one path now")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("ctaType=home_primary_cta")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("ctaType=home_hero_route")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("See the public tool page")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("What happens after you start")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("High-signal pages worth opening only after you start the tool")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("New Jersey PWTA Private Well Testing What To Know")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("State pages with official guidance and lab handoff")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("New Hampshire Arsenic in Well Water What To Do")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Home sale testing by state")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Plumbing vs source-water splits")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust layer")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Find the right water test before you buy the wrong one.")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Why are you testing your well?")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("action=\"/tool/test-plan\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Annual check")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("After a flood")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Nearby risk context")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("No contact details")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("High-signal pages"))))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("application/ld+json")))
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("@content()"))));
     }
 
     @Test
-    void toolLandingPageRendersAsIndexableToolSurface() throws Exception {
+    void legacyToolLandingRedirectsToTheSingleToolSurface() throws Exception {
         mockMvc.perform(get("/tool"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(header().string("Location", "/#test-plan"));
+    }
+
+    @Test
+    void webTestPlanRendersAnImmediateResultWithoutCollectingContactDetails() throws Exception {
+        mockMvc.perform(post("/tool/test-plan")
+                        .param("reason", "after_flood")
+                        .param("signals", "cloudy_water")
+                        .param("stateCode", "PA")
+                        .param("existingTreatment", "none")
+                        .param("useScope", "drinking_only"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private Well Water Decision Tool")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/tool\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Wide public surface, narrow decision wedge")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("What this page does")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("What the engine gives back")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Public pages should feed the tool, not replace it")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("/tool/result-first")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("/well-water/private-well-home-sale-testing-by-state")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Private result wedge")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("application/ld+json")));
+                .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Use an alternate drinking-water source")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Turbidity")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Use a certified path")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("View matching test kit"))))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("email"))));
     }
 
     @Test
@@ -127,7 +129,7 @@ class RenderingSmokeTest {
                         .param("resultValue", "positive")
                         .param("unit", "presence/absence")
                         .param("qualifier", "positive")
-                        .param("sampleDate", "2026-03-01")
+                        .param("sampleDate", java.time.LocalDate.now().minusDays(30).toString())
                         .param("sampleSource", "raw well")
                         .param("labCertified", "yes")
                         .param("state", "FL")
@@ -181,7 +183,7 @@ class RenderingSmokeTest {
                         .param("resultValue", "20")
                         .param("unit", "grains/gal")
                         .param("qualifier", "none")
-                        .param("sampleDate", "2026-03-01")
+                        .param("sampleDate", java.time.LocalDate.now().minusDays(30).toString())
                         .param("sampleSource", "raw well")
                         .param("labCertified", "yes")
                         .param("state", "PA")
@@ -220,7 +222,7 @@ class RenderingSmokeTest {
                 .andExpect(header().string("X-Robots-Tag", org.hamcrest.Matchers.containsString("noindex")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision result")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Open saved view")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Follow-Up")));
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))));
 
         MvcResult pdfResult = mockMvc.perform(get("/result/saved/" + snapshotId + ".pdf"))
                 .andExpect(status().isOk())
@@ -252,8 +254,7 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Escalate now if")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Questions that should be answered before a purchase")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Request follow-up")))
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Method, review, and disclosure")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Related next reads")));
     }
@@ -313,13 +314,13 @@ class RenderingSmokeTest {
     }
 
     @Test
-    void authorityFamilyPageRendersLeadCaptureSurface() throws Exception {
+    void authorityFamilyPageRendersWithoutLeadCaptureSurface() throws Exception {
         mockMvc.perform(get("/well-water/family/authority"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Use the method layer to start the right decision path")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Pick the first path, not the first article")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("What this family should stop you from doing")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Lead capture")));
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))));
     }
 
     @Test
@@ -328,12 +329,12 @@ class RenderingSmokeTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Trust pages")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Methodology")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Early follow-up")));
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))));
 
         mockMvc.perform(get("/trust/methodology"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("How This Site Turns Well-Water Clues Into Next Steps")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("rel=\"canonical\" href=\"https://waterverdict.test/trust/methodology\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Early follow-up")));
+                .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))));
     }
 }

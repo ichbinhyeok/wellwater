@@ -58,7 +58,7 @@ public class SavedResultController {
         model.addAttribute("expiresLabel", formatTimestamp(snapshot.expiresAt()));
         model.addAttribute("sharedView", true);
         model.addAttribute("leadStatus", sanitizeLeadStatus(lead));
-        model.addAttribute("leadContext", buildResultLeadContext(snapshot));
+        model.addAttribute("leadContext", null);
 
         analyticsEventService.logEvent(
                 "result_snapshot_viewed",
