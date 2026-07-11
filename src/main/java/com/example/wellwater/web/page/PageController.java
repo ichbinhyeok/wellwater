@@ -1,6 +1,7 @@
 package com.example.wellwater.web.page;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
+import com.example.wellwater.nj.NjPwtaDataService;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoExperienceService;
 import com.example.wellwater.pseo.PseoPage;
@@ -29,6 +30,7 @@ public class PageController {
     private final TrustPageService trustPageService;
     private final AnalyticsEventService analyticsEventService;
     private final PublicTrackingLinkService publicTrackingLinkService;
+    private final NjPwtaDataService njPwtaDataService;
 
     public PageController(
             PseoCatalogService pseoCatalogService,
@@ -36,7 +38,8 @@ public class PageController {
             SeoMetadataService seoMetadataService,
             TrustPageService trustPageService,
             AnalyticsEventService analyticsEventService,
-            PublicTrackingLinkService publicTrackingLinkService
+            PublicTrackingLinkService publicTrackingLinkService,
+            NjPwtaDataService njPwtaDataService
     ) {
         this.pseoCatalogService = pseoCatalogService;
         this.pseoExperienceService = pseoExperienceService;
@@ -44,6 +47,7 @@ public class PageController {
         this.trustPageService = trustPageService;
         this.analyticsEventService = analyticsEventService;
         this.publicTrackingLinkService = publicTrackingLinkService;
+        this.njPwtaDataService = njPwtaDataService;
     }
 
     @ModelAttribute("trackingLinks")
@@ -178,6 +182,7 @@ public class PageController {
                 Disallow: /tool/
                 Disallow: /mcp
                 Disallow: /partner/
+                Disallow: /partners/
                 Disallow: /out/
 
                 Sitemap: %s/sitemap.xml
@@ -189,6 +194,9 @@ public class PageController {
     public String sitemap() {
         String baseUrl = seoMetadataService.absolute("");
         ArrayList<String> extraPaths = new ArrayList<>(trustPageService.sitemapPaths());
+        extraPaths.add("/nj-well-preflight");
+        njPwtaDataService.pilotMunicipalities().forEach(municipality ->
+                extraPaths.add("/nj/private-well/" + municipality.slug()));
         return pseoCatalogService.sitemapXml(baseUrl, extraPaths);
     }
 

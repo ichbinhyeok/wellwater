@@ -1,6 +1,6 @@
 # Water Verdict
 
-Automated private-well test finder with a first-party web surface and a bounded OpenAI distribution experiment.
+Automated private-well test finder with a first-party web surface and a bounded New Jersey transaction-distribution experiment.
 
 ## Current Product Shape
 
@@ -9,8 +9,11 @@ The product is tool-first. It turns a reason for testing, visible clues, and nea
 Current public surface:
 - tool-first home page with the first input above the fold
 - immediate, noindex web results at `POST /tool/test-plan`
+- NJ transaction preflight at `/nj-well-preflight`
+- 24 data-qualified NJ municipality routers under `/nj/private-well/{slug}`
+- inactive-by-default co-branded routes under `/partners/{slug}/nj-well-preflight`
 - trust, privacy, disclosure, and support pages at `/trust/*`
-- the existing pSEO inventory remains available but is frozen; it is not the active growth model
+- the existing pSEO inventory remains available but is frozen; only the bounded NJ data pilot is new
 
 Current tool surface:
 - web entry at `/#test-plan`
@@ -25,6 +28,7 @@ Current commercial surface:
 - no offer on urgent, home-purchase, known-contamination, flood, wildfire, PFAS, fuel, or radionuclide paths
 - no new lead capture, account, direct payment, or manual consulting flow
 - aggregate completion, official-resource, certified-lab, and partner metrics at the credential-protected `/admin/pivot-metrics`
+- separate privacy-safe NJ channel metrics at `/admin/nj-distribution-metrics`
 
 ## Product Positioning
 
@@ -40,7 +44,7 @@ The engine is the product. Public information explains and supports its output; 
 
 ## Search Inventory Policy
 
-The existing sitemap is a frozen acquisition bench, not a mandate to publish more pages. No new SEO inventory is added during the 90-day ChatGPT distribution test. Existing URLs are retained initially to avoid mixing a product pivot with a destructive index reset. Any later pruning must follow the gates in `19_Automated_Distribution_Pivot_2026-07-10.md`.
+The legacy sitemap remains a frozen acquisition bench. The sole exception is the NJ distribution pilot: one public preflight and 24 municipality pages selected from official non-suppressed aggregate data. Non-pilot municipality routes return `404` and never enter the sitemap. Do not expand the inventory until the 90-day gates in `22_NJ_Transaction_Distribution_Experiment_2026-07-11.md` pass.
 
 ## Commercial Readiness
 
@@ -76,18 +80,24 @@ Optional launch variables:
 - `APP_OPENAI_DOMAIN_CHALLENGE_TOKEN`
 - `APP_PIVOT_EXPERIMENT_START_DATE` in `YYYY-MM-DD` format after public plugin publication
 - `APP_SUPPORT_EMAIL`
+- `NJ_PARTNER_CSV_PATH` for a reviewed external 10-row partner catalog; bundled prospects remain inactive
+- `NJ_GEOCODER_ENABLED`, default `true`
+- `NJ_CENSUS_GEOCODER_URL` only when the Census endpoint must be overridden
+- `NJ_DISTRIBUTION_METRICS_CSV_PATH`, default `${app.data.dir}/analytics/nj-distribution.csv`
 
 Operational endpoints:
 - public health: `GET /health/app`
 - MCP transport: `POST /mcp`
 - OpenAI domain challenge: `GET /.well-known/openai-apps-challenge`
 - protected aggregate metrics: `GET /admin/pivot-metrics`
+- protected NJ distribution metrics: `GET /admin/nj-distribution-metrics`
 
 ## Documentation Map
 
 Use these files as the current source of truth:
 - `01_Strategy_One_Pager.md`
 - `02_Product_PRD.md`
+- `22_NJ_Transaction_Distribution_Experiment_2026-07-11.md`
 - `03_Input_Output_Spec.md`
 - `04_Decision_Engine_Spec.md`
 - `05_Trust_Compliance_Guidelines.md`

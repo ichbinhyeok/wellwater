@@ -131,6 +131,30 @@ public class SeoMetadataService {
         );
     }
 
+    public SeoMetadata publicTool(
+            String canonicalPath,
+            String title,
+            String description,
+            String robots,
+            String breadcrumbLabel
+    ) {
+        String canonicalUrl = absolute(canonicalPath);
+        List<SeoBreadcrumb> breadcrumbs = List.of(
+                new SeoBreadcrumb("Home", absolute("/")),
+                new SeoBreadcrumb(breadcrumbLabel, canonicalUrl)
+        );
+        return new SeoMetadata(
+                canonicalUrl,
+                robots,
+                breadcrumbs,
+                List.of(toolPageJson(canonicalUrl, title, description), breadcrumbJson(breadcrumbs)),
+                "website",
+                socialImageUrl(),
+                googleSiteVerification,
+                googleAnalyticsId
+        );
+    }
+
     public SeoMetadata detail(PseoDetailView pageView) {
         String canonicalUrl = absolute("/well-water/" + pageView.page().slug());
         List<SeoBreadcrumb> breadcrumbs = List.of(

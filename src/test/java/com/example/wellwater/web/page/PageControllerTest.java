@@ -2,6 +2,7 @@ package com.example.wellwater.web.page;
 
 import com.example.wellwater.analytics.AnalyticsEventService;
 import com.example.wellwater.decision.registry.StateResourceRegistryService;
+import com.example.wellwater.nj.NjPwtaDataService;
 import com.example.wellwater.pseo.PseoCatalogService;
 import com.example.wellwater.pseo.PseoCitationRegistryService;
 import com.example.wellwater.pseo.PseoDecisionDocService;
@@ -34,6 +35,7 @@ class PageControllerTest {
     private final PseoCitationRegistryService citationRegistryService = new PseoCitationRegistryService("./data/pseo/page_sources.csv");
     private final SeoMetadataService seoMetadataService = new SeoMetadataService("https://example.com", new MockEnvironment());
     private final TrustPageService trustPageService = new TrustPageService();
+    private final NjPwtaDataService njPwtaDataService = org.mockito.Mockito.mock(NjPwtaDataService.class);
 
     private PseoExperienceService newExperienceService() {
         return new PseoExperienceService(
@@ -46,13 +48,15 @@ class PageControllerTest {
     }
 
     private PageController newController(Path analyticsPath) {
+        org.mockito.Mockito.when(njPwtaDataService.pilotMunicipalities()).thenReturn(List.of());
         return new PageController(
                 catalogService,
                 newExperienceService(),
                 seoMetadataService,
                 trustPageService,
                 new AnalyticsEventService(analyticsPath.toString()),
-                new PublicTrackingLinkService()
+                new PublicTrackingLinkService(),
+                njPwtaDataService
         );
     }
 
@@ -221,7 +225,8 @@ class PageControllerTest {
                 seoMetadataService,
                 trustPageService,
                 failingAnalytics,
-                new PublicTrackingLinkService()
+                new PublicTrackingLinkService(),
+                njPwtaDataService
         );
 
         Model model = new ExtendedModelMap();

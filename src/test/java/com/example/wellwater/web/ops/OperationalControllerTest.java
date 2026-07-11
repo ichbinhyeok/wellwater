@@ -1,5 +1,6 @@
 package com.example.wellwater.web.ops;
 
+import com.example.wellwater.nj.NjDistributionMetricService;
 import com.example.wellwater.welltest.PivotMetricService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -18,6 +19,7 @@ class OperationalControllerTest {
     void exposesHealthAndConfiguredDomainChallenge() {
         OperationalController controller = new OperationalController(
                 new PivotMetricService(tempDir.resolve("metrics.csv").toString()),
+                new NjDistributionMetricService(tempDir.resolve("nj-metrics.csv").toString()),
                 "challenge-token",
                 "waterverdict"
         );
@@ -32,11 +34,13 @@ class OperationalControllerTest {
     void hidesMissingDomainChallengeAndReturnsEmptyMetrics() {
         OperationalController controller = new OperationalController(
                 new PivotMetricService(tempDir.resolve("missing.csv").toString()),
+                new NjDistributionMetricService(tempDir.resolve("missing-nj.csv").toString()),
                 "",
                 "waterverdict"
         );
 
         assertEquals(404, controller.openAiDomainChallenge().getStatusCode().value());
         assertTrue(controller.pivotMetrics().completionsByChannel().isEmpty());
+        assertTrue(controller.njDistributionMetrics().byChannel().isEmpty());
     }
 }

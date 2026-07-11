@@ -1516,6 +1516,56 @@ Result:
 - an allowlisted official-resource action returned `302` to the expected New Hampshire government URL and incremented only the aggregate action counter
 - desktop and `390px` mobile widget QA passed; the only browser console error was the temporary QA server's missing favicon
 
+## Entry: 2026-07-11 - NJ Transaction Distribution Experiment Implemented
+
+### Decision
+
+- the failed model is classified as general-guide publishing followed by passive Google acquisition
+- ChatGPT distribution is not classified as failed because it was never published; it is no longer the active experiment
+- the active product is `NJ Private-Well Transaction Preflight`
+- distribution is split into a borrowed partner route and a bounded local-data search route
+- the same engine and result surface serve both routes so channel quality can be compared without product drift
+
+### Changes Shipped
+
+- added `/nj-well-preflight` and privacy-safe `POST /nj-well-preflight/result`
+- added 24 indexable municipality routers selected from the official 564-row NJDEP municipality snapshot
+- added address-to-grid matching against the versioned 1,676-row NJDEP 2-mile grid snapshot
+- added current PWTA sale, lease, certified-sampling, mercury-county, and uranium-county routing
+- added inactive-by-default configuration for five laboratory and five home-inspector prospects
+- added noindex co-branded partner routes and fixed allowlisted redirects
+- added independent `direct`, `organic_local`, and `partner` aggregate metrics at `/admin/nj-distribution-metrics`
+- excluded addresses, coordinates, sessions, contacts, and raw form answers from the NJ metric contract
+- added the main NJ tool and exactly 24 pilot municipality routes to `sitemap.xml`
+- retained non-pilot municipalities only as form fallbacks; public non-pilot page routes return `404`
+
+### Verification
+
+- `145` automated tests passed with `0` failures
+- snapshot tests verified `1,676` grid rows, `564` municipality rows, and both reviewed SHA-256 checksums
+- Census response parsing, out-of-state handling, grid matching, and geocoder fallback passed
+- Ocean County mercury and Morris County uranium rule tests passed
+- raw submitted addresses were absent from rendered results, result URLs, and aggregate metrics
+- unknown partner routes returned `404`; certified-lab redirects returned only the fixed NJDEP destination
+- browser QA passed on desktop and `390px` mobile for landing, municipality selection, result generation, and action links
+- browser console reported `0` errors and `0` warnings
+
+### Measurement Gates
+
+- partner Day 30: at least 2 of 10 proposed partners publish a link
+- partner Day 60: 100 landing views, 40 completions, and 15 booking or partner clicks
+- local search Day 90: 80% indexed, 1,000 non-brand impressions, 10 clicks across at least 3 pages, 20 starts, and 8 completions
+- no municipality expansion, generic guide publishing, or routine CTR work before the local-search gates pass
+- if both routes fail, move the well-water project to maintenance mode rather than adding another distribution hypothesis
+
+### External Steps Still Required
+
+- verify the current certification or license status of each prospect before outreach
+- obtain written permission before setting any partner row to `active=true`
+- send the 10 one-time proposals and record the first live-link date
+- deploy, verify the production sitemap, and submit the new sitemap in Search Console
+- record the deployment and sitemap-submission dates; those dates start the 30/60/90-day clocks
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

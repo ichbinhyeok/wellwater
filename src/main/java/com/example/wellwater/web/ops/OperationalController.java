@@ -1,5 +1,6 @@
 package com.example.wellwater.web.ops;
 
+import com.example.wellwater.nj.NjDistributionMetricService;
 import com.example.wellwater.welltest.PivotMetricService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -15,15 +16,18 @@ import java.util.Map;
 public class OperationalController {
 
     private final PivotMetricService pivotMetricService;
+    private final NjDistributionMetricService njDistributionMetricService;
     private final String domainChallengeToken;
     private final String applicationName;
 
     public OperationalController(
             PivotMetricService pivotMetricService,
+            NjDistributionMetricService njDistributionMetricService,
             @Value("${app.openai.domain-challenge-token:}") String domainChallengeToken,
             @Value("${spring.application.name:waterverdict}") String applicationName
     ) {
         this.pivotMetricService = pivotMetricService;
+        this.njDistributionMetricService = njDistributionMetricService;
         this.domainChallengeToken = domainChallengeToken == null ? "" : domainChallengeToken.trim();
         this.applicationName = applicationName;
     }
@@ -49,5 +53,10 @@ public class OperationalController {
     @GetMapping(value = "/admin/pivot-metrics", produces = MediaType.APPLICATION_JSON_VALUE)
     public PivotMetricService.PivotMetricSummary pivotMetrics() {
         return pivotMetricService.summary();
+    }
+
+    @GetMapping(value = "/admin/nj-distribution-metrics", produces = MediaType.APPLICATION_JSON_VALUE)
+    public NjDistributionMetricService.Summary njDistributionMetrics() {
+        return njDistributionMetricService.summary();
     }
 }
