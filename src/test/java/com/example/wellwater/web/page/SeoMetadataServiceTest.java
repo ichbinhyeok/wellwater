@@ -32,6 +32,7 @@ class SeoMetadataServiceTest {
         assertEquals("https://waterverdict.example/well-water/new-hampshire-arsenic-well-water", metadata.canonicalUrl());
         assertEquals("index,follow", metadata.robotsDirective());
         assertEquals(3, metadata.breadcrumbs().size());
+        assertTrue(experienceService.detailView("new-hampshire-arsenic-well-water").orElseThrow().searchDescription().length() >= 120);
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("BreadcrumbList")));
         assertTrue(metadata.structuredDataBlocks().stream().anyMatch(block -> block.contains("\"Article\"")));
     }

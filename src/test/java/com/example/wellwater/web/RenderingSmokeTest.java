@@ -256,7 +256,8 @@ class RenderingSmokeTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Official source")))
                 .andExpect(content().string(org.hamcrest.Matchers.not(org.hamcrest.Matchers.containsString("Request follow-up"))))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("Method, review, and disclosure")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Related next reads")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Where to go from here")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("Decision router")));
     }
 
     @Test

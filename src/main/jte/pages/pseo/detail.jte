@@ -24,7 +24,7 @@
             : "Use a recent change, flood, repair, or sudden shift when the method page alone is not enough.";
 }
 
-@template.layout.main(title = pageView.page().title(), robots = seo.robotsDirective(), description = pageView.page().metaDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
+@template.layout.main(title = pageView.page().title(), robots = seo.robotsDirective(), description = pageView.searchDescription(), canonicalUrl = seo.canonicalUrl(), breadcrumbs = seo.breadcrumbs(), structuredDataBlocks = seo.structuredDataBlocks(), openGraphType = seo.openGraphType(), socialImageUrl = seo.socialImageUrl(), googleSiteVerification = seo.googleSiteVerification(), googleAnalyticsId = seo.googleAnalyticsId(), content = @`
     <main class="stack">
         <section class="hero">
             <div class="hero-grid">
@@ -94,26 +94,29 @@
                 </div>
             </section>
         @else
-            <section class="panel panel-accent">
+            <section class="panel panel-accent" id="tool-start" data-pseo-surface="decision-router">
                 <div class="section-header">
                     <div>
-                        <p class="brand-kicker">Quick start</p>
-                        <h2>Understand the page fast, then decide if you need the deeper reading</h2>
+                        <p class="brand-kicker">Decision router</p>
+                        <h2>Start with this signal and get the next move</h2>
                     </div>
-                    <p class="section-copy">This top section is the short version. The longer explanation below is there when you want the public reasoning, not because you should have to read everything first.</p>
+                    <p class="section-copy">This page is an entry point into the decision tool. The guide below explains the reasoning after you know what you want to do next.</p>
                 </div>
                 <div class="grid">
                     <article class="card-link card-link-accent">
-                        <span class="card-kicker">What this page is saying</span>
+                        <span class="card-kicker">Input</span>
+                        <h3>${pageView.entryHint().label()}</h3>
+                        <p class="card-meta">${pageView.entryHint().reason()}</p>
+                    </article>
+                    <article class="card-link">
+                        <span class="card-kicker">Engine signal</span>
+                        <h3>${pageView.riskLabel()}</h3>
                         <p class="card-meta">${pageView.riskSummary()}</p>
                     </article>
                     <article class="card-link">
-                        <span class="card-kicker">Do this first</span>
+                        <span class="card-kicker">Output</span>
+                        <h3>Next test or decision path</h3>
                         <p class="card-meta">${pageView.page().actionNow()}</p>
-                    </article>
-                    <article class="card-link">
-                        <span class="card-kicker">Use the tool when</span>
-                        <p class="card-meta">${pageView.entryHint().reason()}</p>
                     </article>
                 </div>
                 <div class="cta-row">
@@ -126,10 +129,10 @@
         <section class="panel" id="public-guide">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Read more if needed</p>
-                    <h2>What it usually means, who should act faster, and what not to buy first</h2>
+                    <p class="brand-kicker">Public explanation after the route</p>
+                    <h2>Why this route fits the signal</h2>
                 </div>
-                <p class="section-copy">These are the public guide answers for people who want the reasoning before they move on.</p>
+                <p class="section-copy">Use these answers to understand the decision, not as a replacement for the input and result flow above.</p>
             </div>
             <div class="grid">
                 @for (var answer : pageView.quickAnswers())
@@ -484,10 +487,10 @@
         <section class="panel">
             <div class="section-header">
                 <div>
-                    <p class="brand-kicker">Related reads</p>
-                    <h2>Related next reads</h2>
+                    <p class="brand-kicker">Next decision paths</p>
+                    <h2>Where to go from here</h2>
                 </div>
-                <p class="section-copy">Use these pages to keep narrowing the issue instead of bouncing between unrelated symptoms, contaminants, and treatment categories.</p>
+                <p class="section-copy">These links are selected from the same problem graph so the next page changes the input, evidence, or action instead of repeating this guide.</p>
             </div>
             <div class="stack" style="gap: 18px;">
                 @for (var section : pageView.relatedSections())

@@ -12,6 +12,7 @@ public record PseoDetailView(
         String householdSummary,
         String doNotBuyYet,
         PseoEntryHint entryHint,
+        String searchDescription,
         List<PseoQuickAnswer> quickAnswers,
         PseoDecisionDoc decisionDoc,
         PseoRegionalContext regionalContext,

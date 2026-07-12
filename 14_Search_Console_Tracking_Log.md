@@ -1566,6 +1566,53 @@ Result:
 - deploy, verify the production sitemap, and submit the new sitemap in Search Console
 - record the deployment and sitemap-submission dates; those dates start the 30/60/90-day clocks
 
+## Entry: 2026-07-12 - Long-Term pSEO Surface Optimization
+
+### Decision
+
+- keep Water Verdict as a long-term private-well decision tool with a bounded pSEO acquisition surface
+- stop adding pages during the next `90` days
+- adapt the useful Zapier pattern: recognizable entity/context, page-specific structured facts, immediate action, and graph-based next paths
+- do not copy Zapier's scale assumption; the domain still needs to earn authority and ranking depth
+
+### Changes Shipped
+
+- pSEO detail pages now show a decision router before the guide layer:
+  - input signal or context
+  - engine risk lens
+  - expected next test or decision output
+  - direct tool entry and secondary source path
+- guide copy now explicitly describes itself as the explanation after the route
+- related links now present as `Next decision paths` and explain why each link changes the input, evidence, or action
+- short detail-page meta descriptions receive a page-archetype and next-testing suffix, capped at `160` characters
+- no new pSEO pages, sitemap URLs, partner assumptions, or commerce routes were introduced
+
+### Verification
+
+- command: `./gradlew.bat --no-daemon test`
+- result: `145` tests passed, `0` failures
+- existing indexability, canonical, noindex, and sitemap tests remained green
+
+### 90-Day Observation Contract
+
+From the production deployment date, do not make routine page-count, title, CTA, or internal-link changes until the 90-day review. Only production bugs, broken official sources, safety corrections, or tracking failures may interrupt the freeze.
+
+At the review, compare:
+
+- clicks and impressions against the latest baseline of `1` click and `1,568` impressions over `180` days
+- number of pages with clicks
+- number of pages reaching average position `20` or better
+- organic tool starts and completions
+- whether the New Jersey transaction, household-trigger, and problem-signal clusters produce different search and tool behaviour
+
+Impressions alone do not pass the experiment. A winning signal requires ranking movement plus clicks and tool starts on more than one page.
+
+### Reference
+
+- [Long-Term pSEO Optimization](23_Long_Term_PSEO_Optimization_2026-07-12.md)
+- [Ahrefs programmatic SEO overview](https://ahrefs.com/blog/programmatic-seo/)
+- [Ahrefs Zapier SEO case study](https://ahrefs.com/blog/zapier-seo-case-study/)
+
 ## Reusable Entry Template
 
 Copy this block for the next review.

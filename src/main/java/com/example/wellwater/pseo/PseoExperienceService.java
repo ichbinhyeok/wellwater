@@ -254,6 +254,7 @@ public class PseoExperienceService {
                 householdSummary(page, riskLens, regionalContext),
                 doNotBuyYet(page, riskLens, regionalContext),
                 entryHint,
+                searchDescription(page, archetypeLabel(page)),
                 quickAnswers(page, riskLens, entryHint, regionalContext),
                 decisionDocService.findBySlug(page.slug()).orElse(null),
                 regionalContext,
@@ -284,6 +285,21 @@ public class PseoExperienceService {
             case "authority" -> "Build trust and method clarity before the tool or product comparison takes over";
             default -> "Orient the problem before opening the personalized tool";
         };
+    }
+
+    private String searchDescription(PseoPage page, String archetype) {
+        String base = page.metaDescription() == null ? "" : page.metaDescription().trim();
+        if (base.length() >= 120) {
+            return base;
+        }
+        String suffix = " Apply this " + archetype.toLowerCase(Locale.ROOT)
+                + " to get the next testing path before you buy treatment.";
+        String combined = (base + suffix).trim();
+        if (combined.length() <= 160) {
+            return combined;
+        }
+        int cut = combined.lastIndexOf(' ', 160);
+        return combined.substring(0, cut > 0 ? cut : 160).trim();
     }
 
     private String riskLens(PseoPage page) {
